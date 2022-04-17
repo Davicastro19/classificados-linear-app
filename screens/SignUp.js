@@ -32,6 +32,7 @@ export default function SignUp({navigation}) {
 
   function showDialog (titulo, message, tipo) {
     setVisibleDialog(true)
+    setVisibleDialogCode(false)
     setTitulo(titulo)
     setMessage(message)
     setTipo(tipo)
@@ -43,6 +44,7 @@ function hideDialogCode() {
   }
 function hideDialog(status) {
     setVisibleDialog(status)
+    navigation.navigate("Login")
   }
 
 function IsEmail() {
@@ -136,22 +138,29 @@ function FullSignUp(){
         }
         tenantService.register(data)
         .then((response) => {
-          console.log(response.data)
+          setCode(null)
+          setNewCode(null)
+          setEmail(null)
+          setName(null)
+          setPhone(null)
+          setSelected(false)
+          setPassword(null)
           setLoading(false)
+          setVisibleDialogCode(false)
 		      const titulo = (response.data.status) ? "Sucesso" : "Erro"
           showDialog	(titulo, response.data.message, "SUCESSO")         
         })
         .catch((response) => {
           console.log('sssdsds',response.data)
           setLoading(false)
+          setVisibleDialogCode(false)
           showDialog(titulo, response, "SUCESSO")
         })
       }else{
-          console.log('sssdsds',response.data)
           setLoading(false)
           setVisibleDialogCode(false)
           setCode(null)
-          showDialog('Código', 'Código diferente', "Erro")
+          showDialog('Código', 'Código invalido', "Erro")
         }
       }
     }
@@ -204,7 +213,7 @@ function sendCode(){
             <Text style={styles.title}> CADASTRE-SE</Text>
           </View><View style={styles.form}>
               <Text style={styles.errorMessage}>{erroMessageName}</Text>
-              <Input autoComplete={true} inputContainerStyle={input.inputIcon} placeholderTextColor='#C89A5B' style={input.input} onChangeText={value => { setName(value), setErroMessageName(null); } } placeholder="Nome" leftIcon={{ size: 20, type: 'font-awesome', name: 'user', color: '#C89A5B' }} />
+              <Input autoComplete={true} inputContainerStyle={input.inputIcon} placeholderTextColor='#C89A5B' style={input.input} onChangeText={value => { setName(value), setErroMessageName(null); } } placeholder="Nome e sobrenome" leftIcon={{ size: 20, type: 'font-awesome', name: 'user', color: '#C89A5B' }} />
               <Text style={styles.errorMessage}>{erroMessageEmail}</Text>
               <Input autoComplete={true} inputContainerStyle={input.inputIcon} placeholderTextColor='#C89A5B' style={input.input} onChangeText={value => { setEmail(value), setErroMessageEmail(null); } } placeholder=" E-mail" keyboardType="email-address" returnKeyType="done" leftIcon={{ size: 16, type: 'font-awesome', name: 'envelope', color: '#C89A5B' }} />
               <Text style={styles.errorMessage}>{erroMessagePass}</Text>

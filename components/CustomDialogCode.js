@@ -13,7 +13,7 @@ const CustomDialogCode = (props) => {
 		  
           <Dialog.Content>
             <Paragraph style={styles.pagraph}>Insira o código enviado no seu email.</Paragraph>
-            <Input autoComplete={true} onChangeText={value => { props.onChangeText(value)} } inputContainerStyle={input.inputIcon} placeholderTextColor='#C89A5B' style={input.input} placeholder="Código" keyboardType="email-address" returnKeyType="done" leftIcon={{ size: 16, type: 'font-awesome', name: 'unlock-alt', color: '#C89A5B' }} />
+            <Input autoComplete={true} onChangeText={value => { props.onChangeText(value)} } inputContainerStyle={input.inputIcon} placeholderTextColor='#C89A5B' style={input.input} placeholder="Código" keyboardType="email-address" returnKeyType="done" leftIcon={{ size: 16, type: 'font-awesome', name: 'expeditedssl', color: '#C89A5B' }} />
               
           </Dialog.Content>
           <Dialog.Actions>

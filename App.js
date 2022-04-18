@@ -7,7 +7,7 @@ import {
   TransitionPresets,
 } from '@react-navigation/stack';
 import SignUp from './screens/SignUp';
-///import interceptor from './services/Interceptor'
+import interceptor from './services/interceptor'
 
 
 
@@ -42,7 +42,7 @@ function MyStack() {
 }
 
 export default function App() {
-  //interceptor.refresh()
+  interceptor.refresh()
   return (
     <NavigationContainer theme={MyTheme}>
       <MyStack />

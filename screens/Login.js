@@ -7,8 +7,8 @@ import input from '../components/Input'
 import { MaterialIcons } from "@expo/vector-icons";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Device from 'expo-device';
-//import userService from '../services/UserService';
-//import CustomDialog from '../components/CustomDialog';
+import tenantService from '../services/TenantSevice';
+import CustomDialog from '../components/CustomDialog';
 
 export default function Login({ navigation }) {
   const [show, setShow] = React.useState(false);
@@ -41,7 +41,7 @@ export default function Login({ navigation }) {
         email: email,
         password: password
       }
-      userService.login(data)
+      tenantService.login(data)
         .then((response) => {
           if (response.data.status) {
             if (response.data.device === Device.modelName + '/' + Device.osName + '/' + Device.deviceName) {
@@ -55,7 +55,7 @@ export default function Login({ navigation }) {
             }
             else {
               setLoading(false)
-              showDialog("Muitas conexões", "Só é possível cadastrar o g-Safe em um Smartphone", "SUCESSO")
+              showDialog("Muitas conexões", "Só é possível cadastrar o L-Safe em um Smartphone", "SUCESSO")
 
             }
           } else {
@@ -77,12 +77,12 @@ export default function Login({ navigation }) {
     }
   }
 
-  function LoginWithToken(token) {
+  function autoLogin(token) {
     setLoading(true)
     let data = {
       token: token
     }
-    userService.LoginWithToken(data)
+    tenantService.autoLogin(data)
       .then((response) => {
 
         if (response.data.device === Device.modelName + '/' + Device.osName + '/' + Device.deviceName) {
@@ -151,7 +151,7 @@ export default function Login({ navigation }) {
     AsyncStorage.getItem("TOKEN")
       .then((token => {
         if (token) {
-          LoginWithToken(token)
+          autoLogin(token)
         }
       }
       )).catch((setLoading(false)))

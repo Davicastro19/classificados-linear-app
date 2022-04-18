@@ -34,18 +34,18 @@ class TenantService{
 	
 	async login(data){
         return axios({
-            url:Config.API_URL+"tenant/auth/login",
+            url:Config.API_URL+"tenant/login",
             timeout: Config.TIMEOUT_REQUEST,
             method:"POST",
             data:data,
             headers:Config.HEADER_REQUEST
         }).then((response)=> {
             if (response && response.data && response.data.access_token) {
-			    AsyncStorage.setItem("TOKEN", response.data.access_token)
+                AsyncStorage.setItem("TOKEN", response.data.access_token)
             }
             return Promise.resolve(response)
         }).catch((error)=>{
-            //console.log('qwjq',error)
+            console.log('qwjq',error)
             return Promise.reject(error)
         })
     }
@@ -108,9 +108,9 @@ class TenantService{
             return Promise.reject(error)
         })
     }
-	async LoginWithToken(data){
+	async autoLogin(data){
         return axios({
-            url:Config.API_URL+"tenant/auth/loginToken",
+            url:Config.API_URL+"tenant/autoLogin",
             timeout: Config.TIMEOUT_REQUEST,
             method:"POST",
             data:data,

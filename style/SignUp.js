@@ -38,6 +38,15 @@ const styles = StyleSheet.create({
         color:'#C89A5B'
     
     },
+    titleProfile:{
+        marginTop:'15%',
+        marginBottom:'5%',
+        fontSize:15,
+        alignItems: 'center',
+        justifyContent: 'center',
+        color:'#C89A5B'
+    
+    },
     nameApp:{
         marginBottom:'5%',
         letterSpacing:3,

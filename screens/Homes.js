@@ -175,7 +175,7 @@ export default function Homes() {
                             <Paragraph><Text style={{ fontWeight: 'bold' }}>m²</Text> 4      <Text style={{ fontWeight: 'bold' }}>IPTU-R$</Text>20,00      <MaterialIcons name="pets" color='#000' size={15} /> SIM     <FontAwesome5 name="couch" color='#000' size={15} /> SIM      <Text style={{ fontWeight: 'bold' }}>R$</Text>250,00</Paragraph>
                             <Paragraph></Paragraph>
                             <Text style={{ fontWeight: 'bold' }}>Descrição</Text>
-                            <Paragraph>adjaba sdfsdfs fsd fsdf sdfsdfgdfghkdfg;.sdfsdfuhslidfb sdfbjsdfbsajd fsjdbfhjhb</Paragraph>
+                            <Paragraph>sdfsdfuhslidfbsdfsdfuhslidfbsdfsdfuhslidfbsdfsdfuhslidfbsdfsdfuhslidfbsdfsdfuhslidfbsdfsdfuhslidfbsdfsdfuhslidfbsdfsdfuhslidfbsdfsdfuhslidfbsdfsdfuhslidfbsdfsdfuhslidfbsdfsdfuhslidfbsdfsdfuhslidfbsdfsdfuhslidfbsdfsdfuhslidfbsdfsdfuhslidfbsdfsdfuhslidfbsdfsdfuhslidfbsdfsdfuhslidfbsdfsdfuhslidfbsdfsdfuhslidfbsdfsdfuhslidfbsdfsdfuhslidfbsdfsdfuhslidfbsdfsdfuhslidfbsdfsdfuhslidfbsdfsdfuhslidfb</Paragraph>
                        
 
                         </Card.Content>

@@ -4,14 +4,16 @@ import { Provider, Paragraph, Dialog, Portal,Colors  } from 'react-native-paper'
 import { Input, Button } from 'react-native-elements';
 import styles from '../style/MainStyle'
 import input from './Input'
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
+
 const CustomDialogCode = (props) => {
     return (
         <Provider>
-        <Portal>
+        <Portal >
         <Dialog style={styles.dialog} visible={props.visible} onDismiss={() => props.onClose(false)}>
         <Dialog.Title style={styles.dialogTitle}>Verificação de usuario</Dialog.Title>
 		  
-          <Dialog.Content>
+          <Dialog.Content style={{ height:hp('15%')}}>
             <Paragraph style={styles.pagraph}>Insira o código enviado no seu email.</Paragraph>
             <Input autoComplete={true} onChangeText={value => { props.onChangeText(value)} } inputContainerStyle={input.inputIcon} placeholderTextColor='#C89A5B' style={input.input} placeholder="Código" keyboardType="email-address" returnKeyType="done" leftIcon={{ size: 16, type: 'font-awesome', name: 'expeditedssl', color: '#C89A5B' }} />
               

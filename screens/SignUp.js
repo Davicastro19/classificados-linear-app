@@ -7,6 +7,7 @@ import input from '../components/Input'
 import CustomDialog from '../components/CustomDialog';
 import CustomDialogCode from '../components/CustomDialogCode';
 import * as Device from 'expo-device';
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 
 export default function SignUp({navigation}) {
   const  [code,setCode] = useState(null)

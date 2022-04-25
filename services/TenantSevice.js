@@ -69,26 +69,7 @@ class TenantService{
         })
     }
 
-	async getCataloguing(data){
-        let token = await AsyncStorage.getItem("TOKEN")
-        //console.log(data)
-        return axios({
-            url:Config.API_URL+"tenant/catalog",
-            method:"POST",
-            data:data,
-            timeout: Config.LON_TIMEOUT_REQUEST,
-            headers: {
-                Accept: 'application/json',
-                Authorization: 'Bearer ' + token,
-                
-            }
-        }).then((response)=> {
-            return Promise.resolve(response)
-        }).catch((error)=>{
-            //console.log('aaaaaaaaasasa',error)
-            return Promise.reject(error)
-        })
-    }
+	
 
     async getStrategy(data){
         let token = await AsyncStorage.getItem("TOKEN")

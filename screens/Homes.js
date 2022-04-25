@@ -1,4 +1,4 @@
-import { View, Pressable, Keyboard, TextInput, Linking } from 'react-native';
+import { View, Pressable, Keyboard, TextInput, Linking, RefreshControl, StatusBar } from 'react-native';
 import { Text, FAB, Button } from 'react-native-elements';
 import React, { useState, useEffect } from 'react'
 import tenantService from '../services/TenantSevice';
@@ -6,189 +6,143 @@ import { RadioButton } from 'react-native-paper';
 import SelectDropdown from 'react-native-select-dropdown'
 import styles from '../style/Homes'
 import {
+    ScrollView,
     FlatList,
     NativeBaseProvider,
 } from 'native-base';
 import { Avatar, Card, Title, Paragraph } from 'react-native-paper';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { FontAwesome, FontAwesome5, MaterialCommunityIcons,MaterialIcons } from '@expo/vector-icons';
+import { FontAwesome, FontAwesome5, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
+import housesService from '../services/HousesService';
 
 
 
 export default function Homes() {
     const [isLoading, setIsLoading] = useState(false)
     const [showFilter, setShowFilter] = useState(false)
-    const [showInfo, setShowInfo] = useState(false)
-    const [houses, setHouses] = useState([])
-    const [specificHouse, setSpecificHouse] = useState([])
-    const [gale, setGale] = useState('0')
-    const [day, setDay] = useState('7')
-    const [listPair, setListPair] = useState(['EURUSD', 'EURUSD-OTC'])
-    const [percentage, setPercentage] = useState('70')
-    const [time, setTime] = useState('1')
-    const [pair, setPair] = useState('EURUSD')
-    const [news, setNews] = useState('NAO')
+    const [houses, setHouses] = useState(false)
+    const [refreshing, setRefreshing] = useState(false);
+    const [specificHouse, setSpecificHouse] = useState(false)
+    const onRefresh = React.useCallback(() => {
+        console.log('qq')
+        allHouses()
+        setRefreshing(false);
+    }, []);
 
-    const fetchPairs = async () => {
-        const pairs = await tenantService.pairs();
-        return pairs;
+    function validateImage(image, value) {
+        try {
+            return JSON.parse(image)[value].uri.replace(/\//g, '').replace('i.img', '//i.img').replace('.com', '.com/')
+        } catch (e) {
+            return false
+        }
     }
 
-    const data = [{
-        id: "bd7acbea-c1b1-46345c2-aed5-3ad53abb28ba",
-        publicplace: "Rua dos rodrigues",
-        district:"vila caasrboane",
-        bedrooms: "2",
-        bathrooms: "1",
-        garage:"0",
-        value:"700,00",
-        images: "https://swellconstrucoes.com.br/wp-content/uploads/2021/04/apartamento-de-luxo-1.png",
-        type:"Alugar",
-        
-    }, {
-        id: "bd7acbea-c1b1-46c2-aed5-3ryad53abb28ba",
-        publicplace: "Rua dos asdasd",
-        district:"vila carbone",
-        bedrooms: "2",
-        bathrooms: "2",
-        garage:"3",
-        value:"700,00",
-        images: "http://s2.glbimg.com/ef0s2WBnEdF7w4r48fwP08q1L-s=/smart/e.glbimg.com/og/ed/f/original/2016/02/22/apartamento-kg-kebabie-arquitectos-01.jpg",
-        type:"Vender",
-
-    }, {
-        id: "bd7acbea-c1b1-46c2-aed5-3adrt53abb28ba",
-        publicplace: "Rua dos dfgdfgdfgdfg",
-        district:"vila carbone",
-        bedrooms: "3",
-        bathrooms: "2",
-        garage:"0",
-        value:"700,00",
-        images: "https://swellconstrucoes.com.br/wp-content/uploads/2021/04/apartamento-de-luxo-1.png",
-        type:"Alugar",
-        
-    }, {
-        id: "bd7acbea-c1b1-46c2-oaed5-3ad53abb28ba",
-        publicplace: "Rua dos dfg",
-        district:"vila carbone",
-        bedrooms: "3",
-        bathrooms: "3",
-        garage:"1",
-        value:"700,00",
-        images: "http://s2.glbimg.com/ef0s2WBnEdF7w4r48fwP08q1L-s=/smart/e.glbimg.com/og/ed/f/original/2016/02/22/apartamento-kg-kebabie-arquitectos-01.jpg",
-        type:"Vender",
-
-    }, {
-        id: "bd7acbea-c1b1-46cr2-aed5-3ad53abb28ba",
-        publicplace: "Rua dos dfgdf",
-        district:"vila carbone",
-        bedrooms: "2",
-        bathrooms: "1",
-        garage:"0",
-        value:"700,00",
-        images: "https://swellconstrucoes.com.br/wp-content/uploads/2021/04/apartamento-de-luxo-1.png",
-        type:"Alugar",
-        
-    }, {
-        id: "bd7awcbea-c1b1-46c2-aed5-3ad53abb28ba",
-        publicplace: "Rua dos klolo",
-        district:"vila carbone",
-        bedrooms: "6",
-        bathrooms: "3",
-        garage:"2",
-        value:"700,00",
-        images: "http://s2.glbimg.com/ef0s2WBnEdF7w4r48fwP08q1L-s=/smart/e.glbimg.com/og/ed/f/original/2016/02/22/apartamento-kg-kebabie-arquitectos-01.jpg",
-        type:"Vender",
-
-    }];
-    
+    function returnHouses() {
+        setIsLoading(false)
+        setSpecificHouse(false)
+    }
 
     function houseInfor(value) {
-        setShowInfo(true)
-        if (specificHouse){
-            setShowInfo(true)
-    }
+        setIsLoading(true)
+        housesService.oneHouse(value)
+            .then((response) => {
+                setIsLoading(false)
+                setSpecificHouse(response.data)
+                setIsLoading(false)
+                setShowFilter(false)
+
+            })
+            .catch((error) => {
+                console.log('erroo')
+                setIsLoading(false)
+                setShowFilter(false)
+                setSpecificHouse(false)
+                console.log('xx', error)
+                //setCatalogData('Seu sinais estarão aqui. (clique em Filtro)')
+            })
+
     }
 
-    function getHouses() {
+    async function allHouses() {
         setShowFilter(false)
-        setIsLoading(false)
-        setShowInfo(false)
-        //let data = {
-        //    pair: pair,
-        //    time: time,
-        //    gale: gale,
-        //    day: day,
-        //    percentage: percentage,
-        //    news: news,
-        //}
-        //tenantService.getCataloguing(data)
-        //    .then((response) => {
-        //        setIsLoading(false)
-        //        if (response.data.status) {
-        //            setCatalogData(response.data.message)
-        //        } else {
-        //            setCatalogData('Seu sinais estarão aqui. (clique em Filtro)')
-        //        }
-//
-        //    })
-        //    .catch((error) => {
-        //        setIsLoading(false)
-        //        //console.log('adsdw', error)
-        //        setCatalogData('Seu sinais estarão aqui. (clique em Filtro)')
-        //    })
+        setIsLoading(true)
+        housesService.allHouses()
+            .then((response) => {
+                setIsLoading(false)
+                //console.log(response.data)
+                setHouses(response.data)
+
+            })
+            .catch((error) => {
+                setIsLoading(false)
+                console.log('wlls', error)
+                //setCatalogData('Seu sinais estarão aqui. (clique em Filtro)')
+            })
     }
 
-    function setPairOptionFunction(value) {
-        setPair(value)
-    }
-
-
-    //useEffect(() => {
-    //  fetchPairs()
-    //    .then((response) => {
-    //      setListPair(response.data.pairs)
-    //    })
-    //    .catch((
-    //      setListPair(['EURUSD', 'EURUSD-OTC'])))
-    //}, [])
+    useEffect(() => {
+        allHouses()
+    }, [])
     return (
-        <View style={styles.container} onPress={Keyboard.dismiss}>
-            {!showFilter && !showInfo &&
-                <View style={{ width: '100%', height: '6%' }}><Button title=" Filtro" onPress={() => setShowFilter(!showFilter)} icon={{ name: 'filter', type: 'font-awesome', size: 19, color: '#FFC77A' }} iconRight iconContainerStyle={{ marginLeft: 10 }} buttonStyle={{ backgroundColor: '#1E4344', borderColor: '#152F30', borderWidth: 0.5 }} containerStyle={{ height: '100%' }} titleStyle={{ color: '#FFC77A' }} />
+        <View style={styles.container} onPress={() => setPairOptionFunction()}>
+            <StatusBar hidden />
+            {!showFilter && !specificHouse &&
+                <View style={{ width: '100%', height: '6%' }}><Button title=" Filtro" onPress={() => setShowFilter(!showFilter)} icon={{ name: 'filter', type: 'font-awesome', size: 19, color: '#fdf5e8' }} iconRight iconContainerStyle={{ marginLeft: 10 }} buttonStyle={{ backgroundColor: '#1E4344', borderColor: '#152F30', borderWidth: 0.5 }} containerStyle={{ height: '100%' }} titleStyle={{ color: '#fdf5e8' }} />
                 </View>}
-            {showFilter && !showInfo &&
-                <View style={{ width: '100%', height: '6%' }}><Button title=" Filtrar" onPress={() => getHouses()} icon={{ name: 'search', type: 'font-awesome', size: 19, color: '#FFC77A' }} iconRight iconContainerStyle={{ marginLeft: 10 }} buttonStyle={{ backgroundColor: '#1E4344', borderColor: '#152F30', borderWidth: 0.5 }} containerStyle={{ height: '100%' }} titleStyle={{ color: '#FFC77A' }} />
+            {showFilter && !specificHouse &&
+                <View style={{ width: '100%', height: '6%' }}><Button title=" Filtrar" onPress={() => getHouses()} icon={{ name: 'search', type: 'font-awesome', size: 19, color: '#fdf5e8' }} iconRight iconContainerStyle={{ marginLeft: 10 }} buttonStyle={{ backgroundColor: '#1E4344', borderColor: '#152F30', borderWidth: 0.5 }} containerStyle={{ height: '100%' }} titleStyle={{ color: '#fdf5e8' }} />
                 </View>}
 
 
             <NativeBaseProvider >
-            {!isLoading && !showFilter && showInfo && specificHouse &&
-                    <Card style={{ borderWidth: 1.5, backgroundColor: '#fdf5e8', margin: 10, borderColor: '#152F30', borderRadius: 6 }}>
-                    <Title  style={{  color: '#152F30'}}>   Detalhes</Title>
-                        <Card.Cover source={{ uri: "https://imgbr.imovelwebcdn.com/avisos/2/29/63/14/95/07/720x532/2593989414.jpg" }} />
-                        <Card.Content>
-                            <Title>Rua dos rodrigues - Perdizes</Title>
-                            <Paragraph><FontAwesome name="bed" color='#000' size={15} /> 4      <FontAwesome5 name="shower" color='#000' size={15} /> 2      <FontAwesome5 name="car" color='#000' size={15} /> 1     <FontAwesome name="handshake-o" color='#000' size={15} /> Vender      <Text style={{ fontWeight: 'bold' }}>R$</Text>250,00</Paragraph>
-                            <Paragraph><Text style={{ fontWeight: 'bold' }}>m²</Text> 4      <Text style={{ fontWeight: 'bold' }}>IPTU-R$</Text>20,00      <MaterialIcons name="pets" color='#000' size={15} /> SIM     <FontAwesome5 name="couch" color='#000' size={15} /> SIM      <Text style={{ fontWeight: 'bold' }}>R$</Text>250,00</Paragraph>
-                            <Paragraph></Paragraph>
-                            <Text style={{ fontWeight: 'bold' }}>Descrição</Text>
-                            <Paragraph>sdfsdfuhslidfbsdfsdfuhslidfbsdfsdfuhslidfbsdfsdfuhslidfbsdfsdfuhslidfbsdfsdfuhslidfbsdfsdfuhslidfbsdfsdfuhslidfbsdfsdfuhslidfbsdfsdfuhslidfbsdfsdfuhslidfbsdfsdfuhslidfbsdfsdfuhslidfbsdfsdfuhslidfbsdfsdfuhslidfbsdfsdfuhslidfbsdfsdfuhslidfbsdfsdfuhslidfbsdfsdfuhslidfbsdfsdfuhslidfbsdfsdfuhslidfbsdfsdfuhslidfbsdfsdfuhslidfbsdfsdfuhslidfbsdfsdfuhslidfbsdfsdfuhslidfbsdfsdfuhslidfbsdfsdfuhslidfb</Paragraph>
-                       
+                {!isLoading && !showFilter && specificHouse &&
+                    <View style={{  justifyContent: "space-evenly", borderWidth: 1.5, backgroundColor: '#fdf5e8', borderColor: '#152F30', borderRadius: 6, margin:wp('1%') }}>
+                        <View style={{ paddingLeft: 3, paddingRight: 3, paddingTop:3, justifyContent: "space-evenly" }}>
+                        
+                            <View style={{ borderLeftWidth: 3, borderRightWidth: 3, borderRadius: 6, borderColor: '#1E4344', justifyContent: "space-evenly", flexDirection: 'row', backgroundColor: '#1E4344' }}>
+                                <ScrollView horizontal={true}>
+                                    <Card.Cover style={{ width: wp('90%'), height: hp('50%'), borderRadius: 10, borderWidth: 1, borderColor: '#1E4344', }} source={{ uri: validateImage(specificHouse.houses_images, '1') == false ? "https://daviastro.000webhostapp.com/house.png" : validateImage(specificHouse.houses_images, '1') }} />
+                                    <Card.Cover style={{ width: wp('90%'), height: hp('50%'), borderRadius: 10, borderWidth: 1, borderColor: '#1E4344', }} source={{ uri: validateImage(specificHouse.houses_images, '2') == false ? "https://daviastro.000webhostapp.com/house.png" : validateImage(specificHouse.houses_images, '2') }} />
+                                    <Card.Cover style={{ width: wp('90%'), height: hp('50%'), borderRadius: 10, borderWidth: 1, borderColor: '#1E4344', }} source={{ uri: validateImage(specificHouse.houses_images, '3') == false ? "https://daviastro.000webhostapp.com/house.png" : validateImage(specificHouse.houses_images, '3') }} />
+                                    <Card.Cover style={{ width: wp('90%'), height: hp('50%'), borderRadius: 10, borderWidth: 1, borderColor: '#1E4344', }} source={{ uri: validateImage(specificHouse.houses_images, '4') == false ? "https://daviastro.000webhostapp.com/house.png" : validateImage(specificHouse.houses_images, '4') }} />
+                                    <Card.Cover style={{ width: wp('90%'), height: hp('50%'), borderRadius: 10, borderWidth: 1, borderColor: '#1E4344', }} source={{ uri: validateImage(specificHouse.houses_images, '5') == false ? "https://daviastro.000webhostapp.com/house.png" : validateImage(specificHouse.houses_images, '5') }} />
+                                    <Card.Cover style={{ width: wp('90%'), height: hp('50%'), borderRadius: 10, borderWidth: 1, borderColor: '#1E4344', }} source={{ uri: validateImage(specificHouse.houses_images, '6') == false ? "https://daviastro.000webhostapp.com/house.png" : validateImage(specificHouse.houses_images, '6') }} />
 
-                        </Card.Content>
-                        <Card.Actions>
-                            <Button title=" Sair" onPress={() => setShowInfo(!showInfo)} icon={{ name: 'info', type: 'font-awesome', size: 19, color: '#1E4344' }} iconRight iconContainerStyle={{ marginLeft: 10 }} buttonStyle={{ backgroundColor: '#FFF8EE', borderColor: '#FFC77A', borderWidth: 1, borderRadius: 6, }} containerStyle={{ width: '30%' }} titleStyle={{ color: '#1E4344' }} />
-                            <View style={{marginLeft:'5%',width:'14%', height:'100%', padding:'1%', backgroundColor:'#152F30', color:'#91FFA36D', borderRadius:6,borderWidth:1}}><Text style={{color:'#91FFA36D'}}  onPress={() => { Linking.openURL(`https://api.whatsapp.com/send?phone=55$numero&text=Gostaria de saber mais sobre a casa que vi no app Linear ímoveis.`);}}    >  <MaterialCommunityIcons name="whatsapp" color='#91FFA36D' size={30} /></Text></View>
-                            </Card.Actions>
-                    </Card>
+                                </ScrollView>
+                            </View>
+                            <View style={{ paddingLeft: 10, justifyContent: "space-evenly", }} >
+                                <Title>{specificHouse.houses_city} - {specificHouse.houses_publicPlace}</Title>
+                                <Paragraph><FontAwesome name="bed" color='#000' size={15} /> 4      <FontAwesome5 name="shower" color='#000' size={15} /> 2      <FontAwesome5 name="car" color='#000' size={15} /> 1     <FontAwesome name="handshake-o" color='#000' size={15} /> {specificHouse.houses_type}      <Text style={{ fontWeight: 'bold' }}>R$</Text>{specificHouse.houses_price}</Paragraph>
+                                <Paragraph><Text style={{ fontWeight: 'bold' }}>m²</Text> {specificHouse.houses_bed}      <Text style={{ fontWeight: 'bold' }}>IPTU-R$</Text>{specificHouse.houses_tax}       <MaterialIcons name="pets" color='#000' size={15} /> {specificHouse.houses_pet}      <FontAwesome5 name="couch" color='#000' size={15} /> {specificHouse.houses_furniture}</Paragraph>
+                                <Text style={{ fontWeight: 'bold', fontSize: 17, marginTop: 5 }}>Descrição</Text>
+                                <Paragraph style={{  }}>{specificHouse.houses_description}</Paragraph>
+
+                            </View>
+                        </View>
+
+
+                        <View style={{ marginBottom: 5,flexDirection: "row", justifyContent: "space-evenly"}} >
+                        <View style={{  width:wp('35%'), flexDirection: "row", justifyContent: "space-evenly", marginRight:hp('18%')}}>
+                            <Button title="Voltar   " onPress={() => returnHouses()} icon={{ name: 'arrow-back-ios', type: 'material-icons', size: 13, color: '#fdf5e8' }} buttonStyle={{ backgroundColor: '#295E60', borderColor: '#1E4344', borderWidth: 1, borderRadius: 6, }} containerStyle={{ paddingTop: 2, width: wp('20%') }} titleStyle={{ fontSize: 13, color: '#fdf5e8' }} />
+                            <View style={{ marginLeft: '5%', width: wp('15%'), justifyContent: "space-evenly", height: hp('5%'), paddingTop: '1%', backgroundColor: '#fdf5e8', color: '#91FFA36D' }}>
+                                <Text style={{ color: '#91FFA36D' }} onPress={() => { Linking.openURL(`https://api.whatsapp.com/send?phone=55${specificHouse.tenant_phone}&text=Gostaria de saber mais sobre a casa que vi no app Linear ímoveis.`); }}>  <MaterialCommunityIcons name="whatsapp" color='#1E4344' size={35} />
+                                </Text>
+                                
+                            </View>
+                            </View>
+                            <Text style={{ fontSize: 10, marginTop:hp('3%') }}> {specificHouse.houses_creationDate.split(' ')[0]}  </Text>
+
+                        
+                        </View>
+                    </View>
+
                 }
-            
+
                 {!isLoading && showFilter &&
                     <>
-                        <View style={{ backgroundColor: '#1E4344', borderRadius: 6, height:'90%' ,width: '90%', margin: '5%', marginLeft: '5%', marginRight: '10%' }}>
+                        <View style={{ backgroundColor: '#1E4344', borderRadius: 6, height: '90%', width: '90%', margin: '5%', marginLeft: '5%', marginRight: '10%' }}>
                             <View style={styles.viewMultiButton}>
 
                                 <View style={styles.viewFiMultiButtonSelect}>
@@ -276,27 +230,36 @@ export default function Homes() {
                                     />
 
                                 </View>
-                                
+
 
 
                             </View>
                         </View></>
                 }
-                {!showInfo &&  !showFilter &&
-                <View style={{ backgroundColor: '#1E4344', flex: 1, justifyContent: 'center', }}>
-                    <FlatList showsVerticalScrollIndicator={false} data={data} renderItem={({ item }) =>
-                        <Card style={{ borderWidth: 1.5, backgroundColor: '#fdf5e8', margin: 10, borderColor: '#152F30', borderRadius: 6 }}>
-                            <Card.Cover source={{ uri: item.images }} />
-                            <Card.Content>
-                                <Title>{ item.publicplace} - {item.district}</Title>
-                                <Paragraph><FontAwesome name="bed" color='#000' size={15} /> {item.bedrooms}      <FontAwesome5 name="shower" color='#000' size={15} /> {item.bathrooms}      <FontAwesome5 name="car" color='#000' size={15} /> {item.garage}     <FontAwesome name="handshake-o" color='#000' size={15} /> {item.type}      <Text style={{ fontWeight: 'bold' }}>R$</Text>{item.value}</Paragraph>
-                            </Card.Content>
-                            <Card.Actions>
-                                <Button title=" Ver mais" onPress={() => houseInfor(item.id)} icon={{ name: 'info', type: 'font-awesome', size: 19, color: '#1E4344' }} iconRight iconContainerStyle={{ marginLeft: 10 }} buttonStyle={{ backgroundColor: '#FFF8EE', borderColor: '#FFC77A', borderWidth: 1, borderRadius: 6, }} containerStyle={{ width: '30%' }} titleStyle={{ color: '#1E4344' }} />
+                {!showFilter && !specificHouse &&
+                    <View style={{ backgroundColor: '#1E4344', flex: 1, justifyContent: 'center', }}>
+                        {!houses &&
+                            <FAB loading visible={true} icon={{ name: 'add' }} color='#C89A5B' borderColor='rgba(42, 42, 42,1)' size="small" />}
+                        {houses &&
+                            <FlatList refreshControl={<RefreshControl
+                                refreshing={refreshing}
+                                onRefresh={onRefresh}
+                            />} showsVerticalScrollIndicator={false} data={houses} renderItem={({ item }) =>
+                                <Card style={{ justifyContent: "space-evenly", borderWidth: 1.5, backgroundColor: '#fdf5e8', margin: 5, borderColor: '#152F30', borderRadius: 6 }}>
+                                     <Card.Cover style={{ height: hp('65%'), borderRadius: 6, borderWidth: 3, borderColor: '#fdf5e8' }} source={{ uri: validateImage(item.images, '1') == false ? "https://daviastro.000webhostapp.com/house.png" : validateImage(item.images, '1') }} />
+                                    <Card.Content >
+                                        <Text style={{ fontWeight: 'bold', fontSize: 17 }}>{item.publicPlace} - {item.district}</Text>
+                                        <Paragraph><FontAwesome name="bed" color='#000' size={15} /> {item.bed}      <FontAwesome5 name="shower" color='#000' size={15} /> {item.shower}      <FontAwesome5 name="car" color='#000' size={15} /> {item.car}     <FontAwesome name="handshake-o" color='#000' size={15} /> {item.type}      <Text style={{ fontWeight: 'bold' }}>R$</Text>{item.price}</Paragraph>
+                                    </Card.Content>
+                                    <Card.Actions>
+                                        <Button title=" Ver mais" onPress={() => houseInfor(item.id)} icon={{ name: 'info', type: 'font-awesome', size: 15, color: '#1E4344' }} iconRight iconContainerStyle={{ marginLeft: 10 }} buttonStyle={{ height: hp('5%'), backgroundColor: '#FFF8EE', borderColor: '#295E60', borderWidth: 1, borderRadius: 6, }} containerStyle={{ width: '30%' }} titleStyle={{ fontSize: 13, color: '#1E4344' }} />
+                                        <Text style={{ fontSize: 10, marginLeft: wp('50%'), marginTop:hp('3%') }}>   {item.creationDate.split(' ')[0]}  </Text>
+                                    </Card.Actions>
+                                </Card>} keyExtractor={value => value.id} />
+                        }
+                    </View>
+                }
 
-                            </Card.Actions>
-                        </Card>} keyExtractor={value => value.id} />
-                </View>}
             </NativeBaseProvider>
         </View>
 

@@ -19,7 +19,7 @@ const CustomDialog = (props) => {
           <Dialog.Actions>
 		  <IconButton
     icon="check"
-    color={Colors.grey800 }
+    color={'#fdf5e8'}
     size={25}
     onPress={() => props.onClose(false)}
   />

@@ -6,7 +6,6 @@ const styles = StyleSheet.create({
         flex: 1,
         width: '100%',
         backgroundColor: '#1E4344',
-        paddingBottom: 2
     },
     inputList:{
         borderColor:'rgba(106,235, 16, 1)',
@@ -69,17 +68,18 @@ const styles = StyleSheet.create({
         color: '#FFC77A', 
         textAlign: 'center',
         fontSize:15,
+        
     },
     dropdown1RowStyle: {
         height:30,
         backgroundColor: '#122829', 
-        borderColor: '#FFC77A',
+        borderColor: '#295E60',
         borderWidth:1,
+        
         borderRadius:6
     },
     dropdown1BtnTxtStyle: {
-        height:'40%',
-        color: '#FFC77A', 
+        color: '#fdf5e8', 
         textAlign: 'left',
         fontSize:13,
     },

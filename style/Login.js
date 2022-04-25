@@ -1,4 +1,5 @@
 import {StyleSheet} from 'react-native'
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 
 const styles = StyleSheet.create({
     container: {
@@ -7,7 +8,7 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
     Logo:{
-        height:'24%',
+        height:hp('24%'),
         marginTop:'15%',
         marginBottom:'5%',
         justifyContent: 'center',
@@ -15,17 +16,17 @@ const styles = StyleSheet.create({
     
     },
     imageLogin:{
-        width: 150,
-        height: 150,
+        width: wp('40%'),
+        height: hp('25%'),
     
     },
     keyboardAvoiding:{
-        width:'80%',
+        width: wp('80%'),
         alignItems: 'center',
         justifyContent: 'center',
     },
     form:{
-        width:'100%',
+        width:wp('80%'),
 
     },
     
@@ -47,7 +48,7 @@ const styles = StyleSheet.create({
     
     },
     viewMultiButton:{
-        width:"80%",
+        width:wp("65%"),
         flexDirection:"row",
         paddingVertical:15,
         justifyContent:"space-evenly"

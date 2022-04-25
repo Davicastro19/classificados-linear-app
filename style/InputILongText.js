@@ -9,7 +9,7 @@ const styles = StyleSheet.create({
         paddingBottom: 2
     },
     inputList:{
-        borderColor:'#FFC77A',
+        borderColor:'#295E60',
 	    width:'100%',
         height:'85%',
         borderWidth:1,
@@ -17,7 +17,8 @@ const styles = StyleSheet.create({
         fontSize:15,
         paddingLeft: 15,
         paddingRight: 15,
-        color:"#FFC77A",
+        color:"#122829",
+        backgroundColor:'#fdf5e8'
         
     },
     viewFiMultiButton: {

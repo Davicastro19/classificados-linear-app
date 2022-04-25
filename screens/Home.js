@@ -1,4 +1,4 @@
-import {  View,  Linking} from 'react-native';
+import {  View,  Linking,StatusBar } from 'react-native';
 import React, { useState, useEffect } from 'react'
 import {Button, Text} from 'react-native-elements';
 import Profile from '../screens/Profile'
@@ -20,6 +20,7 @@ export default function Home() {
   
   
   return (
+    
     <Tab.Navigator
     screenOptions={{
       //tabBarShowLabel: false,
@@ -36,7 +37,7 @@ export default function Home() {
         component={Homes}
         options={{
           headerStyle: {
-            height:'3%'
+            height:'0%'
           },
           tabBarLabel: 'Casa/Aptoº',
           tabBarIcon: ({ color }) => (
@@ -52,7 +53,7 @@ export default function Home() {
         component={RegisterHouse}
         options={{
           headerStyle: {
-            height:'3%'
+            height:'0%'
           },
           tabBarLabel: 'Minha casa',
           tabBarIcon: ({ color }) => (
@@ -66,7 +67,7 @@ export default function Home() {
         component={Profile}
         options={{
           headerStyle: {
-            height:'3%'
+            height:'0%'
           },
           tabBarLabel: 'Perfil',
           tabBarIcon: ({ color }) => (

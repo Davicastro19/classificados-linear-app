@@ -1,14 +1,16 @@
 import {StyleSheet} from 'react-native'
 import { color } from 'react-native-elements/dist/helpers'
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: '#1E4344',
-        alignItems: 'center'
+        alignItems: 'center',
+        justifyContent:"space-evenly"
     },
     Logo:{
-        height:'24%',
+        height:hp('20%'),
         marginTop:'5%',
         marginBottom:'5%',
         justifyContent: 'center',
@@ -16,17 +18,17 @@ const styles = StyleSheet.create({
     
     },
     imageSignUp:{
-        width: 100,
-        height: 100,
+        width: hp('10%'),
+        height: wp('20%'),
     
     },
     keyboardAvoiding:{
-        width:'80%',
+        width:wp('80%'),
         alignItems: 'center',
         justifyContent: 'center',
     },
     form:{
-        width:'100%',
+        width:wp('80%'),
 
     },
     
@@ -38,26 +40,17 @@ const styles = StyleSheet.create({
         color:'#C89A5B'
     
     },
-    titleProfile:{
-        marginTop:'15%',
-        marginBottom:'5%',
-        fontSize:15,
-        alignItems: 'center',
-        justifyContent: 'center',
-        color:'#C89A5B'
-    
-    },
     nameApp:{
-        marginBottom:'5%',
-        letterSpacing:3,
-        fontSize:10,
+        marginBottom:'3%',
+        letterSpacing:6,
+        fontSize:8,
         alignItems: 'center',
         justifyContent: 'center',
         color:'#C89A5B'
     
     },
     viewMultiButton:{
-        width:"80%",
+        width:wp("80%"),
         flexDirection:"row",
         paddingVertical:15,
         justifyContent:"space-evenly"

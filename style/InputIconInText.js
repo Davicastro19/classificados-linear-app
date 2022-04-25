@@ -2,22 +2,20 @@ import {StyleSheet} from 'react-native'
 
 const inputRegisterHouse = StyleSheet.create({
     input:{
-        
         fontSize:12,
-        color:"#FFC77A",
+        color:"#fdf5e8",
         borderColor:'#000',
         borderRadius:6,
-        paddingLeft: 10,
+        paddingLeft:10
         
         
     },
     inputIcon:{
-        width:'90%',
-        height:'100%',
+        height:'50%',
         fontSize:5,
-        color:"#000",
-        borderWidth:1,
-        borderColor:'#C89A5B',
+        color:"#fdf5e8",
+        borderTopWidth: 0.5,
+        borderColor:'#295E60',
         borderRadius:6,
         backgroundColor:'#122829'
         

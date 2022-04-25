@@ -1,4 +1,5 @@
 import {StyleSheet} from 'react-native'
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 
 const styles = StyleSheet.create({
     keyboardAvoiding:{
@@ -93,13 +94,16 @@ const styles = StyleSheet.create({
     fontSize: 17,
   },
   dialog:{
+    justifyContent:"space-evenly",
+      height:hp('12%'),
+    alignItems: 'center',
+      width:wp('90%'),
 	  backgroundColor:'#1E4344',
 	  borderColor:'#C89A5B',
 	  borderWidth:0.3,
 	  borderRadius:6
 },
   dialogTitle:{
-	  
 	  fontWeight:"bold",
       color:"#C89A5B"
   },

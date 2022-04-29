@@ -7,7 +7,7 @@ import {
   NativeBaseProvider,
 } from 'native-base';
 import Homes from '../screens/Homes'
-import RegisterHouse from '../screens/RegisterHouse'
+import MyHouses from '../screens/MyHouses'
 import { Avatar, Card, Title, Paragraph } from 'react-native-paper';
 import  AsyncStorage  from '@react-native-async-storage/async-storage';
 import { FontAwesome,FontAwesome5,MaterialCommunityIcons } from '@expo/vector-icons';
@@ -50,7 +50,7 @@ export default function Home() {
 
 <Tab.Screen
         name="Atulizar casas"
-        component={RegisterHouse}
+        component={MyHouses}
         options={{
           headerStyle: {
             height:'0%'

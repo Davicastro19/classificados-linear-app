@@ -22,6 +22,7 @@ class HousesService{
             return Promise.reject(error)
         })
     }
+    
     async allHouses(){
         let token = await AsyncStorage.getItem("TOKEN")
         return axios({
@@ -39,6 +40,7 @@ class HousesService{
             return Promise.reject(error)
         })
     }
+
     async allMyHouses(){
         let token = await AsyncStorage.getItem("TOKEN")
         return axios({
@@ -48,7 +50,6 @@ class HousesService{
             data:{token:token},
             headers:Config.HEADER_REQUEST
         }).then((response)=> {
-            console.log('xddxx',response)
             if (response && response.data && response.data.access_token) {
 			    AsyncStorage.setItem("TOKEN", response.data.access_token)
             }
@@ -59,7 +60,7 @@ class HousesService{
         })
     }
 
-    async oneHouse(id){
+    async selectHouseById(id){
         let token = await AsyncStorage.getItem("TOKEN")
         return axios({
             url:Config.API_URL+"houses/oneHouse/"+id,
@@ -70,13 +71,15 @@ class HousesService{
                 Authorization: 'Bearer ' + token
             }
         }).then((response)=> {
-            console.log('xssxx',response.data)
+            //console.log('xssxx',response.data)
             return Promise.resolve(response)
         }).catch((error)=>{
             console.log('aaaaaaaaasasa',error)
             return Promise.reject(error)
         })
     }
+
+    
 }
 const housesService = new HousesService()
 export default housesService

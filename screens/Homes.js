@@ -38,28 +38,23 @@ export default function Homes() {
             return false
         }
     }
-
-    function returnHouses() {
-        setIsLoading(false)
+    function resetState(){
+        setShowFilter(false)
         setSpecificHouse(false)
+        setIsLoading(false)
+
     }
 
-    function houseInfor(value) {
+    function selectHouseById(value) {
         setIsLoading(true)
-        housesService.oneHouse(value)
+        housesService.selectHouseById(value)
             .then((response) => {
                 setIsLoading(false)
                 setSpecificHouse(response.data)
-                setIsLoading(false)
-                setShowFilter(false)
-
             })
             .catch((error) => {
-                console.log('erroo')
-                setIsLoading(false)
-                setShowFilter(false)
-                setSpecificHouse(false)
-                console.log('xx', error)
+                console.log('61 - Homes', error)
+                resetState()
                 //setCatalogData('Seu sinais estarão aqui. (clique em Filtro)')
             })
 
@@ -77,7 +72,7 @@ export default function Homes() {
             })
             .catch((error) => {
                 setIsLoading(false)
-                console.log('wlls', error)
+                console.log('75 - Homes', error)
                 //setCatalogData('Seu sinais estarão aqui. (clique em Filtro)')
             })
     }
@@ -125,7 +120,7 @@ export default function Homes() {
 
                         <View style={{ marginBottom: 5,flexDirection: "row", justifyContent: "space-evenly"}} >
                         <View style={{  width:wp('35%'), flexDirection: "row", justifyContent: "space-evenly", marginRight:hp('18%')}}>
-                            <Button title="Voltar   " onPress={() => returnHouses()} icon={{ name: 'arrow-back-ios', type: 'material-icons', size: 13, color: '#fdf5e8' }} buttonStyle={{ backgroundColor: '#295E60', borderColor: '#1E4344', borderWidth: 1, borderRadius: 6, }} containerStyle={{ paddingTop: 2, width: wp('20%') }} titleStyle={{ fontSize: 13, color: '#fdf5e8' }} />
+                            <Button title="Voltar   " onPress={() => resetState()} icon={{ name: 'arrow-back-ios', type: 'material-icons', size: 13, color: '#fdf5e8' }} buttonStyle={{ backgroundColor: '#295E60', borderColor: '#1E4344', borderWidth: 1, borderRadius: 6, }} containerStyle={{ paddingTop: 2, width: wp('20%') }} titleStyle={{ fontSize: 13, color: '#fdf5e8' }} />
                             <View style={{ marginLeft: '5%', width: wp('15%'), justifyContent: "space-evenly", height: hp('5%'), paddingTop: '1%', backgroundColor: '#fdf5e8', color: '#91FFA36D' }}>
                                 <Text style={{ color: '#91FFA36D' }} onPress={() => { Linking.openURL(`https://api.whatsapp.com/send?phone=55${specificHouse.tenant_phone}&text=Gostaria de saber mais sobre a casa que vi no app Linear ímoveis.`); }}>  <MaterialCommunityIcons name="whatsapp" color='#1E4344' size={35} />
                                 </Text>
@@ -163,13 +158,9 @@ export default function Homes() {
                                             setPairOptionFunction(selectedItem)
                                         }}
                                         buttonTextAfterSelection={(selectedItem, index) => {
-                                            // text represented after item is selected
-                                            // if data array is an array of objects then return selectedItem.property to render after item is selected
                                             return selectedItem
                                         }}
                                         rowTextForSelection={(item, index) => {
-                                            // text represented for each item in dropdown
-                                            // if data array is an array of objects then return item.property to represent item in dropdown
                                             return item
                                         }}
                                     />
@@ -191,13 +182,9 @@ export default function Homes() {
                                             setDay(selectedItem)
                                         }}
                                         buttonTextAfterSelection={(selectedItem, index) => {
-                                            // text represented after item is selected
-                                            // if data array is an array of objects then return selectedItem.property to render after item is selected
                                             return selectedItem
                                         }}
                                         rowTextForSelection={(item, index) => {
-                                            // text represented for each item in dropdown
-                                            // if data array is an array of objects then return item.property to represent item in dropdown
                                             return item
                                         }}
                                     />
@@ -218,13 +205,9 @@ export default function Homes() {
                                             setPercentage(selectedItem)
                                         }}
                                         buttonTextAfterSelection={(selectedItem, index) => {
-                                            // text represented after item is selected
-                                            // if data array is an array of objects then return selectedItem.property to render after item is selected
                                             return selectedItem
                                         }}
                                         rowTextForSelection={(item, index) => {
-                                            // text represented for each item in dropdown
-                                            // if data array is an array of objects then return item.property to represent item in dropdown
                                             return item
                                         }}
                                     />
@@ -252,7 +235,7 @@ export default function Homes() {
                                         <Paragraph><FontAwesome name="bed" color='#000' size={15} /> {item.bed}      <FontAwesome5 name="shower" color='#000' size={15} /> {item.shower}      <FontAwesome5 name="car" color='#000' size={15} /> {item.car}     <FontAwesome name="handshake-o" color='#000' size={15} /> {item.type}      <Text style={{ fontWeight: 'bold' }}>R$</Text>{item.price}</Paragraph>
                                     </Card.Content>
                                     <Card.Actions>
-                                        <Button title=" Ver mais" onPress={() => houseInfor(item.id)} icon={{ name: 'info', type: 'font-awesome', size: 15, color: '#1E4344' }} iconRight iconContainerStyle={{ marginLeft: 10 }} buttonStyle={{ height: hp('5%'), backgroundColor: '#FFF8EE', borderColor: '#295E60', borderWidth: 1, borderRadius: 6, }} containerStyle={{ width: '30%' }} titleStyle={{ fontSize: 13, color: '#1E4344' }} />
+                                        <Button title=" Ver mais" onPress={() => selectHouseById(item.id)} icon={{ name: 'info', type: 'font-awesome', size: 15, color: '#1E4344' }} iconRight iconContainerStyle={{ marginLeft: 10 }} buttonStyle={{ height: hp('5%'), backgroundColor: '#FFF8EE', borderColor: '#295E60', borderWidth: 1, borderRadius: 6, }} containerStyle={{ width: '30%' }} titleStyle={{ fontSize: 13, color: '#1E4344' }} />
                                         <Text style={{ fontSize: 10, marginLeft: wp('50%'), marginTop:hp('3%') }}>   {item.creationDate.split(' ')[0]}  </Text>
                                     </Card.Actions>
                                 </Card>} keyExtractor={value => value.id} />

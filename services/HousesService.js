@@ -22,11 +22,30 @@ class HousesService{
             return Promise.reject(error)
         })
     }
-    
-    async allHouses(){
+    async updateHouse(data,id){
         let token = await AsyncStorage.getItem("TOKEN")
         return axios({
-            url:Config.API_URL+"houses/allHouses",
+            url:Config.API_URL+"houses/update/"+id,
+            timeout: Config.TIMEOUT_REQUEST,
+            method:"PUT",
+            data:data,
+            headers: {
+                Accept: 'application/json',
+                Authorization: 'Bearer ' + token
+            }
+        }).then((response)=> {
+            return Promise.resolve(response)
+        }).catch((error)=>{
+            //console.log('aaaaaaaaasasa',error)
+            return Promise.reject(error)
+        })
+    }
+    
+    async allHouses(skip,take){
+        let token = await AsyncStorage.getItem("TOKEN")
+        console.log(Config.API_URL+"houses/all/"+skip.toString()+"/"+take.toString())
+        return axios({
+            url:Config.API_URL+"houses/all/"+skip.toString()+"/"+take.toString(),
             timeout: Config.TIMEOUT_REQUEST,
             method:"Get",
             headers: {
@@ -44,7 +63,7 @@ class HousesService{
     async allMyHouses(){
         let token = await AsyncStorage.getItem("TOKEN")
         return axios({
-            url:Config.API_URL+"houses/allMyHouses",
+            url:Config.API_URL+"houses/allMy",
             timeout: Config.TIMEOUT_REQUEST,
             method:"POST",
             data:{token:token},
@@ -64,7 +83,7 @@ class HousesService{
         console.log('aa',id)
         let token = await AsyncStorage.getItem("TOKEN")
         return axios({
-            url:Config.API_URL+"houses/deleteHouse/"+id,
+            url:Config.API_URL+"houses/delete/"+id,
             timeout: Config.TIMEOUT_REQUEST,
             method:"Delete",
             headers: {
@@ -86,7 +105,7 @@ class HousesService{
     async selectHouseById(id){
         let token = await AsyncStorage.getItem("TOKEN")
         return axios({
-            url:Config.API_URL+"houses/oneHouse/"+id,
+            url:Config.API_URL+"houses/one/"+id,
             timeout: Config.TIMEOUT_REQUEST,
             method:"Get",
             headers: {

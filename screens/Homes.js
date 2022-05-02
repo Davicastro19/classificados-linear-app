@@ -21,20 +21,38 @@ import housesService from '../services/HousesService';
 
 
 export default function Homes() {
+    const [loading,setLoading] = useState(false)
+    const [take,setTake] = useState(5)
+    const [skip,setSkip] = useState(0)
     const [isLoading, setIsLoading] = useState(false)
     const [showFilter, setShowFilter] = useState(false)
-    const [houses, setHouses] = useState(false)
+    const [houses, setHouses] = useState([])
     const [refreshing, setRefreshing] = useState(false);
     const [specificHouse, setSpecificHouse] = useState(false)
     const onRefresh = React.useCallback(() => {
         console.log('qq')
-        allHouses()
+        setTake(5)
+        setSkip(0)
+        allHouses(0,5)
         setRefreshing(false);
     }, []);
-
+    async function moreHouses(){
+        if (loading) return;
+        setLoading(true);
+        let nSkip = skip
+        nSkip = nSkip+5
+        let nTake = take
+        nTake = nTake+5
+        console.log('ssss',nTake,nSkip)
+        setSkip(nSkip)
+        setTake(nTake)
+        console.log('sss',skip,nTake)
+        allHouses(nSkip, nTake)
+        
+    }
     function validateImage(image, value) {
         try {
-            return Config.API_URL+'/files/'+image[value]
+            return Config.API_URL+'houses/'+image.split(',')[value-1]
         } catch (e) {
             return false
         }
@@ -61,14 +79,16 @@ export default function Homes() {
 
     }
 
-    async function allHouses() {
+    async function allHouses(skip,take) {
         setShowFilter(false)
         setIsLoading(true)
-        housesService.allHouses()
+        housesService.allHouses(skip,take)
             .then((response) => {
                 setIsLoading(false)
-                //console.log(response.data)
+                if (response.data.length !== 0){
                 setHouses(response.data)
+                }
+                setLoading(false)
 
             })
             .catch((error) => {
@@ -79,7 +99,7 @@ export default function Homes() {
     }
 
     useEffect(() => {
-        allHouses()
+        allHouses(0,5)
     }, [])
     return (
         <View style={styles.container} onPress={() => setPairOptionFunction()}>
@@ -239,7 +259,7 @@ export default function Homes() {
                                         <Button title=" Ver mais" onPress={() => selectHouseById(item.id)} icon={{ name: 'info', type: 'font-awesome', size: 15, color: '#1E4344' }} iconRight iconContainerStyle={{ marginLeft: 10 }} buttonStyle={{ height: hp('5%'), backgroundColor: '#FFF8EE', borderColor: '#295E60', borderWidth: 1, borderRadius: 6, }} containerStyle={{ width: '30%' }} titleStyle={{ fontSize: 13, color: '#1E4344' }} />
                                         <Text style={{ fontSize: 10, marginLeft: wp('50%'), marginTop:hp('3%') }}>   {item.creationDate.split(' ')[0]}  </Text>
                                     </Card.Actions>
-                                </Card>} keyExtractor={value => value.id} />
+                                </Card>} onEndReached={moreHouses}  onEndReachedThreshold={0.01} ListFooterComponent={<FAB loading visible={loading} icon={{ name: 'add' }} color='#C89A5B' borderColor='rgba(42, 42, 42,1)' size="small" />} keyExtractor={value => value.id} />
                         }
                     </View>
                 }

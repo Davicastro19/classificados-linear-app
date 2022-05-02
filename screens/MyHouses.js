@@ -26,8 +26,9 @@ import InputIconInText from '../components/InputIconInText'
 import InputILongText from '../components/InputILongText'
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 export default function MyHouses() {
+    const [take,setTake] = useState(5)
+    const [skip,setSkip] = useState(10)
     const [refreshing, setRefreshing] = useState(false);
-    const [hasPermission, setHasPermission] = useState(null);
     const [types, setTypes] = useState(Camera.Constants.Type.back);
     const camRef = useRef(null)
     const [titlePreCapturate, setTitlePreCapturate] = useState("Adicionar a 1º")
@@ -51,7 +52,7 @@ export default function MyHouses() {
     const [iptu, setIptu] = useState('100,66')
     const [squareMeter, setSquareMeter] = useState('100')
     const [furniture, setfurniture] = useState('SIM')
-    const [publicPlace, setpublicPlace] = useState('Rua Dr. Manoel Novais')
+    const [publicPlace, setPublicPlace] = useState('Rua Dr. Manoel Novais')
     const [city, setCity] = useState('Ibotirama')
     const [district, setDistrict] = useState('Centro')
     const [description, setDescription] = useState(null)
@@ -60,60 +61,30 @@ export default function MyHouses() {
     const [filter, setFilter] = useState(false)
     const [editShow, setEditShow] = useState(true)
     const [createShow, setCreateShow] = useState(false)
-    const [houses, setHouses] = useState([])
     const [specificHouses, setSpecificHouses] = useState(false)
-    const [showFilter, setShowFilter]= useState(false)
-    const [deletePhotoEdit, setDeletePhotoEdit]= useState(false)
-    const [messageNotification, setMessageNotification]= useState(false)
+    const [showFilter, setShowFilter] = useState(false)
+    const [deletePhotoEdit, setDeletePhotoEdit] = useState(false)
+    const [messageNotification, setMessageNotification] = useState(false)
     const [images, setImages] = useState('')
     const [visibleConfimation, setVisibleConfimation] = useState(false)
-    const [visibleConfimationDeletion,setVisibleConfimationDeletion] = useState(false)
-    
+    const [visibleConfimationDeletion, setVisibleConfimationDeletion] = useState(false)
+    const [visibleConfimationUpdate, setVisibleConfimationUpdate] = useState(false)
 
-    const fetchPairs = async () => {
-        const pairs = await tenantService.pairs();
-        return pairs;
-    }
 
     const onRefresh = React.useCallback(() => {
         allMyHouses()
         setRefreshing(false);
     }, []);
 
-    function resetHouse(){
-    setCapturatePhoto1(false)
-    setCapturatePhoto2(false)
-    setCapturatePhoto3(false)
-    setCapturatePhoto4(false)
-    setCapturatePhoto5(false)
-    setCapturatePhoto6(false)
-    setVisibleNotification(false)
-    setBed('1')
-    setShower('1')
-    setCar('1')
-    setType('Alugar')
-    setPet('SIM')
-    setPrice('1.800,66')
-    setIptu('100,66')
-    setSquareMeter('100')
-    setfurniture('SIM')
-    setpublicPlace('Rua Dr. Manoel Novais')
-    setCity('Ibotirama')
-    setDistrict('Centro')
-    setDescription(null)
-    setIsLoading(false)
-    setTitlePreCapturate("Adicionar a 1º")
-    setTitleDelCapturate("Apagar a 1º")
-    }
-   
-    function cleanCreate(){
+    function resetHouse() {
+        setEditShow(false)
+        setCreateShow(false)
         setCapturatePhoto1(false)
         setCapturatePhoto2(false)
         setCapturatePhoto3(false)
         setCapturatePhoto4(false)
         setCapturatePhoto5(false)
         setCapturatePhoto6(false)
-        setVisibleNotification(false)
         setBed('1')
         setShower('1')
         setCar('1')
@@ -123,11 +94,15 @@ export default function MyHouses() {
         setIptu('100,66')
         setSquareMeter('100')
         setfurniture('SIM')
-        setpublicPlace('Rua Dr. Manoel Novais')
+        setPublicPlace('Rua Dr. Manoel Novais')
         setCity('Ibotirama')
         setDistrict('Centro')
         setDescription(null)
+        setIsLoading(false)
+        setTitlePreCapturate("Adicionar a 1º")
+        setTitleDelCapturate("Apagar a 1º")
     }
+
 
     function isValidate() {
 
@@ -179,142 +154,6 @@ export default function MyHouses() {
         }
     }
 
-    function removeEditPicture() {
-        console.log(titleDelCapturate)
-
-        if (titleDelCapturate.includes('1')) {
-            setButtonInsert(false)
-            var data = new FormData();
-
-            var config = {
-                method: 'delete',
-                url: 'https://api.imgur.com/3/image/' + alt['1'].deleteHash,
-                headers: {
-                    'Authorization': 'Client-ID 1ecdb35596fd7b0',
-                    //...data.getHeaders()
-                },
-                data: data
-            };
-
-            axios(config)
-                .then(function (response) {
-                    setCapturatePhoto1(false)
-                    setTitlePreCapturate("Adicionar a 1º")
-                    setAlt(new Object)
-                })
-                .catch(function (error) {
-                    ////console.log('dellero', error);
-                });
-        }
-        if (titleDelCapturate.includes('2')) {
-            var data = new FormData();
-
-            var config = {
-                method: 'delete',
-                url: 'https://api.imgur.com/3/image/' + alt['2'].deleteHash,
-                headers: {
-                    'Authorization': 'Client-ID 1ecdb35596fd7b0',
-                    //...data.getHeaders()
-                },
-                data: data
-            };
-
-            axios(config)
-                .then(function (response) {
-                    //////console.log('dell',JSON.stringify(response.data));
-                    setCapturatePhoto2(false)
-                    setTitleDelCapturate("Apagar a 1º")
-                    setTitlePreCapturate("Adicionar a 2º")
-                })
-                .catch(function (error) {
-                    ////console.log('dellero', error);
-                });
-        }
-        if (titleDelCapturate.includes('3')) {
-            var config = {
-                method: 'delete',
-                url: 'https://api.imgur.com/3/image/' + alt['3'].deleteHash,
-                headers: {
-                    'Authorization': 'Client-ID 1ecdb35596fd7b0',
-                    //...data.getHeaders()
-                },
-                data: data
-            };
-
-            axios(config)
-                .then(function (response) {
-                    //////console.log('dell',JSON.stringify(response.data));
-                    setCapturatePhoto3(false)
-                    setTitleDelCapturate("Apagar a 2º")
-                    setTitlePreCapturate("Adicionar a 3º")
-                })
-                .catch(function (error) {
-                    ////console.log('dellero', error);
-                });
-        }
-        if (titleDelCapturate.includes('4')) {
-            var config = {
-                method: 'delete',
-                url: 'https://api.imgur.com/3/image/' + alt['4'].deleteHash,
-                headers: {
-                    'Authorization': 'Client-ID 1ecdb35596fd7b0',
-                    //...data.getHeaders()
-                },
-                data: data
-            };
-
-            axios(config)
-                .then(function (response) {
-                    //////console.log('dell',JSON.stringify(response.data));
-                    setCapturatePhoto4(false)
-                    setTitleDelCapturate("Apagar a 3º")
-                    setTitlePreCapturate("Adicionar a 4º")
-                })
-                .catch(function (error) {
-                    ////console.log('dellero', error);
-                });
-        }
-        if (titleDelCapturate.includes('5')) {
-            var config = {
-                method: 'delete',
-                url: 'https://api.imgur.com/3/image/' + alt['5'].deleteHash,
-                headers: {
-                    'Authorization': 'Client-ID 1ecdb35596fd7b0',
-                    //...data.getHeaders()
-                },
-                data: data
-            };
-
-            axios(config)
-                .then(function (response) {
-                    //////console.log('dell',JSON.stringify(response.data));
-                    setCapturatePhoto5(false)
-                    setTitleDelCapturate("Apagar a 4º")
-                    setTitlePreCapturate("Adicionar a 5º")
-                })
-                .catch(function (error) {
-                    ////console.log('dellero', error);
-                });
-        }
-        if (titleDelCapturate.includes('6')) {
-            setIsLoading(true)
-            housesService.deleteHash(alt['6'].deleteHash)
-            .then((response) => {
-                setIsLoading(false)
-                setCapturatePhoto6(false)
-                setTitleDelCapturate("Apagar a 5º")
-                setTitlePreCapturate("Adicionar a 6º")
-
-            })
-            .catch((error) => {
-                setIsLoading(false)
-                console.log('oooo', error)
-                //setCatalogData('Seu sinais estarão aqui. (clique em Filtro)')
-            })
-        }
-
-    }
-
     function removePicture() {
         if (titleDelCapturate.includes('1')) {
             setButtonInsert(false)
@@ -345,47 +184,48 @@ export default function MyHouses() {
             setCapturatePhoto5(false)
             setTitleDelCapturate("Apagar a 4º")
             setTitlePreCapturate("Adicionar a 5º")
-               
+
         }
         if (titleDelCapturate.includes('6')) {
             setButtonInsert(false)
-           setCapturatePhoto6(false)
+            setCapturatePhoto6(false)
             setTitleDelCapturate("Apagar a 5º")
             setTitlePreCapturate("Adicionar a 6º")
         }
 
     }
 
-    async function isValidateImage(){
-        try{
+    async function isValidateImage() {
+        try {
             let newAlt = ''
-        
+            console.log('ALT', alt)
             for (var num in alt) {
                 console.log(num)
                 const xhr = new XMLHttpRequest();
                 xhr.withCredentials = true;
-                console.log('SIM',images.split(',')[parseInt(num-1)])
+                console.log('SIM', images.split(',')[parseInt(num - 1)])
                 const imagesData = new FormData();
                 imagesData.append('image', {
                     uri: alt[num].uri,
                     type: 'image/jpeg',
-                    name: images.split(',')[parseInt(num-1)]
+                    name: images.split(',')[parseInt(num - 1)]
                 })
                 xhr.open('POST', 'http://192.168.0.104:3000/houses/uploadImg')
                 xhr.send(imagesData)
-                
+
             }
-            
+
             return true
-        }catch (e) {
-               return false 
-            }
+        } catch (e) {
+            return false
+        }
     }
 
     async function insertHouse() {
         setIsLoading(true)
         setCreateShow(false)
         setVisibleConfimation(false)
+        console.log(isValidate())
         if (isValidate() && isValidateImage()) {
             const dataCreateHouse = {
                 bed: bed,
@@ -404,29 +244,91 @@ export default function MyHouses() {
                 images: images,
                 creationDate: DateAndHours
             }
-            console.log(dataCreateHouse)
             housesService.insertHouse(dataCreateHouse)
                 .then((response) => {
-                    setIsLoading(false)
+                    
                     if (response.data.status) {
-                        
+
                         setMessageNotification('Adicionada com sucesso!')
                         setCreateShow(false)
                         setVisibleNotification(true)
-                        
+
                     } else {
+                        setMessageNotification('Ocorreu um erro, tente novamente')
+                        setVisibleNotification(true)
                         setCreateShow(true)
-                        setIsLoading(false)
-                        ////console.log('whatt', response.data)
+                        console.log('Ocorreu um erro 298 myhouse', response.data)
                     }
 
                 })
                 .catch((error) => {
+                    setMessageNotification('Ocorreu um erro, tente novamente')
+                    setVisibleNotification(true)
                     setCreateShow(true)
-                    ////console.log('ertert', error)
+                    console.log('Ocorreu um erro 297 myhouse', response.data)
                 })
-        }
+        }else{
         setCreateShow(true)
+        setMessageNotification('Existem campos invalidos')
+        setVisibleNotification(true)
+        setCreateShow(true)
+        console.log('Ocorreu um erro 300 myhouse', response.data)
+    }
+    setIsLoading(false)
+    }
+
+    async function updateHouse(id) {
+        setIsLoading(true)
+        setEditShow(false)
+        setVisibleConfimationUpdate(false)
+        if (isValidate() && isValidateImage()) {
+            const dataUpdateHouse = {
+                bed: bed,
+                shower: shower,
+                car: car,
+                type: type,
+                pet: pet,
+                price: price,
+                tax: iptu,
+                squareMeter: squareMeter,
+                furniture: furniture,
+                publicPlace: publicPlace,
+                city: city,
+                district: district,
+                description: description,
+                images: images,
+            }
+            housesService.updateHouse(dataUpdateHouse, id)
+                .then((response) => {
+                    console.log(response.data.status)
+                    if (response.data.status) {
+                        setVisibleNotification(true)
+                        setMessageNotification('Alterado com sucesso!')
+                        setCreateShow(false)
+                        setSpecificHouses(false)
+                        resetHouse()
+                        setAlt(new Object)
+
+                    } else {
+                        setEditShow(true)
+                        console.log('whatt', response.data)
+                        setMessageNotification('Não foi possivel alterar, tente novamente')
+                        setVisibleNotification(true)
+                    }
+
+                })
+                .catch((error) => {
+                    setEditShow(true)
+                    setMessageNotification('Não foi possivel alterar, tente novamente')
+                        setVisibleNotification(true)
+                    console.log('ertert', error)
+                })
+        }else{
+            setEditShow(true)
+            setMessageNotification('Campos invalidos')
+            setVisibleNotification(true)
+        }
+        
         setIsLoading(false)
     }
 
@@ -440,7 +342,7 @@ export default function MyHouses() {
             //const { status } = await Camera.requestCameraPermissionsAsync();
             //
             takePictureGalery(data)
-            
+
         }
         //const { status } = await Camera.requestCameraPermissionsAsync();
 
@@ -454,79 +356,97 @@ export default function MyHouses() {
     }
 
     async function takePictureGalery(data) {
-        console.log('sssii',!editShow)
-        if (!editShow){
-
-        const tenantId = Array(4)
-        .fill(null)
-        .map(() => Math.round(Math.random() * 16).toString(16))
-        .join('');}
+        console.log(editShow)
         if (!data.cancelled && data.uri) {
             if (!capturatePhoto1) {
-               
+
                 setButtonInsert(true)
-               let upAlt = alt
-               upAlt['1'] = {'uri':data.uri}
-               setAlt(upAlt)
-               if (!editShow){
-               let img = tenantId+'1.jpg,'
-               setImages(img)}
+                let upAlt = alt
+                upAlt['1'] = { 'uri': data.uri }
+                setAlt(upAlt)
+                if (editShow == false) {
+                    let img = Array(4)
+                        .fill(null)
+                        .map(() => Math.round(Math.random() * 16).toString(16))
+                        .join('') + '1.jpg,'
+                    setImages(img)
+                }
                 setCapturatePhoto1(data.uri)
                 setTitlePreCapturate("Adicionar a 2º")
                 setTitleDelCapturate("Apagar a 1º")
-                
+
             } else if (!capturatePhoto2) {
-                
+
                 let upAlt = alt
-               upAlt['2'] = {'uri':data.uri}
-               setAlt(upAlt)
-               if (!editShow){
-               let img2 = images+tenantId+'2.jpg,'
-               setImages(img2)}
+                upAlt['2'] = { 'uri': data.uri }
+                setAlt(upAlt)
+                if (editShow == false) {
+                    let img2 = images + Array(4)
+                        .fill(null)
+                        .map(() => Math.round(Math.random() * 16).toString(16))
+                        .join('') + '2.jpg,'
+                    setImages(img2)
+                }
                 setCapturatePhoto2(data.uri)
                 setTitlePreCapturate("Adicionar a 3º")
                 setTitleDelCapturate("Apagar a 2º")
             }
             else if (!capturatePhoto3) {
                 let upAlt = alt
-               upAlt['3'] = {'uri':data.uri}
-               setAlt(upAlt)
-               if (!editShow){
-               let img3 = images+tenantId+'3.jpg,'
-               setImages(img3)}
+                upAlt['3'] = { 'uri': data.uri }
+                setAlt(upAlt)
+                if (editShow == false) {
+                    let img3 = images + Array(4)
+                        .fill(null)
+                        .map(() => Math.round(Math.random() * 16).toString(16))
+                        .join('') + '3.jpg,'
+                    setImages(img3)
+                }
                 setCapturatePhoto3(data.uri)
                 setTitlePreCapturate("Adicionar a 4º")
                 setTitleDelCapturate("Apagar a 3º")
             }
             else if (!capturatePhoto4) {
                 let upAlt = alt
-               upAlt['4'] = {'uri':data.uri}
-               setAlt(upAlt)
-               if (!editShow){
-               let img4 = images+tenantId+'4.jpg,'
-               setImages(img4)}
+                upAlt['4'] = { 'uri': data.uri }
+                setAlt(upAlt)
+                if (editShow == false) {
+                    let img4 = images + Array(4)
+                        .fill(null)
+                        .map(() => Math.round(Math.random() * 16).toString(16))
+                        .join('') + '4.jpg,'
+                    setImages(img4)
+                }
                 setCapturatePhoto4(data.uri)
                 setTitlePreCapturate("Adicionar a 5º")
                 setTitleDelCapturate("Apagar a 4º")
             }
             else if (!capturatePhoto5) {
                 let upAlt = alt
-               upAlt['5'] = {'uri':data.uri}
-               setAlt(upAlt)
-               if (!editShow){
-               let img5 = images+tenantId+'5.jpg,'
-               setImages(img5)}
+                upAlt['5'] = { 'uri': data.uri }
+                setAlt(upAlt)
+                if (editShow == false) {
+                    let img5 = images + Array(4)
+                        .fill(null)
+                        .map(() => Math.round(Math.random() * 16).toString(16))
+                        .join('') + '5.jpg,'
+                    setImages(img5)
+                }
                 setCapturatePhoto5(data.uri)
                 setTitlePreCapturate("Adicionar a 6º")
                 setTitleDelCapturate("Apagar a 5º")
             }
             else if (!capturatePhoto6) {
                 let upAlt = alt
-               upAlt['6'] = {'uri':data.uri}
-               setAlt(upAlt)
-               if (!editShow){
-               let img6 = images+tenantId+'6.jpg'
-               setImages(img6)}
+                upAlt['6'] = { 'uri': data.uri }
+                setAlt(upAlt)
+                if (editShow == false) {
+                    let img6 = images + Array(4)
+                        .fill(null)
+                        .map(() => Math.round(Math.random() * 16).toString(16))
+                        .join('') + '6.jpg'
+                    setImages(img6)
+                }
                 setCapturatePhoto6(data.uri)
                 setTitleDelCapturate("Apagar a 6º")
                 setButtonInsert(true)
@@ -534,13 +454,12 @@ export default function MyHouses() {
 
         }
     }
-    
-    
+
     function validateImage(image, value) {
         try {
-            if (image.split(',')[value].includes('jpg') || image.split(',')[value].includes('png')){
-                return "http://192.168.0.104:3000/houses/"+image.split(',')[value]
-            }else{
+            if (image.split(',')[value].includes('jpg') || image.split(',')[value].includes('png')) {
+                return "http://192.168.0.104:3000/houses/" + image.split(',')[value]
+            } else {
                 return false
             }
         } catch (e) {
@@ -548,21 +467,40 @@ export default function MyHouses() {
         }
     }
 
-    function alterHouse() {
-        setEditShow(!editShow)
-    }
+    function loadData(image, data) {
+        setImages(image)
+        setButtonInsert(true)
+        setBed(data.houses_bed)
+        setShower(data.houses_shower)
+        setCar(data.houses_car)
+        setType(data.houses_type)
+        setPet(data.houses_pet)
+        setPrice(data.houses_price)
+        setIptu(data.houses_tax)
+        setSquareMeter(data.houses_squareMeter)
+        setfurniture(data.houses_furniture)
+        setPublicPlace(data.houses_publicPlace)
+        setCity(data.houses_city)
+        setDistrict(data.houses_district)
+        setDescription(data.houses_description)
+        setShowFilter(false)
+        setEditShow(true)
+        setIsLoading(false)
+        let i = 1
+        for (var num in image.split(',')) {
+            let upAlt = alt
+            upAlt[i.toString()] = { 'uri': "http://192.168.0.104:3000/houses/" + image.split(',')[num] }
+            setAlt(upAlt)
+            i = i + 1
+        }
 
-    function loadedImage(image){
-        console.log('image',image)
-        setTitleDelCapturate("Apagar a 6º")
         setDeletePhotoEdit(true)
-        setAlt(image)
-        setCapturatePhoto1("http://192.168.0.104:3000/houses/"+image.split(',')[0])
-        setCapturatePhoto2("http://192.168.0.104:3000/houses/"+image.split(',')[1])
-        setCapturatePhoto3("http://192.168.0.104:3000/houses/"+image.split(',')[2])
-        setCapturatePhoto4("http://192.168.0.104:3000/houses/"+image.split(',')[3])
-        setCapturatePhoto5("http://192.168.0.104:3000/houses/"+image.split(',')[4])
-        setCapturatePhoto6("http://192.168.0.104:3000/houses/"+image.split(',')[5])
+        setCapturatePhoto1("http://192.168.0.104:3000/houses/" + image.split(',')[0])
+        setCapturatePhoto2("http://192.168.0.104:3000/houses/" + image.split(',')[1])
+        setCapturatePhoto3("http://192.168.0.104:3000/houses/" + image.split(',')[2])
+        setCapturatePhoto4("http://192.168.0.104:3000/houses/" + image.split(',')[3])
+        setCapturatePhoto5("http://192.168.0.104:3000/houses/" + image.split(',')[4])
+        setCapturatePhoto6("http://192.168.0.104:3000/houses/" + image.split(',')[5])
         setTitleDelCapturate("Apagar a 6º")
     }
 
@@ -572,27 +510,22 @@ export default function MyHouses() {
         housesService.selectHouseById(value)
             .then((response) => {
                 setSpecificHouses(response.data)
-                console.log('asss',specificHouses)
-                //setShowFilter(false)
-                //setEditShow(true)
-                //setButtonInsert(false)
-                //loadedImage(specificHouses.houses_images)
-                setIsLoading(false)
-                
-
+                loadData(response.data.houses_images, response.data)
             })
             .catch((error) => {
                 setSpecificHouses(false)
                 setShowFilter(true)
                 setEditShow(false)
                 setButtonInsert(false)
-                setIsLoading(false)
                 console.log('aaa', error)
+                setMessageNotification('Não foi possivel buscar, tente novamente')
+                setVisibleNotification(true)
                 //setCatalogData('Seu sinais estarão aqui. (clique em Filtro)')
             })
+            setIsLoading(false)
     }
 
-    function deleteHouse(id){
+    function deleteHouse(id) {
         setVisibleConfimationDeletion(false)
         setOpenCamera(false)
         setEditShow(false)
@@ -602,7 +535,6 @@ export default function MyHouses() {
         housesService.deleteHouse(id)
             .then((response) => {
                 setMessageNotification('Excluido com sucesso!')
-                setIsLoading(false)
                 setMyHouses(false)
                 setEditShow(false)
                 setVisibleNotification(true)
@@ -610,11 +542,11 @@ export default function MyHouses() {
 
             })
             .catch((error) => {
-                setIsLoading(false)
-                ////console.log('oooo', error)
+                console.log('oooo', error)
                 //setCatalogData('Seu sinais estarão aqui. (clique em Filtro)')
             })
-        
+            setIsLoading(false)
+
     }
 
     async function allMyHouses() {
@@ -625,23 +557,26 @@ export default function MyHouses() {
         setIsLoading(true)
         housesService.allMyHouses()
             .then((response) => {
-                setIsLoading(false)
-                setMyHouses(response.data)
+
+                setMyHouses()
 
             })
             .catch((error) => {
-                setIsLoading(false)
                 console.log('oooo', error)
+                setMessageNotification('Não foi possivel encontrar, tente novamente')
+                setVisibleNotification(true)
                 //setCatalogData('Seu sinais estarão aqui. (clique em Filtro)')
             })
+            setIsLoading(false)
     }
 
 
 
 
     useEffect(() => {
-        if (myHouses == false){
-        allMyHouses()}
+        if (myHouses == false) {
+            allMyHouses()
+        }
     }, [])
     return (
         <View style={styles.container} >
@@ -650,8 +585,8 @@ export default function MyHouses() {
                 {!editShow && !createShow && !isLoading && !visibleNotification &&
                     <><View style={{ width: '100%', height: '6%' }}><Button title=" Filtro" onPress={() => setFilter(!filter)} icon={{ name: 'filter', type: 'font-awesome', size: 19, color: '#fdf5e8' }} iconRight iconContainerStyle={{ marginLeft: 10 }} buttonStyle={{ backgroundColor: '#1E4344', borderColor: '#152F30', borderWidth: 0.5 }} containerStyle={{ height: '100%' }} titleStyle={{ color: '#fdf5e8' }} />
                     </View>
-                    
-                    {myHouses &&<View style={{ width: '100%', height: '6%' }}><Button title=" Adicionar casa/aptoº" onPress={() => (setCreateShow(!createShow),setTitleDelCapturate("Adicionar a 1ª"))} icon={{ name: 'add-box', type: 'material-icons', size: 19, color: '#fdf5e8' }} iconRight iconContainerStyle={{ marginLeft: 10 }} buttonStyle={{ backgroundColor: '#1E4344', borderColor: '#152F30', borderWidth: 0.5 }} containerStyle={{ height: '100%' }} titleStyle={{ color: '#fdf5e8' }} />
+
+                        {myHouses && <View style={{ width: '100%', height: '6%' }}><Button title=" Adicionar casa/aptoº" onPress={() => (setCreateShow(!createShow), setTitleDelCapturate("Adicionar a 1ª"))} icon={{ name: 'add-box', type: 'material-icons', size: 19, color: '#fdf5e8' }} iconRight iconContainerStyle={{ marginLeft: 10 }} buttonStyle={{ backgroundColor: '#1E4344', borderColor: '#152F30', borderWidth: 0.5 }} containerStyle={{ height: '100%' }} titleStyle={{ color: '#fdf5e8' }} />
                         </View>}</>}
 
                 <NativeBaseProvider >
@@ -687,19 +622,19 @@ export default function MyHouses() {
 
                                 <View style={{ borderLeftWidth: 3, borderRightWidth: 3, borderRadius: 6, borderColor: '#1E4344', justifyContent: "space-evenly", flexDirection: 'row', backgroundColor: '#1E4344' }}>
                                     <ScrollView horizontal={true}>
-                                        <Card.Cover style={{ width: wp('30%'), borderRadius: 10, borderWidth: 1, borderColor: '#1E4344', }} source={{ uri: capturatePhoto1 == false ? "https://daviastro.000webhostapp.com/house.png" : capturatePhoto1  }} />
-                                        <Card.Cover style={{ width: wp('30%'), borderRadius: 10, borderWidth: 1, borderColor: '#1E4344', }} source={{ uri: capturatePhoto2 == false ? "https://daviastro.000webhostapp.com/house.png" : capturatePhoto2  }} />
-                                        <Card.Cover style={{ width: wp('30%'), borderRadius: 10, borderWidth: 1, borderColor: '#1E4344', }} source={{ uri: capturatePhoto3 == false ? "https://daviastro.000webhostapp.com/house.png" : capturatePhoto3  }} />
-                                        <Card.Cover style={{ width: wp('30%'), borderRadius: 10, borderWidth: 1, borderColor: '#1E4344', }} source={{ uri: capturatePhoto4 == false ? "https://daviastro.000webhostapp.com/house.png" : capturatePhoto4  }} />
-                                        <Card.Cover style={{ width: wp('30%'), borderRadius: 10, borderWidth: 1, borderColor: '#1E4344', }} source={{ uri: capturatePhoto5 == false ? "https://daviastro.000webhostapp.com/house.png" : capturatePhoto5  }} />
-                                        <Card.Cover style={{ width: wp('30%'), borderRadius: 10, borderWidth: 1, borderColor: '#1E4344', }} source={{ uri: capturatePhoto6 == false ? "https://daviastro.000webhostapp.com/house.png" : capturatePhoto6  }} />
+                                        <Card.Cover style={{ width: wp('30%'), borderRadius: 10, borderWidth: 1, borderColor: '#1E4344', }} source={{ uri: capturatePhoto1 == false ? "https://daviastro.000webhostapp.com/house.png" : capturatePhoto1 }} />
+                                        <Card.Cover style={{ width: wp('30%'), borderRadius: 10, borderWidth: 1, borderColor: '#1E4344', }} source={{ uri: capturatePhoto2 == false ? "https://daviastro.000webhostapp.com/house.png" : capturatePhoto2 }} />
+                                        <Card.Cover style={{ width: wp('30%'), borderRadius: 10, borderWidth: 1, borderColor: '#1E4344', }} source={{ uri: capturatePhoto3 == false ? "https://daviastro.000webhostapp.com/house.png" : capturatePhoto3 }} />
+                                        <Card.Cover style={{ width: wp('30%'), borderRadius: 10, borderWidth: 1, borderColor: '#1E4344', }} source={{ uri: capturatePhoto4 == false ? "https://daviastro.000webhostapp.com/house.png" : capturatePhoto4 }} />
+                                        <Card.Cover style={{ width: wp('30%'), borderRadius: 10, borderWidth: 1, borderColor: '#1E4344', }} source={{ uri: capturatePhoto5 == false ? "https://daviastro.000webhostapp.com/house.png" : capturatePhoto5 }} />
+                                        <Card.Cover style={{ width: wp('30%'), borderRadius: 10, borderWidth: 1, borderColor: '#1E4344', }} source={{ uri: capturatePhoto6 == false ? "https://daviastro.000webhostapp.com/house.png" : capturatePhoto6 }} />
                                     </ScrollView>
                                 </View>
 
                                 <View style={{ alignItems: 'center', justifyContent: "space-evenly", flexDirection: "row", }} >
                                     {!titleDelCapturate.includes('6') &&
                                         <><Button title={titlePreCapturate} onPress={() => preTakePictureGalery()} icon={{ name: 'photo-library', type: 'material-icons', size: 15, color: '#fdf5e8' }} iconRight iconContainerStyle={{ marginLeft: 10 }} buttonStyle={{ backgroundColor: '#295E60', borderColor: '#1E4344', borderWidth: 1, borderRadius: 6, }} containerStyle={{ paddingTop: 2, width: wp('30%') }} titleStyle={{ fontSize: 13, color: '#fdf5e8' }} />
-                                            </>
+                                        </>
                                     }
                                     {deletePhotoEdit && !isLoading &&
                                         <Button title={titleDelCapturate} onPress={() => removePicture()} icon={{ name: 'image-not-supported', type: 'material-icons', size: 14, color: '#FFC77A' }} iconRight iconContainerStyle={{ marginLeft: 10 }} buttonStyle={{ backgroundColor: '#602929', borderColor: '#FFC77A', borderWidth: 1, borderRadius: 6, }} containerStyle={{ paddingTop: 2, width: '30%' }} titleStyle={{ fontSize: 13, color: '#FFC77A' }} />
@@ -707,26 +642,26 @@ export default function MyHouses() {
                                 </View>
                             </View>
                             <View style={{ margin: 4, flexDirection: "row", justifyContent: "space-evenly", }}>
-                                <SelectDropdownTextLinear widthbt={wp('45%')} text={'Cidade'} placeholder={'2.888,66'} setValue={setCity} value={specificHouses.houses_city} data={['São josé dos campos']} />
-                                <SelectDropdownTextLinear widthbt={wp('45%')} text={'Bairro'} placeholder={'2.888,66'} setValue={setDistrict} value={specificHouses.houses_district} data={['Veredinha', 'Alto do cruzeiro']} />
+                                <SelectDropdownTextLinear widthbt={wp('45%')} text={'Cidade'} placeholder={'2.888,66'} setValue={setCity} value={city} data={['São josé dos campos']} />
+                                <SelectDropdownTextLinear widthbt={wp('45%')} text={'Bairro'} placeholder={'2.888,66'} setValue={setDistrict} value={district} data={['Veredinha', 'Alto do cruzeiro']} />
                             </View>
                             <View style={{ margin: 5, flexDirection: "row", justifyContent: "space-evenly", }}>
-                                <InputIconInText width={wp('70%')} height={hp('6%')} text={'Logradouro'} placeholder={'2.888,66'} setValue={specificHouses.houses_setpublicPlace} value={publicPlace} />
-                                <SelectDropdownIconLinear width={wp('22%')} height={hp('6%')} widthbtn={wp('20%')} setValue={setType} value={specificHouses.houses_type} text={'Tipo '} icon={<FontAwesome name="handshake-o" color='#122829' size={19} />} data={['Vender', 'Alugar']} />
+                                <InputIconInText width={wp('70%')} height={hp('6%')} text={'Logradouro'} placeholder={'2.888,66'} setValue={setPublicPlace} value={publicPlace} />
+                                <SelectDropdownIconLinear width={wp('22%')} height={hp('6%')} widthbtn={wp('20%')} setValue={setType} value={type} text={'Tipo '} icon={<FontAwesome name="handshake-o" color='#122829' size={19} />} data={['Vender', 'Alugar']} />
 
                             </View>
                             <View style={{ margin: 5, flexDirection: "row", justifyContent: "space-evenly", }}>
-                                <InputIconInText width={wp('25%')} height={hp('6%')} text={'Valor R$'} placeholder={'2.888,66'} setValue={setPrice} value={specificHouses.houses_price} />
-                                <InputIconInText width={wp('25%')} height={hp('6%')} text={'IPTU'} placeholder={'2.888,66'} setValue={setIptu} value={specificHouses.houses_tax} />
-                                <InputIconInText width={wp('20%')} height={hp('6%')} text={'m²'} placeholder={'200'} setValue={setSquareMeter} value={specificHouses.houses_squareMeter} />
-                                <SelectDropdownIconLinear width={wp('22%')} height={hp('6%')} widthbtn={wp('20%')} setValue={setCar} value={specificHouses.houses_car} text={'Vagas '} icon={<FontAwesome5 name="car" color='#122829' size={20} />} data={['1', '2', '3', '4', '5', '6', '7', '8', '9', '10']} />
+                                <InputIconInText width={wp('25%')} height={hp('6%')} text={'Valor R$'} placeholder={'2.888,66'} setValue={setPrice} value={price} />
+                                <InputIconInText width={wp('25%')} height={hp('6%')} text={'IPTU'} placeholder={'2.888,66'} setValue={setIptu} value={iptu} />
+                                <InputIconInText width={wp('20%')} height={hp('6%')} text={'m²'} placeholder={'200'} setValue={setSquareMeter} value={squareMeter} />
+                                <SelectDropdownIconLinear width={wp('22%')} height={hp('6%')} widthbtn={wp('20%')} setValue={setCar} value={car} text={'Vagas '} icon={<FontAwesome5 name="car" color='#122829' size={20} />} data={['1', '2', '3', '4', '5', '6', '7', '8', '9', '10']} />
 
                             </View>
                             <View style={{ margin: 5, flexDirection: "row", justifyContent: "space-evenly", }}>
-                                <SelectDropdownIconLinear width={wp('25%')} height={hp('6%')} widthbtn={wp('20%')} setValue={setfurniture} value={specificHouses.houses_furniture} text={'Mobilhada '} icon={<FontAwesome5 name="couch" color='#122829' size={17} />} data={['SIM', 'NÃO']} />
-                                <SelectDropdownIconLinear width={wp('22%')} height={hp('6%')} widthbtn={wp('20%')} setValue={setShower} value={specificHouses.houses_shower} text={'Banheiro '} icon={<FontAwesome5 name="shower" color='#122829' size={19} />} data={['1', '2', '3', '4', '5', '6', '7', '8', '9', '10']} />
-                                <SelectDropdownIconLinear width={wp('19%')} height={hp('6%')} widthbtn={wp('17%')} setValue={setPet} value={specificHouses.houses_pet} text={'Pet '} icon={<MaterialIcons name="pets" color='#122829' size={20} />} data={['SIM', 'NÃO']} />
-                                <SelectDropdownIconLinear width={wp('22%')} height={hp('6%')} widthbtn={wp('20%')} setValue={setBed} value={specificHouses.houses_bed} text={'Quartos '} icon={<FontAwesome name="bed" color='#122829' size={20} />} data={['1', '2', '3', '4', '5', '6', '7', '8', '9', '10']} />
+                                <SelectDropdownIconLinear width={wp('25%')} height={hp('6%')} widthbtn={wp('20%')} setValue={setfurniture} value={furniture} text={'Mobilhada '} icon={<FontAwesome5 name="couch" color='#122829' size={17} />} data={['SIM', 'NÃO']} />
+                                <SelectDropdownIconLinear width={wp('22%')} height={hp('6%')} widthbtn={wp('20%')} setValue={setShower} value={shower} text={'Banheiro '} icon={<FontAwesome5 name="shower" color='#122829' size={19} />} data={['1', '2', '3', '4', '5', '6', '7', '8', '9', '10']} />
+                                <SelectDropdownIconLinear width={wp('19%')} height={hp('6%')} widthbtn={wp('17%')} setValue={setPet} value={pet} text={'Pet '} icon={<MaterialIcons name="pets" color='#122829' size={20} />} data={['SIM', 'NÃO']} />
+                                <SelectDropdownIconLinear width={wp('22%')} height={hp('6%')} widthbtn={wp('20%')} setValue={setBed} value={bed} text={'Quartos '} icon={<FontAwesome name="bed" color='#122829' size={20} />} data={['1', '2', '3', '4', '5', '6', '7', '8', '9', '10']} />
 
                             </View>
 
@@ -735,7 +670,7 @@ export default function MyHouses() {
                             <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"}>
                                 <View style={{ flexDirection: "row", justifyContent: "space-evenly" }}>
 
-                                    <InputILongText width={wp('90%')} height={hp('18%')} text={'Descrição'} placeholder={'200'} setValue={setDescription} value={specificHouses.houses_description} />
+                                    <InputILongText width={wp('90%')} height={hp('18%')} text={'Descrição'} placeholder={'200'} setValue={setDescription} value={description} />
 
                                 </View>
                             </KeyboardAvoidingView >
@@ -743,11 +678,11 @@ export default function MyHouses() {
 
                             <View style={{ flexDirection: "row", justifyContent: "space-evenly", }}>
 
-                                 <Button title="Voltar   " onPress={() => (setEditShow(!editShow),resetHouse(),setAlt(new Object))} icon={{ name: 'arrow-back-ios', type: 'material-icons', size: 13, color: '#1E4344' }} buttonStyle={{ backgroundColor: '#EDE17B', borderColor: '#1E4344', borderWidth: 1, borderRadius: 6, }} containerStyle={{ paddingTop: 2, width: wp('20%') }} titleStyle={{ fontSize: 13, color: '#1E4344' }} />
-                                 {buttonInsert &&  <Button title="  Salvar" onPress={() => alterHouse()} icon={{ name: 'save', type: 'font-awesome', size: 14, color: '#1E4344' }} iconRight iconContainerStyle={{ marginLeft: 10 }} buttonStyle={{ backgroundColor: '#FFF8EE', borderColor: '#122829', borderWidth: 1, borderRadius: 6, }} containerStyle={{ paddingTop: 2, width: wp('40%') }} titleStyle={{ fontSize: 13, color: '#1E4344' }} />}
-                               
+                                <Button title="Voltar   " onPress={() => (setEditShow(!editShow), resetHouse(), setAlt(new Object))} icon={{ name: 'arrow-back-ios', type: 'material-icons', size: 13, color: '#1E4344' }} buttonStyle={{ backgroundColor: '#EDE17B', borderColor: '#1E4344', borderWidth: 1, borderRadius: 6, }} containerStyle={{ paddingTop: 2, width: wp('20%') }} titleStyle={{ fontSize: 13, color: '#1E4344' }} />
+                                {buttonInsert && <Button title="  Salvar" onPress={() => setVisibleConfimationUpdate(true)} icon={{ name: 'save', type: 'font-awesome', size: 14, color: '#1E4344' }} iconRight iconContainerStyle={{ marginLeft: 10 }} buttonStyle={{ backgroundColor: '#FFF8EE', borderColor: '#122829', borderWidth: 1, borderRadius: 6, }} containerStyle={{ paddingTop: 2, width: wp('40%') }} titleStyle={{ fontSize: 13, color: '#1E4344' }} />}
+
                                 <Button title="  Excluir" onPress={() => setVisibleConfimationDeletion(true)} icon={{ name: 'close', type: 'font-awesome', size: 14, color: '#fdf5e8' }} iconRight iconContainerStyle={{ marginLeft: 10 }} buttonStyle={{ backgroundColor: '#8F3E3E', borderColor: '#602929', borderWidth: 1, borderRadius: 6, }} containerStyle={{ paddingTop: 2, width: wp('20%') }} titleStyle={{ fontSize: 13, color: '#fdf5e8' }} />
-                          </View>
+                            </View>
 
 
                         </View>
@@ -771,7 +706,7 @@ export default function MyHouses() {
                                 <View style={{ alignItems: 'center', justifyContent: "space-evenly", flexDirection: "row", }} >
                                     {!titleDelCapturate.includes('6') &&
                                         <><Button title={titlePreCapturate} onPress={() => preTakePictureGalery()} icon={{ name: 'photo-library', type: 'material-icons', size: 15, color: '#fdf5e8' }} iconRight iconContainerStyle={{ marginLeft: 10 }} buttonStyle={{ backgroundColor: '#295E60', borderColor: '#1E4344', borderWidth: 1, borderRadius: 6, }} containerStyle={{ paddingTop: 2, width: wp('30%') }} titleStyle={{ fontSize: 13, color: '#fdf5e8' }} />
-                                            </>
+                                        </>
                                     }
                                     {capturatePhoto1 && !isLoading &&
                                         <Button title={titleDelCapturate} onPress={() => removePicture()} icon={{ name: 'image-not-supported', type: 'material-icons', size: 14, color: '#FFC77A' }} iconRight iconContainerStyle={{ marginLeft: 10 }} buttonStyle={{ backgroundColor: '#602929', borderColor: '#FFC77A', borderWidth: 1, borderRadius: 6, }} containerStyle={{ paddingTop: 2, width: '30%' }} titleStyle={{ fontSize: 13, color: '#FFC77A' }} />
@@ -783,7 +718,7 @@ export default function MyHouses() {
                                 <SelectDropdownTextLinear widthbt={wp('45%')} text={'Bairro'} placeholder={'2.888,66'} setValue={setDistrict} value={district} data={['Veredinha', 'Alto do cruzeiro']} />
                             </View>
                             <View style={{ margin: 5, flexDirection: "row", justifyContent: "space-evenly", }}>
-                                <InputIconInText width={wp('70%')} height={hp('6%')} text={'Logradouro'} placeholder={'2.888,66'} setValue={setpublicPlace} value={publicPlace} />
+                                <InputIconInText width={wp('70%')} height={hp('6%')} text={'Logradouro'} placeholder={'2.888,66'} setValue={setPublicPlace} value={publicPlace} />
                                 <SelectDropdownIconLinear width={wp('22%')} height={hp('6%')} widthbtn={wp('20%')} setValue={setType} value={type} text={'Tipo '} icon={<FontAwesome name="handshake-o" color='#122829' size={19} />} data={['Vender', 'Alugar']} />
 
                             </View>
@@ -816,20 +751,16 @@ export default function MyHouses() {
                             <View style={{ flexDirection: "row", justifyContent: "space-evenly", }}>
 
                                 {buttonInsert && <Button title="  Adicionar" onPress={() => setVisibleConfimation(true)} icon={{ name: 'plus', type: 'font-awesome', size: 14, color: '#1E4344' }} iconRight iconContainerStyle={{ marginLeft: 10 }} buttonStyle={{ backgroundColor: '#FFF8EE', borderColor: '#122829', borderWidth: 1, borderRadius: 6, }} containerStyle={{ paddingTop: 10, width: '55%' }} titleStyle={{ fontSize: 13, color: '#1E4344' }} />}
-                                <Button title="  Cancelar" onPress={() => (setCreateShow(!createShow),resetHouse(),setAlt(new Object))} icon={{ name: 'close', type: 'font-awesome', size: 14, color: '#122829' }} iconRight iconContainerStyle={{ marginLeft: 10 }} buttonStyle={{ backgroundColor: '#EDE17B', borderColor: '#122829', borderWidth: 1, borderRadius: 6, }} containerStyle={{ paddingTop: 10, width: '30%' }} titleStyle={{ fontSize: 13, color: '#122829' }} />
+                                <Button title="  Cancelar" onPress={() => (setCreateShow(!createShow), resetHouse(), setAlt(new Object))} icon={{ name: 'close', type: 'font-awesome', size: 14, color: '#122829' }} iconRight iconContainerStyle={{ marginLeft: 10 }} buttonStyle={{ backgroundColor: '#EDE17B', borderColor: '#122829', borderWidth: 1, borderRadius: 6, }} containerStyle={{ paddingTop: 10, width: '30%' }} titleStyle={{ fontSize: 13, color: '#122829' }} />
                             </View>
 
 
                         </View>
-
-
-
                     }
-
 
                     {!editShow && !isLoading && !visibleNotification &&
                         <View style={{ backgroundColor: '#1E4344', flex: 1, justifyContent: 'center', }}>
-                             {myHouses && 
+                            {myHouses &&
                                 <FlatList refreshControl={<RefreshControl
                                     refreshing={refreshing}
                                     onRefresh={onRefresh}
@@ -848,17 +779,20 @@ export default function MyHouses() {
                         </View>
                     }
                     {isLoading &&
-                    <View style={{marginTop:wp('80%')}}>
-                        <FAB loading visible={true} icon={{ name: 'add' }} color='#C89A5B' borderColor='rgba(42, 42, 42,1)' size="small" />
+                        <View style={{ marginTop: wp('80%') }}>
+                            <FAB loading visible={true} icon={{ name: 'add' }} color='#C89A5B' borderColor='rgba(42, 42, 42,1)' size="small" />
                         </View>}
                     {visibleNotification &&
-                        <Notification message={messageNotification} tipo={'ss'} visible={true} onClose={() => (setVisibleNotification(false), cleanCreate())}></Notification>
+                        <Notification message={messageNotification} tipo={'ss'} visible={true} onClose={() => (setVisibleNotification(false))}></Notification>
                     }
                     {visibleConfimation &&
-                        <Confirmation message={'Tem certeza que deseja adicionar?'} tipo={'ss'} visible={true} cancel={() => (setCreateShow(!createShow),resetHouse(),setAlt(new Object),setVisibleConfimation(false))} confirmation={() => insertHouse()}></Confirmation>
+                        <Confirmation message={'Tem certeza que deseja adicionar?'} tipo={'ss'} visible={true} cancel={() => (setCreateShow(!createShow), resetHouse(), setAlt(new Object), setVisibleConfimation(false))} confirmation={() => insertHouse()}></Confirmation>
                     }
                     {visibleConfimationDeletion &&
-                        <Confirmation message={'Tem certeza que deseja deletar?'} tipo={'ss'} visible={true} cancel={() => (setEditShow(!editShow),resetHouse(),setAlt(new Object),setVisibleConfimationDeletion(false))} confirmation={() => deleteHouse(specificHouses.houses_id)}></Confirmation>
+                        <Confirmation message={'Tem certeza que deseja deletar?'} tipo={'ss'} visible={true} cancel={() => (setEditShow(!editShow), resetHouse(), setAlt(new Object), setVisibleConfimationDeletion(false))} confirmation={() => deleteHouse(specificHouses.houses_id)}></Confirmation>
+                    }
+                    {visibleConfimationUpdate &&
+                        <Confirmation message={'Tem certeza que deseja alterar?'} tipo={'ss'} visible={true} cancel={() => (setEditShow(!editShow), resetHouse(), setAlt(new Object), setVisibleConfimationUpdate(false))} confirmation={() => updateHouse(specificHouses.houses_id)}></Confirmation>
                     }
 
 

@@ -8,7 +8,7 @@ const Notification = (props) => {
         <Provider>
         <Portal>
         <Dialog style={styles.dialog} visible={props.visible} onDismiss={() => props.onClose(false)}>
-          <Paragraph style={styles.pagraph}>{props.message}.</Paragraph>
+          <Paragraph style={styles.pagraph}>{props.message}</Paragraph>
          <Dialog.Actions>
          <Button title="   " onPress={() => props.onClose(false)} icon={{ name: 'check', type: 'font-awesome', size: 25, color: '#EDE17B' }} iconRight iconContainerStyle={{ marginLeft: 10 }} buttonStyle={{ backgroundColor: '#1E4344', borderColor: '#122829' }} containerStyle={{ width: '100%' }}  />
           

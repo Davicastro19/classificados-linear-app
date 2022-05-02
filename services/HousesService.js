@@ -60,6 +60,29 @@ class HousesService{
         })
     }
 
+    async deleteHouse(id){
+        console.log('aa',id)
+        let token = await AsyncStorage.getItem("TOKEN")
+        return axios({
+            url:Config.API_URL+"houses/deleteHouse/"+id,
+            timeout: Config.TIMEOUT_REQUEST,
+            method:"Delete",
+            headers: {
+                Accept: 'application/json',
+                Authorization: 'Bearer ' + token
+            }
+        }).then((response)=> {
+            if (response && response.data && response.data.access_token) {
+			    AsyncStorage.setItem("TOKEN", response.data.access_token)
+            }
+            return Promise.resolve(response)
+        }).catch((error)=>{
+            //////console.log('aaa',error)
+            return Promise.reject(error)
+        })
+    }
+
+
     async selectHouseById(id){
         let token = await AsyncStorage.getItem("TOKEN")
         return axios({

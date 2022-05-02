@@ -11,6 +11,7 @@ import * as ImagePicker from "expo-image-picker";
 import { Camera } from 'expo-camera';
 import { Card, Title, Paragraph } from 'react-native-paper';
 import Notification from '../components/Notification';
+import Confirmation from '../components/Confirmation';
 
 import axios from 'axios'
 import {
@@ -24,7 +25,6 @@ import SelectDropdownTextLinear from '../components/SelectText'
 import InputIconInText from '../components/InputIconInText'
 import InputILongText from '../components/InputILongText'
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
-
 export default function MyHouses() {
     const [refreshing, setRefreshing] = useState(false);
     const [hasPermission, setHasPermission] = useState(null);
@@ -61,12 +61,13 @@ export default function MyHouses() {
     const [editShow, setEditShow] = useState(true)
     const [createShow, setCreateShow] = useState(false)
     const [houses, setHouses] = useState([])
-    const [specificHouse, setSpecificHouse] = useState(false)
+    const [specificHouses, setSpecificHouses] = useState(false)
     const [showFilter, setShowFilter]= useState(false)
     const [deletePhotoEdit, setDeletePhotoEdit]= useState(false)
     const [messageNotification, setMessageNotification]= useState(false)
-    
-
+    const [images, setImages] = useState('')
+    const [visibleConfimation, setVisibleConfimation] = useState(false)
+    const [visibleConfimationDeletion,setVisibleConfimationDeletion] = useState(false)
     
 
     const fetchPairs = async () => {
@@ -104,51 +105,7 @@ export default function MyHouses() {
     setTitlePreCapturate("Adicionar a 1º")
     setTitleDelCapturate("Apagar a 1º")
     }
-    async function loadingImagens(data){
-        try{
-            console.log(data['1'].uri)
-            console.log(data['2'].uri)
-            console.log(data['3'].uri)
-            console.log(data['4'].uri)
-            console.log(data['5'].uri)
-            console.log(data['6'].uri)
-
-        if (data['1'].uri){
-            setCapturatePhoto1(data['1'].uri)
-            setTitlePreCapturate("Adicionar a 2º")
-            setDeletePhotoEdit(true)
-            setTitleDelCapturate("Apagar a 1º")
-        }
-        if (data['2'].uri){
-            setCapturatePhoto2(data['2'].uri)
-            setTitlePreCapturate("Adicionar a 3º")
-            setTitleDelCapturate("Apagar a 2º")
-        }
-        if (data['3'].uri){
-            setCapturatePhoto3(data['3'].uri)
-            setTitlePreCapturate("Adicionar a 4º")
-            setTitleDelCapturate("Apagar a 3º")
-            
-        }
-        if (data['4'].uri){
-            setCapturatePhoto4(data['4'].uri)
-            setTitlePreCapturate("Adicionar a 5º")
-            setTitleDelCapturate("Apagar a 4º")
-            
-        }
-        if (data['5'].uri){
-            setCapturatePhoto5(data['5'].uri)
-            setTitlePreCapturate("Adicionar a 6º")
-            setTitleDelCapturate("Apagar a 5º")
-        }
-        if (data['6'].uri){
-            setCapturatePhoto6(data['6'].uri)
-            setTitleDelCapturate("Apagar a 6º")
-        }
-    }catch (e) {
-        console.log('ss',e)
-    }
-}
+   
     function cleanCreate(){
         setCapturatePhoto1(false)
         setCapturatePhoto2(false)
@@ -221,6 +178,7 @@ export default function MyHouses() {
             return false
         }
     }
+
     function removeEditPicture() {
         console.log(titleDelCapturate)
 
@@ -242,7 +200,7 @@ export default function MyHouses() {
                 .then(function (response) {
                     setCapturatePhoto1(false)
                     setTitlePreCapturate("Adicionar a 1º")
-                    setAlt(false)
+                    setAlt(new Object)
                 })
                 .catch(function (error) {
                     ////console.log('dellero', error);
@@ -357,99 +315,78 @@ export default function MyHouses() {
 
     }
 
-    function deleteUnicImage(hash){
-        console.log('https://api.imgur.com/3/image/' + hash)
-        var config = {
-            method: 'delete',
-            url: 'https://api.imgur.com/3/image/' + hash,
-            headers: {
-                'Authorization': 'Client-ID 1ecdb35596fd7b0',
-                //...data.getHeaders()
-            },
-            data: data
-        };
-
-        axios(config)
-            .then(function (response) {
-                console.log('334', response);
-            })
-            .catch(function (error) {
-                console.log('346', error);
-            });
-    }
     function removePicture() {
-        console.log(alt['6'].deleteHash)
         if (titleDelCapturate.includes('1')) {
             setButtonInsert(false)
             setCapturatePhoto1(false)
             setTitlePreCapturate("Adicionar a 1º")
-            setAlt(false)
+            setAlt(new Object)
         }
         if (titleDelCapturate.includes('2')) {
+            setButtonInsert(false)
             setCapturatePhoto2(false)
             setTitleDelCapturate("Apagar a 1º")
             setTitlePreCapturate("Adicionar a 2º")
         }
         if (titleDelCapturate.includes('3')) {
+            setButtonInsert(false)
             setCapturatePhoto3(false)
             setTitleDelCapturate("Apagar a 2º")
             setTitlePreCapturate("Adicionar a 3º")
         }
         if (titleDelCapturate.includes('4')) {
+            setButtonInsert(false)
             setCapturatePhoto4(false)
             setTitleDelCapturate("Apagar a 3º")
             setTitlePreCapturate("Adicionar a 4º")
         }
         if (titleDelCapturate.includes('5')) {
-            var config = {
-                method: 'delete',
-                url: 'https://api.imgur.com/3/image/' + alt['5'].deleteHash,
-                headers: {
-                    'Authorization': 'Client-ID 1ecdb35596fd7b0',
-                    //...data.getHeaders()
-                },
-                data: data
-            };
-
-            axios(config)
-                .then(function (response) {
-                    //////console.log('dell',JSON.stringify(response.data));
-                    setCapturatePhoto5(false)
-                    setTitleDelCapturate("Apagar a 4º")
-                    setTitlePreCapturate("Adicionar a 5º")
-                })
-                .catch(function (error) {
-                    ////console.log('dellero', error);
-                });
+            setButtonInsert(false)
+            setCapturatePhoto5(false)
+            setTitleDelCapturate("Apagar a 4º")
+            setTitlePreCapturate("Adicionar a 5º")
+               
         }
         if (titleDelCapturate.includes('6')) {
-            var config = {
-                method: 'delete',
-                url: 'https://api.imgur.com/3/image/' + alt['6'].deleteHash,
-                headers: {
-                    'Authorization': 'Client-ID 1ecdb35596fd7b0',
-                    //...data.getHeaders()
-                },
-            };
-
-            axios(config)
-                .then(function (response) {
-                    //////console.log('dell',JSON.stringify(response.data));
-                    setCapturatePhoto6(false)
-                    setTitleDelCapturate("Apagar a 5º")
-                    setTitlePreCapturate("Adicionar a 6º")
-                })
-                .catch(function (error) {
-                    console.log('dellero', error);
-                });
+            setButtonInsert(false)
+           setCapturatePhoto6(false)
+            setTitleDelCapturate("Apagar a 5º")
+            setTitlePreCapturate("Adicionar a 6º")
         }
 
+    }
+
+    async function isValidateImage(){
+        try{
+            let newAlt = ''
+        
+            for (var num in alt) {
+                console.log(num)
+                const xhr = new XMLHttpRequest();
+                xhr.withCredentials = true;
+                console.log('SIM',images.split(',')[parseInt(num-1)])
+                const imagesData = new FormData();
+                imagesData.append('image', {
+                    uri: alt[num].uri,
+                    type: 'image/jpeg',
+                    name: images.split(',')[parseInt(num-1)]
+                })
+                xhr.open('POST', 'http://192.168.0.104:3000/houses/uploadImg')
+                xhr.send(imagesData)
+                
+            }
+            
+            return true
+        }catch (e) {
+               return false 
+            }
     }
 
     async function insertHouse() {
         setIsLoading(true)
         setCreateShow(false)
-        if (isValidate()) {
+        setVisibleConfimation(false)
+        if (isValidate() && isValidateImage()) {
             const dataCreateHouse = {
                 bed: bed,
                 shower: shower,
@@ -464,14 +401,16 @@ export default function MyHouses() {
                 city: city,
                 district: district,
                 description: description,
-                images: JSON.stringify(alt).toString(),
+                images: images,
                 creationDate: DateAndHours
             }
+            console.log(dataCreateHouse)
             housesService.insertHouse(dataCreateHouse)
                 .then((response) => {
                     setIsLoading(false)
                     if (response.data.status) {
-                        setMessageNotification('Casa/Aptoº adicionada com sucesso!')
+                        
+                        setMessageNotification('Adicionada com sucesso!')
                         setCreateShow(false)
                         setVisibleNotification(true)
                         
@@ -501,6 +440,7 @@ export default function MyHouses() {
             //const { status } = await Camera.requestCameraPermissionsAsync();
             //
             takePictureGalery(data)
+            
         }
         //const { status } = await Camera.requestCameraPermissionsAsync();
 
@@ -514,412 +454,97 @@ export default function MyHouses() {
     }
 
     async function takePictureGalery(data) {
+        console.log('sssii',!editShow)
+        if (!editShow){
 
-        //if (camRef){
-        //const data = await camRef.current.takePictureAsync();
-
+        const tenantId = Array(4)
+        .fill(null)
+        .map(() => Math.round(Math.random() * 16).toString(16))
+        .join('');}
         if (!data.cancelled && data.uri) {
             if (!capturatePhoto1) {
+               
                 setButtonInsert(true)
-                
-               // const imagesData = new FormData();
-//
-//
-               // imagesData.append('image', JSON.stringify({
-               //     uri:
-               //       Platform.OS === 'android'
-               //         ? data.uri
-               //         : data.uri.replace('file://', ''),
-               //     name: data.fileName,
-               //     type: data.type
-               //   })
-               // )
-               // console.log(imagesData)
-               // return axios({
-               //     url:'http://192.168.0.104:3000/houses/upload',
-               //     method:'POST',
-               //     data:imagesData,
-               //     
-               // }).then((response)=> {
-               //     console.log('aaaaaaaaasasa',response)
-               // }).catch((error)=>{
-               //     console.log('aaaaaaaaasasa',error)
-               // })
-               const xhr = new XMLHttpRequest();
-               xhr.withCredentials = true;
-               const xhrrepository = alt
-               xhr.addEventListener("readystatechange", function () {
-                   if (this.readyState === 4) {
-                       const dts = JSON.parse(this.responseText)
-                       console.log(dts)
-                       //xhrrepository['2'] = { "uri": dts.data.link, "deleteHash": dts.data.deletehash }
-                       //setAlt(xhrrepository)
-                   }
-               });
-
-               const imagesData = new FormData();
-
-
-               imagesData.append('image', {
-                   uri: data.uri,
-                   type: 'image/jpeg',
-                   name: 'name.jpg'
-               })
-
-
-               xhr.open('POST', 'http://192.168.0.104:3000/houses/upload')
-              // xhr.setRequestHeader('Authorization', 'Client-ID 1ecdb35596fd7b0')
-               xhr.send(imagesData)
+               let upAlt = alt
+               upAlt['1'] = {'uri':data.uri}
+               setAlt(upAlt)
+               if (!editShow){
+               let img = tenantId+'1.jpg,'
+               setImages(img)}
                 setCapturatePhoto1(data.uri)
                 setTitlePreCapturate("Adicionar a 2º")
                 setTitleDelCapturate("Apagar a 1º")
                 
             } else if (!capturatePhoto2) {
-                const xhr = new XMLHttpRequest();
-                xhr.withCredentials = true;
-                const xhrrepository = alt
-                xhr.addEventListener("readystatechange", function () {
-                    if (this.readyState === 4) {
-                        const dts = JSON.parse(this.responseText)
-                        xhrrepository['2'] = { "uri": dts.data.link, "deleteHash": dts.data.deletehash }
-                        setAlt(xhrrepository)
-                    }
-                });
-
-                const imagesData = new FormData();
-
-
-                imagesData.append('image', {
-                    uri: data.uri,
-                    type: 'image/jpeg',
-                    name: 'name.jpg'
-                })
-
-
-                xhr.open('POST', 'https://api.imgur.com/3/image')
-                xhr.setRequestHeader('Authorization', 'Client-ID 1ecdb35596fd7b0')
-                xhr.send(imagesData)
+                
+                let upAlt = alt
+               upAlt['2'] = {'uri':data.uri}
+               setAlt(upAlt)
+               if (!editShow){
+               let img2 = images+tenantId+'2.jpg,'
+               setImages(img2)}
                 setCapturatePhoto2(data.uri)
                 setTitlePreCapturate("Adicionar a 3º")
                 setTitleDelCapturate("Apagar a 2º")
             }
             else if (!capturatePhoto3) {
-                const xhr = new XMLHttpRequest();
-                xhr.withCredentials = true;
-                const xhrrepository = alt
-                xhr.addEventListener("readystatechange", function () {
-                    if (this.readyState === 4) {
-                        const dts = JSON.parse(this.responseText)
-                        xhrrepository['3'] = { "uri": dts.data.link, "deleteHash": dts.data.deletehash }
-                        setAlt(xhrrepository)
-                    }
-                });
-                const imagesData = new FormData();
-
-
-                imagesData.append('image', {
-                    uri: data.uri,
-                    type: 'image/jpeg',
-                    name: 'name.jpg'
-                })
-
-
-                xhr.open('POST', 'https://api.imgur.com/3/image')
-                xhr.setRequestHeader('Authorization', 'Client-ID 1ecdb35596fd7b0')
-                xhr.send(imagesData)
+                let upAlt = alt
+               upAlt['3'] = {'uri':data.uri}
+               setAlt(upAlt)
+               if (!editShow){
+               let img3 = images+tenantId+'3.jpg,'
+               setImages(img3)}
                 setCapturatePhoto3(data.uri)
                 setTitlePreCapturate("Adicionar a 4º")
                 setTitleDelCapturate("Apagar a 3º")
             }
             else if (!capturatePhoto4) {
-                const xhr = new XMLHttpRequest();
-                xhr.withCredentials = true;
-                const xhrrepository = alt
-                xhr.addEventListener("readystatechange", function () {
-                    if (this.readyState === 4) {
-                        const dts = JSON.parse(this.responseText)
-                        xhrrepository['4'] = { "uri": dts.data.link, "deleteHash": dts.data.deletehash }
-                        setAlt(xhrrepository)
-                    }
-                });
-
-                const imagesData = new FormData();
-
-
-                imagesData.append('image', {
-                    uri: data.uri,
-                    type: 'image/jpeg',
-                    name: 'name.jpg'
-                })
-
-
-                xhr.open('POST', 'https://api.imgur.com/3/image')
-                xhr.setRequestHeader('Authorization', 'Client-ID 1ecdb35596fd7b0')
-                xhr.send(imagesData)
+                let upAlt = alt
+               upAlt['4'] = {'uri':data.uri}
+               setAlt(upAlt)
+               if (!editShow){
+               let img4 = images+tenantId+'4.jpg,'
+               setImages(img4)}
                 setCapturatePhoto4(data.uri)
                 setTitlePreCapturate("Adicionar a 5º")
                 setTitleDelCapturate("Apagar a 4º")
             }
             else if (!capturatePhoto5) {
-                const xhr = new XMLHttpRequest();
-                xhr.withCredentials = true;
-                const xhrrepository = alt
-                xhr.addEventListener("readystatechange", function () {
-                    if (this.readyState === 4) {
-                        const dts = JSON.parse(this.responseText)
-                        xhrrepository['5'] = { "uri": dts.data.link, "deleteHash": dts.data.deletehash }
-                        setAlt(xhrrepository)
-                    }
-                });
-
-                const imagesData = new FormData();
-
-
-                imagesData.append('image', {
-                    uri: data.uri,
-                    type: 'image/jpeg',
-                    name: 'name.jpg'
-                })
-
-
-                xhr.open('POST', 'https://api.imgur.com/3/image')
-                xhr.setRequestHeader('Authorization', 'Client-ID 1ecdb35596fd7b0')
-                xhr.send(imagesData)
+                let upAlt = alt
+               upAlt['5'] = {'uri':data.uri}
+               setAlt(upAlt)
+               if (!editShow){
+               let img5 = images+tenantId+'5.jpg,'
+               setImages(img5)}
                 setCapturatePhoto5(data.uri)
                 setTitlePreCapturate("Adicionar a 6º")
                 setTitleDelCapturate("Apagar a 5º")
             }
             else if (!capturatePhoto6) {
-                const xhr = new XMLHttpRequest();
-                xhr.withCredentials = true;
-                const xhrrepository = alt
-                xhr.addEventListener("readystatechange", function () {
-                    if (this.readyState === 4) {
-                        const dts = JSON.parse(this.responseText)
-                        xhrrepository['6'] = { "uri": dts.data.link, "deleteHash": dts.data.deletehash }
-                        setAlt(xhrrepository)
-                    }
-                });
-                const imagesData = new FormData();
-
-
-                imagesData.append('image', {
-                    uri: data.uri,
-                    type: 'image/jpeg',
-                    name: 'name.jpg'
-                })
-
-
-                xhr.open('POST', 'https://api.imgur.com/3/image')
-                xhr.setRequestHeader('Authorization', 'Client-ID 1ecdb35596fd7b0')
-                xhr.send(imagesData)
+                let upAlt = alt
+               upAlt['6'] = {'uri':data.uri}
+               setAlt(upAlt)
+               if (!editShow){
+               let img6 = images+tenantId+'6.jpg'
+               setImages(img6)}
                 setCapturatePhoto6(data.uri)
                 setTitleDelCapturate("Apagar a 6º")
+                setButtonInsert(true)
             }
-            //setOpenCamera(false)
+
         }
-        //}
     }
-
-    async function preTakePicture() {
-        const { status } = await Camera.requestCameraPermissionsAsync();
-        setHasPermission(status === 'granted');
-        if (hasPermission === null || hasPermission === true) {
-            setOpenCamera(true)
-        }
-        if (hasPermission === false) {
-            setOpenCamera(false)
-        }
-
-    }
-
+    
+    
     function validateImage(image, value) {
         try {
-
-            return JSON.parse(image)[value].uri.replace(/\//g, '').replace('i.img', '//i.img').replace('.com', '.com/')
-    
+            if (image.split(',')[value].includes('jpg') || image.split(',')[value].includes('png')){
+                return "http://192.168.0.104:3000/houses/"+image.split(',')[value]
+            }else{
+                return false
+            }
         } catch (e) {
             return false
-        }
-    }
-
-    async function takePicture() {
-
-        if (camRef) {
-            const data = await camRef.current.takePictureAsync();
-            if (!capturatePhoto1) {
-                setButtonInsert(true)
-                const xhr = new XMLHttpRequest();
-                xhr.withCredentials = true;
-                const xhrrepository = alt
-                xhr.addEventListener("readystatechange", function () {
-                    if (this.readyState === 4) {
-                        const dts = JSON.parse(this.responseText)
-                        xhrrepository['1'] = { "uri": dts.data.link, "deleteHash": dts.data.deletehash }
-                        setAlt(xhrrepository)
-                    }
-                });
-
-                const imagesData = new FormData();
-
-
-                imagesData.append('image', {
-                    uri: data.uri,
-                    type: 'image/jpeg',
-                    name: 'name.jpg'
-                })
-
-
-                xhr.open('POST', 'https://api.imgur.com/3/image')
-                xhr.setRequestHeader('Authorization', 'Client-ID 1ecdb35596fd7b0')
-                xhr.send(imagesData)
-                setCapturatePhoto1(data.uri)
-                setTitlePreCapturate("Adicionar a 2º")
-                setTitleDelCapturate("Apagar a 1º")
-            } else if (!capturatePhoto2) {
-                const xhr = new XMLHttpRequest();
-                xhr.withCredentials = true;
-                const xhrrepository = alt
-                xhr.addEventListener("readystatechange", function () {
-                    if (this.readyState === 4) {
-                        const dts = JSON.parse(this.responseText)
-                        xhrrepository['2'] = { "uri": dts.data.link, "deleteHash": dts.data.deletehash }
-                        setAlt(xhrrepository)
-                    }
-                });
-
-                const imagesData = new FormData();
-
-
-                imagesData.append('image', {
-                    uri: data.uri,
-                    type: 'image/jpeg',
-                    name: 'name.jpg'
-                })
-
-
-                xhr.open('POST', 'https://api.imgur.com/3/image')
-                xhr.setRequestHeader('Authorization', 'Client-ID 1ecdb35596fd7b0')
-                xhr.send(imagesData)
-                setCapturatePhoto2(data.uri)
-                setTitlePreCapturate("Adicionar a 3º")
-                setTitleDelCapturate("Apagar a 2º")
-            }
-            else if (!capturatePhoto3) {
-                const xhr = new XMLHttpRequest();
-                xhr.withCredentials = true;
-                const xhrrepository = alt
-                xhr.addEventListener("readystatechange", function () {
-                    if (this.readyState === 4) {
-                        const dts = JSON.parse(this.responseText)
-                        xhrrepository['3'] = { "uri": dts.data.link, "deleteHash": dts.data.deletehash }
-                        setAlt(xhrrepository)
-                    }
-                });
-                const imagesData = new FormData();
-
-
-                imagesData.append('image', {
-                    uri: data.uri,
-                    type: 'image/jpeg',
-                    name: 'name.jpg'
-                })
-
-
-                xhr.open('POST', 'https://api.imgur.com/3/image')
-                xhr.setRequestHeader('Authorization', 'Client-ID 1ecdb35596fd7b0')
-                xhr.send(imagesData)
-                setCapturatePhoto3(data.uri)
-                setTitlePreCapturate("Adicionar a 4º")
-                setTitleDelCapturate("Apagar a 3º")
-            }
-            else if (!capturatePhoto4) {
-                const xhr = new XMLHttpRequest();
-                xhr.withCredentials = true;
-                const xhrrepository = alt
-                xhr.addEventListener("readystatechange", function () {
-                    if (this.readyState === 4) {
-                        const dts = JSON.parse(this.responseText)
-                        xhrrepository['4'] = { "uri": dts.data.link, "deleteHash": dts.data.deletehash }
-                        setAlt(xhrrepository)
-                    }
-                });
-
-                const imagesData = new FormData();
-
-
-                imagesData.append('image', {
-                    uri: data.uri,
-                    type: 'image/jpeg',
-                    name: 'name.jpg'
-                })
-
-
-                xhr.open('POST', 'https://api.imgur.com/3/image')
-                xhr.setRequestHeader('Authorization', 'Client-ID 1ecdb35596fd7b0')
-                xhr.send(imagesData)
-                setCapturatePhoto4(data.uri)
-                setTitlePreCapturate("Adicionar a 5º")
-                setTitleDelCapturate("Apagar a 4º")
-            }
-            else if (!capturatePhoto5) {
-                const xhr = new XMLHttpRequest();
-                xhr.withCredentials = true;
-                const xhrrepository = alt
-                xhr.addEventListener("readystatechange", function () {
-                    if (this.readyState === 4) {
-                        const dts = JSON.parse(this.responseText)
-                        xhrrepository['5'] = { "uri": dts.data.link, "deleteHash": dts.data.deletehash }
-                        setAlt(xhrrepository)
-                    }
-                });
-
-                const imagesData = new FormData();
-
-
-                imagesData.append('image', {
-                    uri: data.uri,
-                    type: 'image/jpeg',
-                    name: 'name.jpg'
-                })
-
-
-                xhr.open('POST', 'https://api.imgur.com/3/image')
-                xhr.setRequestHeader('Authorization', 'Client-ID 1ecdb35596fd7b0')
-                xhr.send(imagesData)
-                setCapturatePhoto5(data.uri)
-                setTitlePreCapturate("Adicionar a 6º")
-                setTitleDelCapturate("Apagar a 5º")
-            }
-            else if (!capturatePhoto6) {
-                const xhr = new XMLHttpRequest();
-                xhr.withCredentials = true;
-                const xhrrepository = alt
-                xhr.addEventListener("readystatechange", function () {
-                    if (this.readyState === 4) {
-                        const dts = JSON.parse(this.responseText)
-                        xhrrepository['6'] = { "uri": dts.data.link, "deleteHash": dts.data.deletehash }
-                        setAlt(xhrrepository)
-                    }
-                });
-                const imagesData = new FormData();
-
-
-                imagesData.append('image', {
-                    uri: data.uri,
-                    type: 'image/jpeg',
-                    name: 'name.jpg'
-                })
-
-
-                xhr.open('POST', 'https://api.imgur.com/3/image')
-                xhr.setRequestHeader('Authorization', 'Client-ID 1ecdb35596fd7b0')
-                xhr.send(imagesData)
-                setCapturatePhoto6(data.uri)
-                setTitleDelCapturate("Apagar a 6º")
-            }
-            setOpenCamera(false)
-
         }
     }
 
@@ -927,30 +552,48 @@ export default function MyHouses() {
         setEditShow(!editShow)
     }
 
-    function selectHouseById(value) {
+    function loadedImage(image){
+        console.log('image',image)
+        setTitleDelCapturate("Apagar a 6º")
+        setDeletePhotoEdit(true)
+        setAlt(image)
+        setCapturatePhoto1("http://192.168.0.104:3000/houses/"+image.split(',')[0])
+        setCapturatePhoto2("http://192.168.0.104:3000/houses/"+image.split(',')[1])
+        setCapturatePhoto3("http://192.168.0.104:3000/houses/"+image.split(',')[2])
+        setCapturatePhoto4("http://192.168.0.104:3000/houses/"+image.split(',')[3])
+        setCapturatePhoto5("http://192.168.0.104:3000/houses/"+image.split(',')[4])
+        setCapturatePhoto6("http://192.168.0.104:3000/houses/"+image.split(',')[5])
+        setTitleDelCapturate("Apagar a 6º")
+    }
+
+    async function selectHouseById(value) {
         setIsLoading(true)
+        console.log(value)
         housesService.selectHouseById(value)
             .then((response) => {
-                setSpecificHouse(response.data)
-                setShowFilter(false)
-                setEditShow(true)
-                setButtonInsert(true)
-                setAlt(JSON.parse(response.data.houses_images))
-                loadingImagens(JSON.parse(response.data.houses_images))
+                setSpecificHouses(response.data)
+                console.log('asss',specificHouses)
+                //setShowFilter(false)
+                //setEditShow(true)
+                //setButtonInsert(false)
+                //loadedImage(specificHouses.houses_images)
                 setIsLoading(false)
                 
 
             })
             .catch((error) => {
-                ////console.log('erroo')
+                setSpecificHouses(false)
+                setShowFilter(true)
+                setEditShow(false)
+                setButtonInsert(false)
                 setIsLoading(false)
-                setShowFilter(false)
-                setSpecificHouse(false)
-                ////console.log('xx', error)
+                console.log('aaa', error)
                 //setCatalogData('Seu sinais estarão aqui. (clique em Filtro)')
             })
     }
+
     function deleteHouse(id){
+        setVisibleConfimationDeletion(false)
         setOpenCamera(false)
         setEditShow(false)
         setCreateShow(false)
@@ -958,10 +601,7 @@ export default function MyHouses() {
         setIsLoading(true)
         housesService.deleteHouse(id)
             .then((response) => {
-                //for (let x in alt) {
-                //    deleteUnicImage(alt[x].deleteHash)
-                //  }
-                setMessageNotification('Casa/Aptoº excluido com sucesso!')
+                setMessageNotification('Excluido com sucesso!')
                 setIsLoading(false)
                 setMyHouses(false)
                 setEditShow(false)
@@ -976,6 +616,7 @@ export default function MyHouses() {
             })
         
     }
+
     async function allMyHouses() {
         setOpenCamera(false)
         setEditShow(false)
@@ -999,7 +640,8 @@ export default function MyHouses() {
 
 
     useEffect(() => {
-        allMyHouses()
+        if (myHouses == false){
+        allMyHouses()}
     }, [])
     return (
         <View style={styles.container} >
@@ -1007,8 +649,10 @@ export default function MyHouses() {
 
                 {!editShow && !createShow && !isLoading && !visibleNotification &&
                     <><View style={{ width: '100%', height: '6%' }}><Button title=" Filtro" onPress={() => setFilter(!filter)} icon={{ name: 'filter', type: 'font-awesome', size: 19, color: '#fdf5e8' }} iconRight iconContainerStyle={{ marginLeft: 10 }} buttonStyle={{ backgroundColor: '#1E4344', borderColor: '#152F30', borderWidth: 0.5 }} containerStyle={{ height: '100%' }} titleStyle={{ color: '#fdf5e8' }} />
-                    </View><View style={{ width: '100%', height: '6%' }}><Button title=" Adicionar casa/aptoº" onPress={() => (setCreateShow(!createShow),setTitleDelCapturate("Adicionar a 1ª"))} icon={{ name: 'add-box', type: 'material-icons', size: 19, color: '#fdf5e8' }} iconRight iconContainerStyle={{ marginLeft: 10 }} buttonStyle={{ backgroundColor: '#1E4344', borderColor: '#152F30', borderWidth: 0.5 }} containerStyle={{ height: '100%' }} titleStyle={{ color: '#fdf5e8' }} />
-                        </View></>}
+                    </View>
+                    
+                    {myHouses &&<View style={{ width: '100%', height: '6%' }}><Button title=" Adicionar casa/aptoº" onPress={() => (setCreateShow(!createShow),setTitleDelCapturate("Adicionar a 1ª"))} icon={{ name: 'add-box', type: 'material-icons', size: 19, color: '#fdf5e8' }} iconRight iconContainerStyle={{ marginLeft: 10 }} buttonStyle={{ backgroundColor: '#1E4344', borderColor: '#152F30', borderWidth: 0.5 }} containerStyle={{ height: '100%' }} titleStyle={{ color: '#fdf5e8' }} />
+                        </View>}</>}
 
                 <NativeBaseProvider >
                     {openCamera && !isLoading &&
@@ -1055,34 +699,34 @@ export default function MyHouses() {
                                 <View style={{ alignItems: 'center', justifyContent: "space-evenly", flexDirection: "row", }} >
                                     {!titleDelCapturate.includes('6') &&
                                         <><Button title={titlePreCapturate} onPress={() => preTakePictureGalery()} icon={{ name: 'photo-library', type: 'material-icons', size: 15, color: '#fdf5e8' }} iconRight iconContainerStyle={{ marginLeft: 10 }} buttonStyle={{ backgroundColor: '#295E60', borderColor: '#1E4344', borderWidth: 1, borderRadius: 6, }} containerStyle={{ paddingTop: 2, width: wp('30%') }} titleStyle={{ fontSize: 13, color: '#fdf5e8' }} />
-                                            <Button title={titlePreCapturate} onPress={() => preTakePicture()} icon={{ name: 'camera', type: 'material-icons', size: 15, color: '#fdf5e8' }} iconRight iconContainerStyle={{ marginLeft: 10 }} buttonStyle={{ backgroundColor: '#295E60', borderColor: '#1E4344', borderWidth: 1, borderRadius: 6, }} containerStyle={{ paddingTop: 2, width: wp('30%') }} titleStyle={{ fontSize: 13, color: '#fdf5e8' }} /></>
+                                            </>
                                     }
                                     {deletePhotoEdit && !isLoading &&
-                                        <Button title={titleDelCapturate} onPress={() => removeEditPicture()} icon={{ name: 'image-not-supported', type: 'material-icons', size: 14, color: '#FFC77A' }} iconRight iconContainerStyle={{ marginLeft: 10 }} buttonStyle={{ backgroundColor: '#602929', borderColor: '#FFC77A', borderWidth: 1, borderRadius: 6, }} containerStyle={{ paddingTop: 2, width: '30%' }} titleStyle={{ fontSize: 13, color: '#FFC77A' }} />
+                                        <Button title={titleDelCapturate} onPress={() => removePicture()} icon={{ name: 'image-not-supported', type: 'material-icons', size: 14, color: '#FFC77A' }} iconRight iconContainerStyle={{ marginLeft: 10 }} buttonStyle={{ backgroundColor: '#602929', borderColor: '#FFC77A', borderWidth: 1, borderRadius: 6, }} containerStyle={{ paddingTop: 2, width: '30%' }} titleStyle={{ fontSize: 13, color: '#FFC77A' }} />
                                     }
                                 </View>
                             </View>
                             <View style={{ margin: 4, flexDirection: "row", justifyContent: "space-evenly", }}>
-                                <SelectDropdownTextLinear widthbt={wp('45%')} text={'Cidade'} placeholder={'2.888,66'} setValue={setCity} value={specificHouse.houses_city} data={['São josé dos campos']} />
-                                <SelectDropdownTextLinear widthbt={wp('45%')} text={'Bairro'} placeholder={'2.888,66'} setValue={setDistrict} value={specificHouse.houses_district} data={['Veredinha', 'Alto do cruzeiro']} />
+                                <SelectDropdownTextLinear widthbt={wp('45%')} text={'Cidade'} placeholder={'2.888,66'} setValue={setCity} value={specificHouses.houses_city} data={['São josé dos campos']} />
+                                <SelectDropdownTextLinear widthbt={wp('45%')} text={'Bairro'} placeholder={'2.888,66'} setValue={setDistrict} value={specificHouses.houses_district} data={['Veredinha', 'Alto do cruzeiro']} />
                             </View>
                             <View style={{ margin: 5, flexDirection: "row", justifyContent: "space-evenly", }}>
-                                <InputIconInText width={wp('70%')} height={hp('6%')} text={'Logradouro'} placeholder={'2.888,66'} setValue={specificHouse.houses_setpublicPlace} value={publicPlace} />
-                                <SelectDropdownIconLinear width={wp('22%')} height={hp('6%')} widthbtn={wp('20%')} setValue={setType} value={specificHouse.houses_type} text={'Tipo '} icon={<FontAwesome name="handshake-o" color='#122829' size={19} />} data={['Vender', 'Alugar']} />
+                                <InputIconInText width={wp('70%')} height={hp('6%')} text={'Logradouro'} placeholder={'2.888,66'} setValue={specificHouses.houses_setpublicPlace} value={publicPlace} />
+                                <SelectDropdownIconLinear width={wp('22%')} height={hp('6%')} widthbtn={wp('20%')} setValue={setType} value={specificHouses.houses_type} text={'Tipo '} icon={<FontAwesome name="handshake-o" color='#122829' size={19} />} data={['Vender', 'Alugar']} />
 
                             </View>
                             <View style={{ margin: 5, flexDirection: "row", justifyContent: "space-evenly", }}>
-                                <InputIconInText width={wp('25%')} height={hp('6%')} text={'Valor R$'} placeholder={'2.888,66'} setValue={setPrice} value={specificHouse.houses_price} />
-                                <InputIconInText width={wp('25%')} height={hp('6%')} text={'IPTU'} placeholder={'2.888,66'} setValue={setIptu} value={specificHouse.houses_tax} />
-                                <InputIconInText width={wp('20%')} height={hp('6%')} text={'m²'} placeholder={'200'} setValue={setSquareMeter} value={specificHouse.houses_squareMeter} />
-                                <SelectDropdownIconLinear width={wp('22%')} height={hp('6%')} widthbtn={wp('20%')} setValue={setCar} value={specificHouse.houses_car} text={'Vagas '} icon={<FontAwesome5 name="car" color='#122829' size={20} />} data={['1', '2', '3', '4', '5', '6', '7', '8', '9', '10']} />
+                                <InputIconInText width={wp('25%')} height={hp('6%')} text={'Valor R$'} placeholder={'2.888,66'} setValue={setPrice} value={specificHouses.houses_price} />
+                                <InputIconInText width={wp('25%')} height={hp('6%')} text={'IPTU'} placeholder={'2.888,66'} setValue={setIptu} value={specificHouses.houses_tax} />
+                                <InputIconInText width={wp('20%')} height={hp('6%')} text={'m²'} placeholder={'200'} setValue={setSquareMeter} value={specificHouses.houses_squareMeter} />
+                                <SelectDropdownIconLinear width={wp('22%')} height={hp('6%')} widthbtn={wp('20%')} setValue={setCar} value={specificHouses.houses_car} text={'Vagas '} icon={<FontAwesome5 name="car" color='#122829' size={20} />} data={['1', '2', '3', '4', '5', '6', '7', '8', '9', '10']} />
 
                             </View>
                             <View style={{ margin: 5, flexDirection: "row", justifyContent: "space-evenly", }}>
-                                <SelectDropdownIconLinear width={wp('25%')} height={hp('6%')} widthbtn={wp('20%')} setValue={setfurniture} value={specificHouse.houses_furniture} text={'Mobilhada '} icon={<FontAwesome5 name="couch" color='#122829' size={17} />} data={['SIM', 'NÃO']} />
-                                <SelectDropdownIconLinear width={wp('22%')} height={hp('6%')} widthbtn={wp('20%')} setValue={setShower} value={specificHouse.houses_shower} text={'Banheiro '} icon={<FontAwesome5 name="shower" color='#122829' size={19} />} data={['1', '2', '3', '4', '5', '6', '7', '8', '9', '10']} />
-                                <SelectDropdownIconLinear width={wp('19%')} height={hp('6%')} widthbtn={wp('17%')} setValue={setPet} value={specificHouse.houses_pet} text={'Pet '} icon={<MaterialIcons name="pets" color='#122829' size={20} />} data={['SIM', 'NÃO']} />
-                                <SelectDropdownIconLinear width={wp('22%')} height={hp('6%')} widthbtn={wp('20%')} setValue={setBed} value={specificHouse.houses_bed} text={'Quartos '} icon={<FontAwesome name="bed" color='#122829' size={20} />} data={['1', '2', '3', '4', '5', '6', '7', '8', '9', '10']} />
+                                <SelectDropdownIconLinear width={wp('25%')} height={hp('6%')} widthbtn={wp('20%')} setValue={setfurniture} value={specificHouses.houses_furniture} text={'Mobilhada '} icon={<FontAwesome5 name="couch" color='#122829' size={17} />} data={['SIM', 'NÃO']} />
+                                <SelectDropdownIconLinear width={wp('22%')} height={hp('6%')} widthbtn={wp('20%')} setValue={setShower} value={specificHouses.houses_shower} text={'Banheiro '} icon={<FontAwesome5 name="shower" color='#122829' size={19} />} data={['1', '2', '3', '4', '5', '6', '7', '8', '9', '10']} />
+                                <SelectDropdownIconLinear width={wp('19%')} height={hp('6%')} widthbtn={wp('17%')} setValue={setPet} value={specificHouses.houses_pet} text={'Pet '} icon={<MaterialIcons name="pets" color='#122829' size={20} />} data={['SIM', 'NÃO']} />
+                                <SelectDropdownIconLinear width={wp('22%')} height={hp('6%')} widthbtn={wp('20%')} setValue={setBed} value={specificHouses.houses_bed} text={'Quartos '} icon={<FontAwesome name="bed" color='#122829' size={20} />} data={['1', '2', '3', '4', '5', '6', '7', '8', '9', '10']} />
 
                             </View>
 
@@ -1091,7 +735,7 @@ export default function MyHouses() {
                             <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"}>
                                 <View style={{ flexDirection: "row", justifyContent: "space-evenly" }}>
 
-                                    <InputILongText width={wp('90%')} height={hp('18%')} text={'Descrição'} placeholder={'200'} setValue={setDescription} value={specificHouse.houses_description} />
+                                    <InputILongText width={wp('90%')} height={hp('18%')} text={'Descrição'} placeholder={'200'} setValue={setDescription} value={specificHouses.houses_description} />
 
                                 </View>
                             </KeyboardAvoidingView >
@@ -1099,10 +743,10 @@ export default function MyHouses() {
 
                             <View style={{ flexDirection: "row", justifyContent: "space-evenly", }}>
 
-                                 <Button title="Voltar   " onPress={() => (setEditShow(!editShow),resetHouse(),setAlt([]))} icon={{ name: 'arrow-back-ios', type: 'material-icons', size: 13, color: '#1E4344' }} buttonStyle={{ backgroundColor: '#EDE17B', borderColor: '#1E4344', borderWidth: 1, borderRadius: 6, }} containerStyle={{ paddingTop: 2, width: wp('20%') }} titleStyle={{ fontSize: 13, color: '#1E4344' }} />
+                                 <Button title="Voltar   " onPress={() => (setEditShow(!editShow),resetHouse(),setAlt(new Object))} icon={{ name: 'arrow-back-ios', type: 'material-icons', size: 13, color: '#1E4344' }} buttonStyle={{ backgroundColor: '#EDE17B', borderColor: '#1E4344', borderWidth: 1, borderRadius: 6, }} containerStyle={{ paddingTop: 2, width: wp('20%') }} titleStyle={{ fontSize: 13, color: '#1E4344' }} />
                                  {buttonInsert &&  <Button title="  Salvar" onPress={() => alterHouse()} icon={{ name: 'save', type: 'font-awesome', size: 14, color: '#1E4344' }} iconRight iconContainerStyle={{ marginLeft: 10 }} buttonStyle={{ backgroundColor: '#FFF8EE', borderColor: '#122829', borderWidth: 1, borderRadius: 6, }} containerStyle={{ paddingTop: 2, width: wp('40%') }} titleStyle={{ fontSize: 13, color: '#1E4344' }} />}
                                
-                                <Button title="  Excluir" onPress={() => deleteHouse(specificHouse.houses_id)} icon={{ name: 'close', type: 'font-awesome', size: 14, color: '#fdf5e8' }} iconRight iconContainerStyle={{ marginLeft: 10 }} buttonStyle={{ backgroundColor: '#8F3E3E', borderColor: '#602929', borderWidth: 1, borderRadius: 6, }} containerStyle={{ paddingTop: 2, width: wp('20%') }} titleStyle={{ fontSize: 13, color: '#fdf5e8' }} />
+                                <Button title="  Excluir" onPress={() => setVisibleConfimationDeletion(true)} icon={{ name: 'close', type: 'font-awesome', size: 14, color: '#fdf5e8' }} iconRight iconContainerStyle={{ marginLeft: 10 }} buttonStyle={{ backgroundColor: '#8F3E3E', borderColor: '#602929', borderWidth: 1, borderRadius: 6, }} containerStyle={{ paddingTop: 2, width: wp('20%') }} titleStyle={{ fontSize: 13, color: '#fdf5e8' }} />
                           </View>
 
 
@@ -1127,7 +771,7 @@ export default function MyHouses() {
                                 <View style={{ alignItems: 'center', justifyContent: "space-evenly", flexDirection: "row", }} >
                                     {!titleDelCapturate.includes('6') &&
                                         <><Button title={titlePreCapturate} onPress={() => preTakePictureGalery()} icon={{ name: 'photo-library', type: 'material-icons', size: 15, color: '#fdf5e8' }} iconRight iconContainerStyle={{ marginLeft: 10 }} buttonStyle={{ backgroundColor: '#295E60', borderColor: '#1E4344', borderWidth: 1, borderRadius: 6, }} containerStyle={{ paddingTop: 2, width: wp('30%') }} titleStyle={{ fontSize: 13, color: '#fdf5e8' }} />
-                                            <Button title={titlePreCapturate} onPress={() => preTakePicture()} icon={{ name: 'camera', type: 'material-icons', size: 15, color: '#fdf5e8' }} iconRight iconContainerStyle={{ marginLeft: 10 }} buttonStyle={{ backgroundColor: '#295E60', borderColor: '#1E4344', borderWidth: 1, borderRadius: 6, }} containerStyle={{ paddingTop: 2, width: wp('30%') }} titleStyle={{ fontSize: 13, color: '#fdf5e8' }} /></>
+                                            </>
                                     }
                                     {capturatePhoto1 && !isLoading &&
                                         <Button title={titleDelCapturate} onPress={() => removePicture()} icon={{ name: 'image-not-supported', type: 'material-icons', size: 14, color: '#FFC77A' }} iconRight iconContainerStyle={{ marginLeft: 10 }} buttonStyle={{ backgroundColor: '#602929', borderColor: '#FFC77A', borderWidth: 1, borderRadius: 6, }} containerStyle={{ paddingTop: 2, width: '30%' }} titleStyle={{ fontSize: 13, color: '#FFC77A' }} />
@@ -1171,8 +815,8 @@ export default function MyHouses() {
 
                             <View style={{ flexDirection: "row", justifyContent: "space-evenly", }}>
 
-                                {buttonInsert && <Button title="  Adicionar" onPress={() => insertHouse()} icon={{ name: 'plus', type: 'font-awesome', size: 14, color: '#1E4344' }} iconRight iconContainerStyle={{ marginLeft: 10 }} buttonStyle={{ backgroundColor: '#FFF8EE', borderColor: '#122829', borderWidth: 1, borderRadius: 6, }} containerStyle={{ paddingTop: 10, width: '55%' }} titleStyle={{ fontSize: 13, color: '#1E4344' }} />}
-                                <Button title="  Cancelar" onPress={() => (setCreateShow(!createShow),resetHouse(),setAlt([]))} icon={{ name: 'close', type: 'font-awesome', size: 14, color: '#122829' }} iconRight iconContainerStyle={{ marginLeft: 10 }} buttonStyle={{ backgroundColor: '#EDE17B', borderColor: '#122829', borderWidth: 1, borderRadius: 6, }} containerStyle={{ paddingTop: 10, width: '30%' }} titleStyle={{ fontSize: 13, color: '#122829' }} />
+                                {buttonInsert && <Button title="  Adicionar" onPress={() => setVisibleConfimation(true)} icon={{ name: 'plus', type: 'font-awesome', size: 14, color: '#1E4344' }} iconRight iconContainerStyle={{ marginLeft: 10 }} buttonStyle={{ backgroundColor: '#FFF8EE', borderColor: '#122829', borderWidth: 1, borderRadius: 6, }} containerStyle={{ paddingTop: 10, width: '55%' }} titleStyle={{ fontSize: 13, color: '#1E4344' }} />}
+                                <Button title="  Cancelar" onPress={() => (setCreateShow(!createShow),resetHouse(),setAlt(new Object))} icon={{ name: 'close', type: 'font-awesome', size: 14, color: '#122829' }} iconRight iconContainerStyle={{ marginLeft: 10 }} buttonStyle={{ backgroundColor: '#EDE17B', borderColor: '#122829', borderWidth: 1, borderRadius: 6, }} containerStyle={{ paddingTop: 10, width: '30%' }} titleStyle={{ fontSize: 13, color: '#122829' }} />
                             </View>
 
 
@@ -1191,7 +835,7 @@ export default function MyHouses() {
                                     onRefresh={onRefresh}
                                 />} showsVerticalScrollIndicator={false} data={myHouses} renderItem={({ item }) =>
                                     <Card style={{ justifyContent: "space-evenly", borderWidth: 1.5, backgroundColor: '#fdf5e8', margin: 5, borderColor: '#152F30', borderRadius: 6 }}>
-                                        <Card.Cover style={{ height: hp('65%'), borderRadius: 6, borderWidth: 3, borderColor: '#fdf5e8' }} source={{ uri: validateImage(item.houses_images, '1') == false ? "https://daviastro.000webhostapp.com/house.png" : validateImage(item.houses_images, '1') }} />
+                                        <Card.Cover style={{ height: hp('65%'), borderRadius: 6, borderWidth: 3, borderColor: '#fdf5e8' }} source={{ uri: validateImage(item.houses_images, 0) == false ? "https://daviastro.000webhostapp.com/house.png" : validateImage(item.houses_images, 0) }} />
                                         <Card.Content >
                                             <Text style={{ fontWeight: 'bold', fontSize: 17 }}>{item.houses_publicPlace} - {item.houses_district}</Text>
                                             <Paragraph><FontAwesome name="bed" color='#000' size={15} /> {item.houses_bed}      <FontAwesome5 name="shower" color='#000' size={15} /> {item.houses_shower}      <FontAwesome5 name="car" color='#000' size={15} /> {item.houses_car}     <FontAwesome name="handshake-o" color='#000' size={15} /> {item.houses_type}      <Text style={{ fontWeight: 'bold' }}>R$</Text>{item.houses_price}</Paragraph>
@@ -1210,6 +854,14 @@ export default function MyHouses() {
                     {visibleNotification &&
                         <Notification message={messageNotification} tipo={'ss'} visible={true} onClose={() => (setVisibleNotification(false), cleanCreate())}></Notification>
                     }
+                    {visibleConfimation &&
+                        <Confirmation message={'Tem certeza que deseja adicionar?'} tipo={'ss'} visible={true} cancel={() => (setCreateShow(!createShow),resetHouse(),setAlt(new Object),setVisibleConfimation(false))} confirmation={() => insertHouse()}></Confirmation>
+                    }
+                    {visibleConfimationDeletion &&
+                        <Confirmation message={'Tem certeza que deseja deletar?'} tipo={'ss'} visible={true} cancel={() => (setEditShow(!editShow),resetHouse(),setAlt(new Object),setVisibleConfimationDeletion(false))} confirmation={() => deleteHouse(specificHouses.houses_id)}></Confirmation>
+                    }
+
+
                 </NativeBaseProvider>
 
 

@@ -14,7 +14,7 @@ const CustomDialog = (props) => {
 		  <Dialog.Title style={styles.dialogTitle}>{props.titulo}</Dialog.Title>
 		  }
           <Dialog.Content>
-            <Paragraph style={styles.pagraph}>{props.message}.</Paragraph>
+            <Paragraph style={styles.pagraph}>{props.message}</Paragraph>
           </Dialog.Content>
           <Dialog.Actions>
 		  <IconButton

@@ -8,6 +8,13 @@ const styles = StyleSheet.create({
         backgroundColor: '#1E4344',
         paddingBottom: 2
     },
+    termsUse:{
+        backgroundColor: 'transparent', 
+        borderColor:'transparent', 
+        borderRadius:6,
+        borderWidth:0.1,
+        backgroundColor:'#C89A5B'
+    },
     inputList:{
         borderColor:'rgba(106,235, 16, 1)',
 	    width:'95%',
@@ -72,7 +79,7 @@ const styles = StyleSheet.create({
     dropdown1RowStyle: {
         backgroundColor: '#122829', 
         borderColor: '#FFC77A',
-        borderWidth:5,
+        borderWidth:1,
         borderRadius:10
     },
     dropdown1BtnTxtStyle: {

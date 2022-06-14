@@ -9,6 +9,14 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent:"space-evenly"
     },
+    titleProfile:{
+        
+        fontSize:15,
+        alignItems: 'center',
+        justifyContent: 'center',
+        color:'#C89A5B'
+    
+    },
     Logo:{
         height:hp('20%'),
         marginTop:'5%',

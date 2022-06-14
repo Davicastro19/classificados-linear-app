@@ -198,12 +198,12 @@ export default function MyHouses() {
     async function isValidateImage() {
         try {
             let newAlt = ''
-            console.log('ALT', alt)
+            //console.log('ALT', alt)
             for (var num in alt) {
-                console.log(num)
+                //console.log(num)
                 const xhr = new XMLHttpRequest();
                 xhr.withCredentials = true;
-                console.log('SIM', images.split(',')[parseInt(num - 1)])
+                //console.log('SIM', images.split(',')[parseInt(num - 1)])
                 const imagesData = new FormData();
                 imagesData.append('image', {
                     uri: alt[num].uri,
@@ -225,7 +225,7 @@ export default function MyHouses() {
         setIsLoading(true)
         setCreateShow(false)
         setVisibleConfimation(false)
-        console.log(isValidate())
+        //console.log(isValidate())
         if (isValidate() && isValidateImage()) {
             const dataCreateHouse = {
                 bed: bed,
@@ -257,7 +257,7 @@ export default function MyHouses() {
                         setMessageNotification('Ocorreu um erro, tente novamente')
                         setVisibleNotification(true)
                         setCreateShow(true)
-                        console.log('Ocorreu um erro 298 myhouse', response.data)
+                        //console.log('Ocorreu um erro 298 myhouse', response.data)
                     }
 
                 })
@@ -265,14 +265,14 @@ export default function MyHouses() {
                     setMessageNotification('Ocorreu um erro, tente novamente')
                     setVisibleNotification(true)
                     setCreateShow(true)
-                    console.log('Ocorreu um erro 297 myhouse', response.data)
+                    //console.log('Ocorreu um erro 297 myhouse', response.data)
                 })
         }else{
         setCreateShow(true)
         setMessageNotification('Existem campos invalidos')
         setVisibleNotification(true)
         setCreateShow(true)
-        console.log('Ocorreu um erro 300 myhouse', response.data)
+        //console.log('Ocorreu um erro 300 myhouse', response.data)
     }
     setIsLoading(false)
     }
@@ -300,7 +300,7 @@ export default function MyHouses() {
             }
             housesService.updateHouse(dataUpdateHouse, id)
                 .then((response) => {
-                    console.log(response.data.status)
+                    //console.log(response.data.status)
                     if (response.data.status) {
                         setVisibleNotification(true)
                         setMessageNotification('Alterado com sucesso!')
@@ -311,7 +311,7 @@ export default function MyHouses() {
 
                     } else {
                         setEditShow(true)
-                        console.log('whatt', response.data)
+                        //console.log('whatt', response.data)
                         setMessageNotification('Não foi possivel alterar, tente novamente')
                         setVisibleNotification(true)
                     }
@@ -321,7 +321,7 @@ export default function MyHouses() {
                     setEditShow(true)
                     setMessageNotification('Não foi possivel alterar, tente novamente')
                         setVisibleNotification(true)
-                    console.log('ertert', error)
+                    //console.log('ertert', error)
                 })
         }else{
             setEditShow(true)
@@ -356,7 +356,7 @@ export default function MyHouses() {
     }
 
     async function takePictureGalery(data) {
-        console.log(editShow)
+        //console.log(editShow)
         if (!data.cancelled && data.uri) {
             if (!capturatePhoto1) {
 
@@ -506,7 +506,7 @@ export default function MyHouses() {
 
     async function selectHouseById(value) {
         setIsLoading(true)
-        console.log(value)
+        //console.log(value)
         housesService.selectHouseById(value)
             .then((response) => {
                 setSpecificHouses(response.data)
@@ -517,7 +517,7 @@ export default function MyHouses() {
                 setShowFilter(true)
                 setEditShow(false)
                 setButtonInsert(false)
-                console.log('aaa', error)
+                //console.log('aaa', error)
                 setMessageNotification('Não foi possivel buscar, tente novamente')
                 setVisibleNotification(true)
                 //setCatalogData('Seu sinais estarão aqui. (clique em Filtro)')
@@ -542,7 +542,7 @@ export default function MyHouses() {
 
             })
             .catch((error) => {
-                console.log('oooo', error)
+                //console.log('oooo', error)
                 //setCatalogData('Seu sinais estarão aqui. (clique em Filtro)')
             })
             setIsLoading(false)
@@ -557,14 +557,13 @@ export default function MyHouses() {
         setIsLoading(true)
         housesService.allMyHouses()
             .then((response) => {
-
-                setMyHouses()
-
+                setMyHouses(response.data)
             })
             .catch((error) => {
-                console.log('oooo', error)
+                //console.log('oooo', error)
                 setMessageNotification('Não foi possivel encontrar, tente novamente')
                 setVisibleNotification(true)
+                allMyHouses()
                 //setCatalogData('Seu sinais estarão aqui. (clique em Filtro)')
             })
             setIsLoading(false)
@@ -583,11 +582,10 @@ export default function MyHouses() {
             <View style={styles.container} >
 
                 {!editShow && !createShow && !isLoading && !visibleNotification &&
-                    <><View style={{ width: '100%', height: '6%' }}><Button title=" Filtro" onPress={() => setFilter(!filter)} icon={{ name: 'filter', type: 'font-awesome', size: 19, color: '#fdf5e8' }} iconRight iconContainerStyle={{ marginLeft: 10 }} buttonStyle={{ backgroundColor: '#1E4344', borderColor: '#152F30', borderWidth: 0.5 }} containerStyle={{ height: '100%' }} titleStyle={{ color: '#fdf5e8' }} />
-                    </View>
-
-                        {myHouses && <View style={{ width: '100%', height: '6%' }}><Button title=" Adicionar casa/aptoº" onPress={() => (setCreateShow(!createShow), setTitleDelCapturate("Adicionar a 1ª"))} icon={{ name: 'add-box', type: 'material-icons', size: 19, color: '#fdf5e8' }} iconRight iconContainerStyle={{ marginLeft: 10 }} buttonStyle={{ backgroundColor: '#1E4344', borderColor: '#152F30', borderWidth: 0.5 }} containerStyle={{ height: '100%' }} titleStyle={{ color: '#fdf5e8' }} />
-                        </View>}</>}
+                    //<><View style={{ width: '100%', height: '6%' }}><Button title=" Filtro" onPress={() => setFilter(!filter)} icon={{ name: 'filter', type: 'font-awesome', size: 19, color: '#fdf5e8' }} iconRight iconContainerStyle={{ marginLeft: 10 }} buttonStyle={{ backgroundColor: '#1E4344', borderColor: '#152F30', borderWidth: 0.5 }} containerStyle={{ height: '100%' }} titleStyle={{ color: '#fdf5e8' }} />
+                   // </View>
+                            <View style={{ width: '100%', height: '6%' }}><Button title=" Adicionar casa/aptoº" onPress={() => (setCreateShow(!createShow), setTitleDelCapturate("Adicionar a 1ª"))} icon={{ name: 'add-box', type: 'material-icons', size: 19, color: '#fdf5e8' }} iconRight iconContainerStyle={{ marginLeft: 10 }} buttonStyle={{ backgroundColor: '#1E4344', borderColor: '#152F30', borderWidth: 0.5 }} containerStyle={{ height: '100%' }} titleStyle={{ color: '#fdf5e8' }} />
+                        </View>}
 
                 <NativeBaseProvider >
                     {openCamera && !isLoading &&
@@ -616,7 +614,7 @@ export default function MyHouses() {
                             </View>
                         </Camera>}
 
-                    {!isLoading && editShow && !openCamera &&
+                    {!isLoading && editShow && !openCamera && !visibleConfimationUpdate && !visibleNotification && !visibleConfimationDeletion && !visibleNotification &&
                         <View style={{ height: hp('93%'), justifyContent: "space-evenly", borderWidth: 1.5, backgroundColor: '#fdf5e8', borderColor: '#152F30', borderRadius: 6 }}>
                             <View style={{ paddingLeft: 5, paddingRight: 5, justifyContent: "space-evenly" }}>
 
@@ -642,8 +640,8 @@ export default function MyHouses() {
                                 </View>
                             </View>
                             <View style={{ margin: 4, flexDirection: "row", justifyContent: "space-evenly", }}>
-                                <SelectDropdownTextLinear widthbt={wp('45%')} text={'Cidade'} placeholder={'2.888,66'} setValue={setCity} value={city} data={['São josé dos campos']} />
-                                <SelectDropdownTextLinear widthbt={wp('45%')} text={'Bairro'} placeholder={'2.888,66'} setValue={setDistrict} value={district} data={['Veredinha', 'Alto do cruzeiro']} />
+                                <SelectDropdownTextLinear widthbt={wp('45%')} text={'Cidade'} placeholder={'2.888,66'} setValue={setCity} value={city} data={['Ibotirama']} />
+                                <SelectDropdownTextLinear widthbt={wp('45%')} text={'Bairro'} placeholder={'2.888,66'} setValue={setDistrict} value={district} data={['Alto do Cruzeiro', 'Alto do Fundão', 'Calumbi', 'Centro',  'Ibotiraminha', 'Morada Real', 'Bairro São Francisco', 'Barão 242', 'Bairro São João', 'Santa Rosa', 'Veredinha', 'Xixa']} />
                             </View>
                             <View style={{ margin: 5, flexDirection: "row", justifyContent: "space-evenly", }}>
                                 <InputIconInText width={wp('70%')} height={hp('6%')} text={'Logradouro'} placeholder={'2.888,66'} setValue={setPublicPlace} value={publicPlace} />
@@ -687,7 +685,7 @@ export default function MyHouses() {
 
                         </View>
                     }
-                    {!isLoading && createShow && !openCamera &&
+                    {!isLoading && createShow && !openCamera && !visibleConfimationUpdate && !visibleNotification && !visibleConfimationDeletion && !visibleNotification &&
 
                         <View style={{ height: hp('93%'), justifyContent: "space-evenly", borderWidth: 1.5, backgroundColor: '#fdf5e8', borderColor: '#152F30', borderRadius: 6 }}>
                             <View style={{ paddingLeft: 5, paddingRight: 5, justifyContent: "space-evenly" }}>
@@ -714,8 +712,8 @@ export default function MyHouses() {
                                 </View>
                             </View>
                             <View style={{ margin: 4, flexDirection: "row", justifyContent: "space-evenly", }}>
-                                <SelectDropdownTextLinear widthbt={wp('45%')} text={'Cidade'} placeholder={'2.888,66'} setValue={setCity} value={city} data={['São josé dos campos']} />
-                                <SelectDropdownTextLinear widthbt={wp('45%')} text={'Bairro'} placeholder={'2.888,66'} setValue={setDistrict} value={district} data={['Veredinha', 'Alto do cruzeiro']} />
+                                <SelectDropdownTextLinear widthbt={wp('45%')} text={'Cidade'} placeholder={'2.888,66'} setValue={setCity} value={city} data={['Ibotirama']} />
+                                <SelectDropdownTextLinear widthbt={wp('45%')} text={'Bairro'} placeholder={'2.888,66'} setValue={setDistrict} value={district} data={['Alto do Cruzeiro', 'Alto do Fundão', 'Calumbi', 'Centro',  'Ibotiraminha', 'Morada Real', 'Bairro São Francisco', 'Barão 242', 'Bairro São João', 'Santa Rosa', 'Veredinha', 'Xixa']} />
                             </View>
                             <View style={{ margin: 5, flexDirection: "row", justifyContent: "space-evenly", }}>
                                 <InputIconInText width={wp('70%')} height={hp('6%')} text={'Logradouro'} placeholder={'2.888,66'} setValue={setPublicPlace} value={publicPlace} />
@@ -758,7 +756,7 @@ export default function MyHouses() {
                         </View>
                     }
 
-                    {!editShow && !isLoading && !visibleNotification &&
+                    {!editShow && !isLoading && !visibleConfimationUpdate && !visibleNotification && !visibleConfimationDeletion && !visibleNotification &&
                         <View style={{ backgroundColor: '#1E4344', flex: 1, justifyContent: 'center', }}>
                             {myHouses &&
                                 <FlatList refreshControl={<RefreshControl

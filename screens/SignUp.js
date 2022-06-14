@@ -121,6 +121,7 @@ function isNumber(str) {
   }
 function FullSignUp(){
     if (ValidateSignUp()){
+      //console.log(code, newCode)
       if (code === newCode){
         setLoading(true)
         let dateNow = new Date();
@@ -152,7 +153,7 @@ function FullSignUp(){
           showDialog	(titulo, response.data.message, "SUCESSO")         
         })
         .catch((response) => {
-          console.log('sssdsds',response.data)
+          //console.log('sssdsds',response.data)
           setLoading(false)
           setVisibleDialogCode(false)
           showDialog(titulo, response, "SUCESSO")
@@ -178,7 +179,6 @@ function setCodeFull(value){
 function sendCode(){
   setLoading(true)
   if (ValidateSignUp()){
-    setVisibleDialogCode(true)
     setLoading(true)
       let data = {
         email: email,
@@ -187,6 +187,8 @@ function sendCode(){
     tenantService.sendCode(data)
       .then((response) => {
        if (response.data.status){
+         //console.log(response.data.message)
+        setVisibleDialogCode(true)
         setLoading(false)
         setNewCode(response.data.message)
        }else{
@@ -195,8 +197,9 @@ function sendCode(){
         showDialog(titulo, response.data.message, "SUCESSO")         
       }})
       .catch((response) => {
-        console.log('sssdsds',response.data)
-    //    setLoading(false)
+        //console.log('sssdsds',response.data)
+        setVisibleDialogCode(false)
+        setLoading(false)
     //    showDialog(titulo, response, "SUCESSO")
       })
 }else{

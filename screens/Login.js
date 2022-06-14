@@ -44,7 +44,7 @@ export default function Login({ navigation }) {
       tenantService.login(data)
         .then((response) => {
           if (response.data.status) {
-            if (response.data.device === Device.modelName + '/' + Device.osName + '/' + Device.deviceName) {
+            if (true){//(response.data.device === Device.modelName + '/' + Device.osName + '/' + Device.deviceName) {
               setLoading(false)
               setErroMessageEmail('')
               setErroMessagePass('')
@@ -69,7 +69,7 @@ export default function Login({ navigation }) {
             showDialog("Ops!", "Erro interno", "SUCESSO")
 
           } else {
-            //console.log('ww',error)
+            ////console.log('ww',error)
             setLoading(false)
             showDialog("Dados inválidos", "Clique em cadastrar para ter acesso. Use token DEMO (garrateste) caso não tenha recebido um token VIP", "SUCESSO")
           }
@@ -85,7 +85,10 @@ export default function Login({ navigation }) {
     tenantService.autoLogin(data)
       .then((response) => {
 
-        if (response.data.device === Device.modelName + '/' + Device.osName + '/' + Device.deviceName) {
+        if (!response.data.status){//(response.data.device === Device.modelName + '/' + Device.osName + '/' + Device.deviceName) {
+          setLoading(false)
+        }
+        else {
           setLoading(false)
           setErroMessageEmail('')
           setErroMessagePass('')
@@ -93,9 +96,7 @@ export default function Login({ navigation }) {
             index: 0,
             routes: [{ name: "Home" }]
           })
-        }
-        else {
-          setLoading(false)
+          
 
         }
       })

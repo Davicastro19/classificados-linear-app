@@ -18,7 +18,7 @@ class HousesService{
         }).then((response)=> {
             return Promise.resolve(response)
         }).catch((error)=>{
-            //console.log('aaaaaaaaasasa',error)
+            ////console.log('aaaaaaaaasasa',error)
             return Promise.reject(error)
         })
     }
@@ -36,14 +36,13 @@ class HousesService{
         }).then((response)=> {
             return Promise.resolve(response)
         }).catch((error)=>{
-            //console.log('aaaaaaaaasasa',error)
+            ////console.log('aaaaaaaaasasa',error)
             return Promise.reject(error)
         })
     }
     
     async allHouses(skip,take){
         let token = await AsyncStorage.getItem("TOKEN")
-        console.log(Config.API_URL+"houses/all/"+skip.toString()+"/"+take.toString())
         return axios({
             url:Config.API_URL+"houses/all/"+skip.toString()+"/"+take.toString(),
             timeout: Config.TIMEOUT_REQUEST,
@@ -55,10 +54,29 @@ class HousesService{
         }).then((response)=> {
             return Promise.resolve(response)
         }).catch((error)=>{
-            //console.log('aaaaaaaaasasa',error)
+            ////console.log('aaaaaaaaasasa',error)
             return Promise.reject(error)
         })
     }
+    async getHouseFiltered(skip,take, district,city,orderAll){
+        let token = await AsyncStorage.getItem("TOKEN")
+        return axios({
+            url:Config.API_URL+"houses/orderByCityAndDistrictAndOrderValue/"+skip.toString()+"/"+take.toString()+"/"+district+"/"+city+"/"+orderAll,
+            timeout: Config.TIMEOUT_REQUEST,
+            method:"Get",
+            headers: {
+                Accept: 'application/json',
+                Authorization: 'Bearer ' + token
+            }
+        }).then((response)=> {
+            return Promise.resolve(response)
+        }).catch((error)=>{
+            ////console.log('aaaaaaaaasasa',error)
+            return Promise.reject(error)
+        })
+    }
+
+    
 
     async allMyHouses(){
         let token = await AsyncStorage.getItem("TOKEN")
@@ -74,13 +92,13 @@ class HousesService{
             }
             return Promise.resolve(response)
         }).catch((error)=>{
-            //console.log('aaa',error)
+            ////console.log('aaa',error)
             return Promise.reject(error)
         })
     }
 
     async deleteHouse(id){
-        console.log('aa',id)
+        //console.log('aa',id)
         let token = await AsyncStorage.getItem("TOKEN")
         return axios({
             url:Config.API_URL+"houses/delete/"+id,
@@ -96,7 +114,7 @@ class HousesService{
             }
             return Promise.resolve(response)
         }).catch((error)=>{
-            //////console.log('aaa',error)
+            ////////console.log('aaa',error)
             return Promise.reject(error)
         })
     }
@@ -113,10 +131,10 @@ class HousesService{
                 Authorization: 'Bearer ' + token
             }
         }).then((response)=> {
-            //console.log('xssxx',response.data)
+            ////console.log('xssxx',response.data)
             return Promise.resolve(response)
         }).catch((error)=>{
-            console.log('aaaaaaaaasasa',error)
+            //console.log('aaaaaaaaasasa',error)
             return Promise.reject(error)
         })
     }

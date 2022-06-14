@@ -22,7 +22,10 @@ import housesService from '../services/HousesService';
 
 export default function Homes() {
     const [loading,setLoading] = useState(false)
-    const [take,setTake] = useState(5)
+    const [take,setTake] = useState(20)
+    const [orderCity,setOrderCity] = useState('Ibotirama')
+    const [orderDistrict,setOrderDistrict] = useState('Todos Bairros')
+    const [orderAll,setOrderAll] = useState('Mais Recentes')
     const [skip,setSkip] = useState(0)
     const [isLoading, setIsLoading] = useState(false)
     const [showFilter, setShowFilter] = useState(false)
@@ -30,25 +33,38 @@ export default function Homes() {
     const [refreshing, setRefreshing] = useState(false);
     const [specificHouse, setSpecificHouse] = useState(false)
     const onRefresh = React.useCallback(() => {
-        console.log('qq')
-        setTake(5)
+        setTake(20)
         setSkip(0)
-        allHouses(0,5)
+        if (orderDistrict === 'Todos Bairros'){
+            allHouses(0,20)
+        }
+        else{ 
+            setTake(20)
+            setSkip(0) 
+            getHouseFiltered()
+        }
+        
         setRefreshing(false);
     }, []);
+
     async function moreHouses(){
         if (loading) return;
         setLoading(true);
         let nSkip = skip
-        nSkip = nSkip+5
+        nSkip = nSkip+20
         let nTake = take
-        nTake = nTake+5
-        console.log('ssss',nTake,nSkip)
+        nTake = nTake+20
         setSkip(nSkip)
         setTake(nTake)
-        console.log('sss',skip,nTake)
-        allHouses(nSkip, nTake)
-        
+        if (orderDistrict === 'Todos Bairros'){
+            allHouses(nSkip, nTake)
+        }
+        else{ 
+            setSkip(nSkip)
+            setTake(nTake)  
+            getHouseFiltered()
+        }
+            
     }
     function validateImage(image, value) {
         try {
@@ -63,6 +79,17 @@ export default function Homes() {
         setIsLoading(false)
 
     }
+    function setOrderMain(value){
+        //console.log(value)
+        if (value === 'Maior Valor'){
+            setOrderAll('bigger')
+        }else if(value === 'Menor Valor'){
+            setOrderAll('smaller')
+        }else{
+            setOrderAll('recent')
+        }
+        //console.log(orderAll)
+    }
 
     function selectHouseById(value) {
         setIsLoading(true)
@@ -72,43 +99,86 @@ export default function Homes() {
                 setSpecificHouse(response.data)
             })
             .catch((error) => {
-                console.log('61 - Homes', error)
+                //console.log('61 - Homes', error)
                 resetState()
                 //setCatalogData('Seu sinais estarão aqui. (clique em Filtro)')
             })
 
     }
 
+    async function getHouseFiltered() {
+        if (orderDistrict != 'Todos Bairros'){
+            setIsLoading(true)
+            setShowFilter(false)
+            housesService.getHouseFiltered(skip,take, orderDistrict,orderCity,orderAll)
+
+                .then((response) => {
+                    if (skip !== 0){
+                    if (response.data.length !== 0){
+                        let newList = [...houses, ...response.data]
+                        newList = newList.filter(function (a) {
+                            return !this[JSON.stringify(a)] && (this[JSON.stringify(a)] = true);
+                        }, Object.create(null))
+                        setHouses(newList)
+                    }}else{
+                        setHouses(response.data)
+                    }
+                    setLoading(false)
+
+                })
+                .catch((error) => {
+                    setIsLoading(false)
+                    //console.log('75 - Homes', error)
+                    //setCatalogData('Seu sinais estarão aqui. (clique em Filtro)')
+                })
+                if (orderAll === 'bigger'){
+                    setOrderAll('Maior Valor')
+                }else if(orderAll === 'smaller'){
+                    setOrderAll('Menor Valor')
+                }else{
+                    setOrderAll('Mais Recentes')
+                }
+        }else{
+            allHouses(skip,take)
+        }
+    }
+
     async function allHouses(skip,take) {
-        setShowFilter(false)
         setIsLoading(true)
+        setShowFilter(false)
         housesService.allHouses(skip,take)
             .then((response) => {
-                setIsLoading(false)
+                if (skip !== 0){
                 if (response.data.length !== 0){
-                setHouses(response.data)
+                    let newList = [...houses, ...response.data]
+                    newList = newList.filter(function (a) {
+                        return !this[JSON.stringify(a)] && (this[JSON.stringify(a)] = true);
+                    }, Object.create(null))
+                    setHouses(newList)
+                }}else{
+                    setHouses(response.data)
                 }
                 setLoading(false)
 
             })
             .catch((error) => {
                 setIsLoading(false)
-                console.log('75 - Homes', error)
+                //console.log('75 - Homes', error)
                 //setCatalogData('Seu sinais estarão aqui. (clique em Filtro)')
             })
     }
 
     useEffect(() => {
-        allHouses(0,5)
+        allHouses(0,20)
     }, [])
     return (
         <View style={styles.container} onPress={() => setPairOptionFunction()}>
             <StatusBar hidden />
             {!showFilter && !specificHouse &&
-                <View style={{ width: '100%', height: '6%' }}><Button title=" Filtro" onPress={() => setShowFilter(!showFilter)} icon={{ name: 'filter', type: 'font-awesome', size: 19, color: '#fdf5e8' }} iconRight iconContainerStyle={{ marginLeft: 10 }} buttonStyle={{ backgroundColor: '#1E4344', borderColor: '#152F30', borderWidth: 0.5 }} containerStyle={{ height: '100%' }} titleStyle={{ color: '#fdf5e8' }} />
+                <View style={{ width: '100%', height: '6%' }}><Button title=" Filtro" onPress={() => (setIsLoading(false), setShowFilter(true))} icon={{ name: 'filter', type: 'font-awesome', size: 19, color: '#fdf5e8' }} iconRight iconContainerStyle={{ marginLeft: 10 }} buttonStyle={{ backgroundColor: '#1E4344', borderColor: '#152F30', borderWidth: 0.5 }} containerStyle={{ height: '100%' }} titleStyle={{ color: '#fdf5e8' }} />
                 </View>}
             {showFilter && !specificHouse &&
-                <View style={{ width: '100%', height: '6%' }}><Button title=" Filtrar" onPress={() => getHouses()} icon={{ name: 'search', type: 'font-awesome', size: 19, color: '#fdf5e8' }} iconRight iconContainerStyle={{ marginLeft: 10 }} buttonStyle={{ backgroundColor: '#1E4344', borderColor: '#152F30', borderWidth: 0.5 }} containerStyle={{ height: '100%' }} titleStyle={{ color: '#fdf5e8' }} />
+                <View style={{ width: '100%', height: '6%' }}><Button title=" Filtrar" onPress={() => getHouseFiltered()} icon={{ name: 'search', type: 'font-awesome', size: 19, color: '#fdf5e8' }} iconRight iconContainerStyle={{ marginLeft: 10 }} buttonStyle={{ backgroundColor: '#1E4344', borderColor: '#152F30', borderWidth: 0.5 }} containerStyle={{ height: '100%' }} titleStyle={{ color: '#fdf5e8' }} />
                 </View>}
 
 
@@ -172,11 +242,11 @@ export default function Homes() {
                                         rowStyle={styles.dropdown1RowStyle}
                                         rowTextStyle={styles.dropdown1RowTxtStyle}
 
-                                        defaultButtonText={'Cidade'}
-                                        buttonStyle={{ width: '70%', backgroundColor: '#122829', borderRadius: 8, borderWidth: 4, borderBottomWidth: 0, borderLeftWidth: 1, borderRightWidth: 1, borderColor: '#FFC77A', alignItems: 'center', justifyContent: "center", marginBottom: 5 }}
+                                        defaultButtonText={orderCity}
+                                        buttonStyle={{ width: '70%', backgroundColor: '#122829', borderRadius: 8, borderWidth: 2, borderBottomWidth: 0, borderLeftWidth: 1, borderRightWidth: 1, borderColor: '#FFC77A', alignItems: 'center', justifyContent: "center", marginBottom: 5 }}
                                         data={['Ibotirama']}
                                         onSelect={(selectedItem, index) => {
-                                            setPairOptionFunction(selectedItem)
+                                            setOrderCity(selectedItem)
                                         }}
                                         buttonTextAfterSelection={(selectedItem, index) => {
                                             return selectedItem
@@ -196,11 +266,11 @@ export default function Homes() {
                                         rowStyle={styles.dropdown1RowStyle}
                                         rowTextStyle={styles.dropdown1RowTxtStyle}
 
-                                        defaultButtonText={'Bairro'}
-                                        buttonStyle={{ width: '70%', backgroundColor: '#122829', borderRadius: 8, borderWidth: 4, borderBottomWidth: 0, borderLeftWidth: 1, borderRightWidth: 1, borderColor: '#FFC77A', alignItems: 'center', justifyContent: "center", marginBottom: 5 }}
-                                        data={['Menor Valor', 'Maior Valor']}
+                                        defaultButtonText={orderDistrict}
+                                        buttonStyle={{ width: '70%', backgroundColor: '#122829', borderRadius: 8, borderWidth: 2, borderBottomWidth: 0, borderLeftWidth: 1, borderRightWidth: 1, borderColor: '#FFC77A', alignItems: 'center', justifyContent: "center", marginBottom: 5 }}
+                                        data={['Todos Bairros','Alto do Cruzeiro', 'Alto do Fundão', 'Calumbi', 'Centro',  'Ibotiraminha', 'Morada Real', 'Bairro São Francisco', 'Barão 242', 'Bairro São João', 'Santa Rosa', 'Veredinha', 'Xixa']}
                                         onSelect={(selectedItem, index) => {
-                                            setDay(selectedItem)
+                                            setOrderDistrict(selectedItem)
                                         }}
                                         buttonTextAfterSelection={(selectedItem, index) => {
                                             return selectedItem
@@ -219,11 +289,11 @@ export default function Homes() {
                                         rowStyle={styles.dropdown1RowStyle}
                                         rowTextStyle={styles.dropdown1RowTxtStyle}
 
-                                        defaultButtonText={'Menor valor'}
-                                        buttonStyle={{ width: '70%', backgroundColor: '#122829', borderRadius: 8, borderWidth: 4, borderBottomWidth: 0, borderLeftWidth: 1, borderRightWidth: 1, borderColor: '#FFC77A', alignItems: 'center', justifyContent: "center" }}
-                                        data={['Menor Valor', 'Maior Valor']}
+                                        defaultButtonText={orderAll}
+                                        buttonStyle={{ width: '70%', backgroundColor: '#122829', borderRadius: 8, borderWidth: 2, borderBottomWidth: 0, borderLeftWidth: 1, borderRightWidth: 1, borderColor: '#FFC77A', alignItems: 'center', justifyContent: "center" }}
+                                        data={['Mais Recentes','Menor Valor', 'Maior Valor']}
                                         onSelect={(selectedItem, index) => {
-                                            setPercentage(selectedItem)
+                                            setOrderMain(selectedItem)
                                         }}
                                         buttonTextAfterSelection={(selectedItem, index) => {
                                             return selectedItem
@@ -232,6 +302,7 @@ export default function Homes() {
                                             return item
                                         }}
                                     />
+                                    
 
                                 </View>
 
@@ -259,7 +330,7 @@ export default function Homes() {
                                         <Button title=" Ver mais" onPress={() => selectHouseById(item.id)} icon={{ name: 'info', type: 'font-awesome', size: 15, color: '#1E4344' }} iconRight iconContainerStyle={{ marginLeft: 10 }} buttonStyle={{ height: hp('5%'), backgroundColor: '#FFF8EE', borderColor: '#295E60', borderWidth: 1, borderRadius: 6, }} containerStyle={{ width: '30%' }} titleStyle={{ fontSize: 13, color: '#1E4344' }} />
                                         <Text style={{ fontSize: 10, marginLeft: wp('50%'), marginTop:hp('3%') }}>   {item.creationDate.split(' ')[0]}  </Text>
                                     </Card.Actions>
-                                </Card>} onEndReached={moreHouses}  onEndReachedThreshold={0.01} ListFooterComponent={<FAB loading visible={loading} icon={{ name: 'add' }} color='#C89A5B' borderColor='rgba(42, 42, 42,1)' size="small" />} keyExtractor={value => value.id} />
+                                </Card>} onEndReached={moreHouses}  onEndReachedThreshold={1} ListFooterComponent={<FAB loading visible={loading} icon={{ name: 'add' }} color='#C89A5B' borderColor='rgba(42, 42, 42,1)' size="small" />} keyExtractor={value => value.id} />
                         }
                     </View>
                 }

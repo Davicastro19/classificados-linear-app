@@ -1,6 +1,6 @@
 import {  View, Image, Pressable,Keyboard,Vibration,KeyboardAvoidingView } from 'react-native';
 import { FAB,Text, Input, Button, CheckBox } from 'react-native-elements';
-import React, {useState} from 'react'
+import React, {useState, useEffect} from 'react'
 import { Divider, NativeBaseProvider } from "native-base";
 import tenantService from '../services/TenantSevice';
 import  AsyncStorage  from '@react-native-async-storage/async-storage';
@@ -35,10 +35,34 @@ export default function Profile(navigation)  {
     navigation.reset({index:0,
     routes:[{name: "Login" }]
     })}).catch((erro)=> {
-      console.log(erro)
+      //console.log(erro)
     })
   }
+  function getData(token) {
+    setLoading(true)
+    let data = {
+      token: token
+    }
+    tenantService.getData(data)
+      .then((response) => {
 
+        if (response.data.status) {
+          //console.log('asdasd',response.data)
+          setLoading(false)
+          setEmail(response.data.email)
+          setName(response.data.name)
+          setPhone(response.data.phone)
+        }
+        else {
+          setLoading(false)
+
+        }
+      })
+      .catch((error) => {
+        setLoading(false)
+      })
+
+  }
   function showDialog (titulo, message, tipo) {
     setVisibleDialog(true)
     setVisibleDialogCode(false)
@@ -160,7 +184,7 @@ function FullSignUp(){
           showDialog	(titulo, response.data.message, "SUCESSO")         
         })
         .catch((response) => {
-          console.log('sssdsds',response.data)
+          //console.log('sssdsds',response.data)
           setLoading(false)
           setVisibleDialogCode(false)
           showDialog(titulo, response, "SUCESSO")
@@ -174,14 +198,9 @@ function FullSignUp(){
       }
     }
 
-
-
-
 function setCodeFull(value){
   setCode(value)
 }
-
-
 
 function sendCode(){
   setLoading(true)
@@ -203,7 +222,7 @@ function sendCode(){
         showDialog(titulo, response.data.message, "SUCESSO")         
       }})
       .catch((response) => {
-        console.log('sssdsds',response.data)
+        //console.log('sssdsds',response.data)
     //    setLoading(false)
     //    showDialog(titulo, response, "SUCESSO")
       })
@@ -212,7 +231,15 @@ function sendCode(){
   setVisibleDialogCode(false)
 }
 }
-  
+useEffect(() => {
+  AsyncStorage.getItem("TOKEN")
+      .then((token => {
+        if (token) {
+          getData(token)
+        }
+      }
+      )).catch((setLoading(false)))
+}, [])
   return (
     <NativeBaseProvider>
     <Pressable style={styles.container} onPress={Keyboard.dismiss}>
@@ -220,13 +247,13 @@ function sendCode(){
        <Text style={styles.titleProfile}> ALTERAR PERFIL</Text>
           <View style={styles.form}>
               <Text style={styles.errorMessage}>{erroMessageName}</Text>
-              <Input autoComplete={true} inputContainerStyle={input.inputIcon} placeholderTextColor='#C89A5B' style={input.input} onChangeText={value => { setName(value), setErroMessageName(null); } } placeholder="Nome e sobrenome" leftIcon={{ size: 20, type: 'font-awesome', name: 'user', color: '#C89A5B' }} />
+              <Input autoComplete={true} inputContainerStyle={input.inputIcon} placeholderTextColor='#C89A5B' style={input.input} value={name}  onChangeText={value => { setName(value), setErroMessageName(null); } } placeholder="Nome e sobrenome" leftIcon={{ size: 20, type: 'font-awesome', name: 'user', color: '#C89A5B' }} />
               <Text style={styles.errorMessage}>{erroMessageEmail}</Text>
-              <Input autoComplete={true} inputContainerStyle={input.inputIcon} placeholderTextColor='#C89A5B' style={input.input} onChangeText={value => { setEmail(value), setErroMessageEmail(null); } } placeholder=" E-mail" keyboardType="email-address" returnKeyType="done" leftIcon={{ size: 16, type: 'font-awesome', name: 'envelope', color: '#C89A5B' }} />
+              <Input autoComplete={true} inputContainerStyle={input.inputIcon} placeholderTextColor='#C89A5B' style={input.input} value={email} onChangeText={value => { setEmail(value), setErroMessageEmail(null); } } placeholder=" E-mail" keyboardType="email-address" returnKeyType="done" leftIcon={{ size: 16, type: 'font-awesome', name: 'envelope', color: '#C89A5B' }} />
               <Text style={styles.errorMessage}>{erroMessagePass}</Text>
               <Input autoComplete={true} inputContainerStyle={input.inputIcon} placeholderTextColor='#C89A5B' style={input.input} onChangeText={value => { setPassword(value), setErroMessagePass(null); } } placeholder="Senha" secureTextEntry={true} returnKeyType="done" leftIcon={{ size: 16, type: 'font-awesome', name: 'key', color: '#C89A5B' }} />
               <Text style={styles.errorMessage}>{erroMessagePhone}</Text>
-              <Input autoComplete={true} inputContainerStyle={input.inputIcon} placeholderTextColor='#C89A5B' style={input.input} onChangeText={value => { setPhone(value), setErroMessagePhone(null); } } placeholder="Telefone" keyboardType="number-pad" returnKeyType="done" leftIcon={{ size: 20, type: 'font-awesome', name: 'phone', color: '#C89A5B' }} />
+              <Input autoComplete={true} inputContainerStyle={input.inputIcon} placeholderTextColor='#C89A5B' style={input.input} value={phone} onChangeText={value => { setPhone(value), setErroMessagePhone(null); } } placeholder="Telefone" keyboardType="number-pad" returnKeyType="done" leftIcon={{ size: 20, type: 'font-awesome', name: 'phone', color: '#C89A5B' }} />
             </View>
       { isLoadings &&
       <FAB

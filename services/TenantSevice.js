@@ -45,7 +45,7 @@ class TenantService{
             }
             return Promise.resolve(response)
         }).catch((error)=>{
-            console.log('qwjq',error)
+            //console.log('qwjq',error)
             return Promise.reject(error)
         })
     }
@@ -64,7 +64,7 @@ class TenantService{
         }).then((response)=> {
             return Promise.resolve(response)
         }).catch((error)=>{
-            //console.log('qfwq',error)
+            ////console.log('qfwq',error)
             return Promise.reject(error)
         })
     }
@@ -85,7 +85,7 @@ class TenantService{
         }).then((response)=> {
             return Promise.resolve(response)
         }).catch((error)=>{
-            //console.log('qwsq',error)
+            ////console.log('qwsq',error)
             return Promise.reject(error)
         })
     }
@@ -97,12 +97,32 @@ class TenantService{
             data:data,
             headers:Config.HEADER_REQUEST
         }).then((response)=> {
+            //console.log(response.data)
             if (response && response.data && response.data.access_token) {
 			    AsyncStorage.setItem("TOKEN", response.data.access_token)
             }
             return Promise.resolve(response)
         }).catch((error)=>{
-            //console.log('aaa',error)
+            ////console.log('aaa',error)
+            return Promise.reject(error)
+        })
+    }
+
+    async getData(data){
+        return axios({
+            url:Config.API_URL+"tenant/getData",
+            timeout: Config.TIMEOUT_REQUEST,
+            method:"POST",
+            data:data,
+            headers:Config.HEADER_REQUEST
+        }).then((response)=> {
+            //console.log(response.data)
+            if (response && response.data && response.data.access_token) {
+			    AsyncStorage.setItem("TOKEN", response.data.access_token)
+            }
+            return Promise.resolve(response)
+        }).catch((error)=>{
+            ////console.log('aaa',error)
             return Promise.reject(error)
         })
     }
@@ -120,7 +140,7 @@ class TenantService{
         }).then((response)=> {
             return Promise.resolve(response)
         }).catch((error)=>{
-            //console.log('qgwq',error)
+            ////console.log('qgwq',error)
 
             return Promise.reject(error)
         })

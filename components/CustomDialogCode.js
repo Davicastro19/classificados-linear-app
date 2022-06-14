@@ -13,15 +13,17 @@ const CustomDialogCode = (props) => {
         <Dialog style={styles.dialog} visible={props.visible} onDismiss={() => props.onClose(false)}>
         <Dialog.Title style={styles.dialogTitle}>Verificação de usuario</Dialog.Title>
 		  
-          <Dialog.Content style={{ height:hp('15%')}}>
-            <Paragraph style={styles.pagraph}>Insira o código enviado no seu email.</Paragraph>
-            <Input autoComplete={true} onChangeText={value => { props.onChangeText(value)} } inputContainerStyle={input.inputIcon} placeholderTextColor='#C89A5B' style={input.input} placeholder="Código" keyboardType="email-address" returnKeyType="done" leftIcon={{ size: 16, type: 'font-awesome', name: 'expeditedssl', color: '#C89A5B' }} />
+          <Dialog.Content style={{ width:wp('60%'),height:hp('10%')}}>
+            <Paragraph style={styles.pagraph}>  Confira o código no seu email.</Paragraph>
+            <Input  autoComplete={true} onChangeText={value => { props.onChangeText(value)} } inputContainerStyle={input.inputIcon} placeholderTextColor='#C89A5B' style={input.input} placeholder="Código" keyboardType="email-address" returnKeyType="done" leftIcon={{ size: 16, type: 'font-awesome', name: 'expeditedssl', color: '#C89A5B' }} />
+            
+            </Dialog.Content>
               
-          </Dialog.Content>
+          
           <Dialog.Actions>
-          <Button  onPress={() => props.onClose()}  title=" " icon={{ name: 'close', type: 'font-awesome', size: 19, color: '#1E4344' }} iconLeft iconContainerStyle={{ marginLeft: 10 }}  buttonStyle={{ backgroundColor: '#C89A5B', borderColor: '#FFC77A', borderWidth: 1, borderRadius: 6, }} containerStyle={{ width: '22%',   }} titleStyle={{ color: '#1E4344' }} />
+          <Button  onPress={() => props.onClose()}  title=" " icon={{ name: 'close', type: 'font-awesome', size: 19, color: '#1E4344' }} iconLeft iconContainerStyle={{ marginLeft: 10 }}  buttonStyle={{ backgroundColor: '#C89A5B', borderColor: '#FFC77A', borderWidth: 1, borderRadius: 6, }} containerStyle={{ width: '22%', marginHorizontal: 18,   }} titleStyle={{ color: '#1E4344' }} />
         
-          <Button  onPress={() => props.FullSignUp()} title=" " icon={{ name: 'check', type: 'font-awesome', size: 19, color: '#1E4344' }} iconLeft iconContainerStyle={{ marginLeft: 10 }}  buttonStyle={{ backgroundColor: '#C89A5B', borderColor: '#FFC77A', borderWidth: 1, borderRadius: 6, }} containerStyle={{ width: '22%',  marginHorizontal: 50, marginVertical: 10, }} titleStyle={{ color: '#1E4344' }} />
+          <Button  onPress={() => props.FullSignUp()} title=" " icon={{ name: 'check', type: 'font-awesome', size: 19, color: '#1E4344' }} iconLeft iconContainerStyle={{ marginLeft: 10 }}  buttonStyle={{ backgroundColor: '#C89A5B', borderColor: '#FFC77A', borderWidth: 1, borderRadius: 6, }} containerStyle={{ width: '22%',  marginHorizontal: 20, marginVertical: 30, }} titleStyle={{ color: '#1E4344' }} />
           
           </Dialog.Actions>
         </Dialog>

@@ -13,8 +13,8 @@ const Notification = (props) => {
           <Paragraph style={styles.pagraph}>{props.message}</Paragraph>
          <Dialog.Actions>
          <View style={{justifyContent: "space-evenly", flexDirection: 'row', width:wp('40%')}}>
-         <Button title="   " onPress={() => props.confirmation()} icon={{ name: 'check', type: 'font-awesome', size: 25, color: '#EDE17B' }} iconRight iconContainerStyle={{ marginLeft: 10 }} buttonStyle={{ backgroundColor: '#1E4344', borderColor: '#122829' }} containerStyle={{ width: '100%' }}  />
-         <Button title="   " onPress={() => props.cancel()} icon={{ name: 'close', type: 'font-awesome', size: 25, color: '#EDE17B' }} iconRight iconContainerStyle={{ marginLeft: 10 }} buttonStyle={{ backgroundColor: '#1E4344', borderColor: '#122829' }} containerStyle={{ width: '100%' }}  />
+         <Button title="   " onPress={() => props.confirmation()} icon={{ name: 'check', type: 'font-awesome', size: 25, color: '#EDE17B' }} iconRight iconContainerStyle={{ marginLeft: 0 }} buttonStyle={{ backgroundColor: '#1E4344', borderColor: '#EDE17B', borderWidth:0.2 }} containerStyle={{ width: '60%', marginRight: 25, }}  />
+         <Button title="   " onPress={() => props.cancel()} icon={{ name: 'close', type: 'font-awesome', size: 25, color: '#EDE17B' }} iconRight iconContainerStyle={{ marginLeft: 0 }} buttonStyle={{ backgroundColor: '#1E4344', borderColor: '#EDE17B', borderWidth:0.2 }} containerStyle={{ width: '60%',marginLeft: 25, }}  />
          </View>
          </Dialog.Actions>
         </Dialog>

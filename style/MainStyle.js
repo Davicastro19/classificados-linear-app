@@ -95,21 +95,20 @@ const styles = StyleSheet.create({
   },
   dialog:{
     justifyContent:"space-evenly",
-      height:hp('12%'),
-    alignItems: 'center',
-      width:wp('90%'),
+      alignItems: 'center',
 	  backgroundColor:'#1E4344',
 	  borderColor:'#C89A5B',
-	  borderWidth:0.3,
-	  borderRadius:6
+      height:wp('25%')
 },
   dialogTitle:{
 	  fontWeight:"bold",
-      color:"#C89A5B"
+      color:"#C89A5B",
+      marginTop:"10%"
   },
   pagraph:{
 	  fontWeight:"bold",
-	  color:'white'
+	  color:'white',
+      fontSize:13
 	 
   },
   dialogTitleE:{

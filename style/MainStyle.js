@@ -98,12 +98,13 @@ const styles = StyleSheet.create({
       alignItems: 'center',
 	  backgroundColor:'#1E4344',
 	  borderColor:'#C89A5B',
-      height:wp('25%')
+      height:wp('50%'),
+      borderRadius:10
 },
   dialogTitle:{
 	  fontWeight:"bold",
       color:"#C89A5B",
-      marginTop:"10%"
+      marginTop:"5%"
   },
   pagraph:{
 	  fontWeight:"bold",

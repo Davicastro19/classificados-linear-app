@@ -1,6 +1,6 @@
 import { View, Pressable, Keyboard, TextInput, Linking, RefreshControl, StatusBar } from 'react-native';
 import { Text, FAB, Button } from 'react-native-elements';
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect,useMemo } from 'react'
 import tenantService from '../services/TenantSevice';
 import { RadioButton } from 'react-native-paper';
 import SelectDropdown from 'react-native-select-dropdown'
@@ -32,6 +32,7 @@ export default function Homes() {
     const [houses, setHouses] = useState([])
     const [refreshing, setRefreshing] = useState(false);
     const [specificHouse, setSpecificHouse] = useState(false)
+    //const memoizedValue = useMemo(() => renderItem, [houses]);
     const onRefresh = React.useCallback(() => {
         setTake(20)
         setSkip(0)
@@ -80,7 +81,7 @@ export default function Homes() {
 
     }
     function setOrderMain(value){
-        //console.log(value)
+        //// // console.log(value)
         if (value === 'Maior Valor'){
             setOrderAll('bigger')
         }else if(value === 'Menor Valor'){
@@ -88,7 +89,7 @@ export default function Homes() {
         }else{
             setOrderAll('recent')
         }
-        //console.log(orderAll)
+        //// // console.log(orderAll)
     }
 
     function selectHouseById(value) {
@@ -99,7 +100,7 @@ export default function Homes() {
                 setSpecificHouse(response.data)
             })
             .catch((error) => {
-                //console.log('61 - Homes', error)
+                //// // console.log('61 - Homes', error)
                 resetState()
                 //setCatalogData('Seu sinais estarão aqui. (clique em Filtro)')
             })
@@ -116,9 +117,7 @@ export default function Homes() {
                     if (skip !== 0){
                     if (response.data.length !== 0){
                         let newList = [...houses, ...response.data]
-                        newList = newList.filter(function (a) {
-                            return !this[JSON.stringify(a)] && (this[JSON.stringify(a)] = true);
-                        }, Object.create(null))
+                        newList = useMemo(() => newList.filter(function (a) {return !this[JSON.stringify(a)] && (this[JSON.stringify(a)] = true);}, Object.create(null)),[newList])
                         setHouses(newList)
                     }}else{
                         setHouses(response.data)
@@ -128,7 +127,7 @@ export default function Homes() {
                 })
                 .catch((error) => {
                     setIsLoading(false)
-                    //console.log('75 - Homes', error)
+                    //// // console.log('75 - Homes', error)
                     //setCatalogData('Seu sinais estarão aqui. (clique em Filtro)')
                 })
                 if (orderAll === 'bigger'){
@@ -163,7 +162,7 @@ export default function Homes() {
             })
             .catch((error) => {
                 setIsLoading(false)
-                //console.log('75 - Homes', error)
+                //// // console.log('75 - Homes', error)
                 //setCatalogData('Seu sinais estarão aqui. (clique em Filtro)')
             })
     }
@@ -329,8 +328,8 @@ export default function Homes() {
                                     <Card.Actions>
                                         <Button title=" Ver mais" onPress={() => selectHouseById(item.id)} icon={{ name: 'info', type: 'font-awesome', size: 15, color: '#1E4344' }} iconRight iconContainerStyle={{ marginLeft: 10 }} buttonStyle={{ height: hp('5%'), backgroundColor: '#FFF8EE', borderColor: '#295E60', borderWidth: 1, borderRadius: 6, }} containerStyle={{ width: '30%' }} titleStyle={{ fontSize: 13, color: '#1E4344' }} />
                                         <Text style={{ fontSize: 10, marginLeft: wp('50%'), marginTop:hp('3%') }}>   {item.creationDate.split(' ')[0]}  </Text>
-                                    </Card.Actions>
-                                </Card>} onEndReached={moreHouses}  onEndReachedThreshold={1} ListFooterComponent={<FAB loading visible={loading} icon={{ name: 'add' }} color='#C89A5B' borderColor='rgba(42, 42, 42,1)' size="small" />} keyExtractor={value => value.id} />
+                                        </Card.Actions>
+                                </Card>} onEndReached={moreHouses}  onEndReachedThreshold={0.03} ListFooterComponent={<FAB loading visible={loading} icon={{ name: 'add' }} color='#C89A5B' borderColor='rgba(42, 42, 42,1)' size="small" />} keyExtractor={value => value.id} />
                         }
                     </View>
                 }

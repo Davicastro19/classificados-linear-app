@@ -45,7 +45,9 @@ function hideDialogCode() {
   }
 function hideDialog(status) {
     setVisibleDialog(status)
+    if (titulo === "Sucesso"){
     navigation.navigate("Login")
+    }
   }
 
 function IsEmail() {
@@ -121,7 +123,7 @@ function isNumber(str) {
   }
 function FullSignUp(){
     if (ValidateSignUp()){
-      //console.log(code, newCode)
+      //// // console.log(code, newCode)
       if (code === newCode){
         setLoading(true)
         let dateNow = new Date();
@@ -129,7 +131,7 @@ function FullSignUp(){
         let day = String(dateNow.getDate()).padStart(2,'0');
         let month = String(dateNow.getMonth() + 1).padStart(2, '0');
         let year = dateNow.getFullYear();
-        let data = {
+        let data = {  
           email: email,
           password: password,
           name: name,
@@ -153,7 +155,7 @@ function FullSignUp(){
           showDialog	(titulo, response.data.message, "SUCESSO")         
         })
         .catch((response) => {
-          //console.log('sssdsds',response.data)
+          //// // console.log('sssdsds',response.data)
           setLoading(false)
           setVisibleDialogCode(false)
           showDialog(titulo, response, "SUCESSO")
@@ -179,15 +181,16 @@ function setCodeFull(value){
 function sendCode(){
   setLoading(true)
   if (ValidateSignUp()){
+
     setLoading(true)
       let data = {
         email: email,
-        name: name
+        type:"signUp"
       }
     tenantService.sendCode(data)
       .then((response) => {
        if (response.data.status){
-         //console.log(response.data.message)
+         //// // console.log(response.data.message)
         setVisibleDialogCode(true)
         setLoading(false)
         setNewCode(response.data.message)
@@ -197,7 +200,7 @@ function sendCode(){
         showDialog(titulo, response.data.message, "SUCESSO")         
       }})
       .catch((response) => {
-        //console.log('sssdsds',response.data)
+        //// // console.log('sssdsds',response.data)
         setVisibleDialogCode(false)
         setLoading(false)
     //    showDialog(titulo, response, "SUCESSO")
@@ -239,12 +242,12 @@ function sendCode(){
       } 
     { !isLoadings && 
        
-       <Button  onPress={() => sendCode()} title=" Cadastrar" icon={{ name: 'check', type: 'font-awesome', size: 19, color: '#1E4344' }} iconRight iconContainerStyle={{ marginLeft: 10 }}  buttonStyle={{ backgroundColor: '#C89A5B', borderColor: '#FFC77A', borderWidth: 1, borderRadius: 6, }} containerStyle={{ width: '95%',  marginHorizontal: 50, marginVertical: 10, }} titleStyle={{ color: '#1E4344' }} />
+       <Button  onPress={() => sendCode()} title=" Cadastrar" icon={{ name: 'check', type: 'font-awesome', size: 19, color: '#1E4344' }} iconRight iconContainerStyle={{ marginLeft: 10 }}  buttonStyle={{ backgroundColor: '#C89A5B', borderColor: '#FFC77A', borderWidth: 1, borderRadius: 6, }} containerStyle={{ width: '80%',  marginHorizontal: 50, marginVertical: 10, }} titleStyle={{ color: '#1E4344' }} />
     }
-  { visibleDialog && 
+  { visibleDialog && !isLoadings && !visibleDialogCode &&
     <CustomDialog titulo={titulo} message={message} tipo={tipo} visible={visibleDialog} onClose={hideDialog}></CustomDialog>
   }
-  { visibleDialogCode && 
+  { visibleDialogCode &&  !isLoadings &&
     <CustomDialogCode onChangeText={setCodeFull} onClose={hideDialogCode} visible={visibleDialogCode} FullSignUp={FullSignUp}></CustomDialogCode>
   }
   

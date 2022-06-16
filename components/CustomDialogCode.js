@@ -13,7 +13,7 @@ const CustomDialogCode = (props) => {
         <Dialog style={styles.dialog} visible={props.visible} onDismiss={() => props.onClose(false)}>
         <Dialog.Title style={styles.dialogTitle}>Verificação de usuario</Dialog.Title>
 		  
-          <Dialog.Content style={{ width:wp('60%'),height:hp('10%')}}>
+          <Dialog.Content style={{ width:wp('70%'),height:hp('10%')}}>
             <Paragraph style={styles.pagraph}>  Confira o código no seu email.</Paragraph>
             <Input  autoComplete={true} onChangeText={value => { props.onChangeText(value)} } inputContainerStyle={input.inputIcon} placeholderTextColor='#C89A5B' style={input.input} placeholder="Código" keyboardType="email-address" returnKeyType="done" leftIcon={{ size: 16, type: 'font-awesome', name: 'expeditedssl', color: '#C89A5B' }} />
             

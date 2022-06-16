@@ -7,6 +7,7 @@ import {
   TransitionPresets,
 } from '@react-navigation/stack';
 import SignUp from './screens/SignUp';
+import ForgotPassword from './screens/forgotPassword';
 import interceptor from './services/interceptor'
 
 
@@ -37,6 +38,7 @@ function MyStack() {
       <Stack.Screen  name="Login" component={Login} />
       <Stack.Screen options={{headerShown: false,}} name="Home" component={Home} />
       <Stack.Screen  name="SignUp" component={SignUp} />
+      <Stack.Screen  name="ForgotPassword" component={ForgotPassword} />
     </Stack.Navigator>
   );
 }

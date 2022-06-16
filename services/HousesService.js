@@ -18,7 +18,7 @@ class HousesService{
         }).then((response)=> {
             return Promise.resolve(response)
         }).catch((error)=>{
-            ////console.log('aaaaaaaaasasa',error)
+            ////// console.log('aaaaaaaaasasa',error)
             return Promise.reject(error)
         })
     }
@@ -36,7 +36,7 @@ class HousesService{
         }).then((response)=> {
             return Promise.resolve(response)
         }).catch((error)=>{
-            ////console.log('aaaaaaaaasasa',error)
+            ////// console.log('aaaaaaaaasasa',error)
             return Promise.reject(error)
         })
     }
@@ -54,7 +54,7 @@ class HousesService{
         }).then((response)=> {
             return Promise.resolve(response)
         }).catch((error)=>{
-            ////console.log('aaaaaaaaasasa',error)
+            ////// console.log('aaaaaaaaasasa',error)
             return Promise.reject(error)
         })
     }
@@ -71,7 +71,7 @@ class HousesService{
         }).then((response)=> {
             return Promise.resolve(response)
         }).catch((error)=>{
-            ////console.log('aaaaaaaaasasa',error)
+            ////// console.log('aaaaaaaaasasa',error)
             return Promise.reject(error)
         })
     }
@@ -80,11 +80,12 @@ class HousesService{
 
     async allMyHouses(){
         let token = await AsyncStorage.getItem("TOKEN")
+        let id = await AsyncStorage.getItem("ID")
         return axios({
             url:Config.API_URL+"houses/allMy",
             timeout: Config.TIMEOUT_REQUEST,
             method:"POST",
-            data:{token:token},
+            data:{token:token, id:parseInt(id)},
             headers:Config.HEADER_REQUEST
         }).then((response)=> {
             if (response && response.data && response.data.access_token) {
@@ -92,13 +93,13 @@ class HousesService{
             }
             return Promise.resolve(response)
         }).catch((error)=>{
-            ////console.log('aaa',error)
+            ////// console.log('aaa',error)
             return Promise.reject(error)
         })
     }
 
     async deleteHouse(id){
-        //console.log('aa',id)
+        //// console.log('aa',id)
         let token = await AsyncStorage.getItem("TOKEN")
         return axios({
             url:Config.API_URL+"houses/delete/"+id,
@@ -114,7 +115,7 @@ class HousesService{
             }
             return Promise.resolve(response)
         }).catch((error)=>{
-            ////////console.log('aaa',error)
+            ////////// console.log('aaa',error)
             return Promise.reject(error)
         })
     }
@@ -131,10 +132,10 @@ class HousesService{
                 Authorization: 'Bearer ' + token
             }
         }).then((response)=> {
-            ////console.log('xssxx',response.data)
+            ////// console.log('xssxx',response.data)
             return Promise.resolve(response)
         }).catch((error)=>{
-            //console.log('aaaaaaaaasasa',error)
+            //// console.log('aaaaaaaaasasa',error)
             return Promise.reject(error)
         })
     }

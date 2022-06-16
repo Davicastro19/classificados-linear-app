@@ -198,12 +198,12 @@ export default function MyHouses() {
     async function isValidateImage() {
         try {
             let newAlt = ''
-            //console.log('ALT', alt)
+            //// console.log('ALT', alt)
             for (var num in alt) {
-                //console.log(num)
+                //// console.log(num)
                 const xhr = new XMLHttpRequest();
                 xhr.withCredentials = true;
-                //console.log('SIM', images.split(',')[parseInt(num - 1)])
+                //// console.log('SIM', images.split(',')[parseInt(num - 1)])
                 const imagesData = new FormData();
                 imagesData.append('image', {
                     uri: alt[num].uri,
@@ -225,7 +225,7 @@ export default function MyHouses() {
         setIsLoading(true)
         setCreateShow(false)
         setVisibleConfimation(false)
-        //console.log(isValidate())
+        //// console.log(isValidate())
         if (isValidate() && isValidateImage()) {
             const dataCreateHouse = {
                 bed: bed,
@@ -257,7 +257,7 @@ export default function MyHouses() {
                         setMessageNotification('Ocorreu um erro, tente novamente')
                         setVisibleNotification(true)
                         setCreateShow(true)
-                        //console.log('Ocorreu um erro 298 myhouse', response.data)
+                        //// console.log('Ocorreu um erro 298 myhouse', response.data)
                     }
 
                 })
@@ -265,14 +265,14 @@ export default function MyHouses() {
                     setMessageNotification('Ocorreu um erro, tente novamente')
                     setVisibleNotification(true)
                     setCreateShow(true)
-                    //console.log('Ocorreu um erro 297 myhouse', response.data)
+                    //// console.log('Ocorreu um erro 297 myhouse', response.data)
                 })
         }else{
         setCreateShow(true)
         setMessageNotification('Existem campos invalidos')
         setVisibleNotification(true)
         setCreateShow(true)
-        //console.log('Ocorreu um erro 300 myhouse', response.data)
+        //// console.log('Ocorreu um erro 300 myhouse', response.data)
     }
     setIsLoading(false)
     }
@@ -300,7 +300,7 @@ export default function MyHouses() {
             }
             housesService.updateHouse(dataUpdateHouse, id)
                 .then((response) => {
-                    //console.log(response.data.status)
+                    //// console.log(response.data.status)
                     if (response.data.status) {
                         setVisibleNotification(true)
                         setMessageNotification('Alterado com sucesso!')
@@ -311,7 +311,7 @@ export default function MyHouses() {
 
                     } else {
                         setEditShow(true)
-                        //console.log('whatt', response.data)
+                        //// console.log('whatt', response.data)
                         setMessageNotification('Não foi possivel alterar, tente novamente')
                         setVisibleNotification(true)
                     }
@@ -321,7 +321,7 @@ export default function MyHouses() {
                     setEditShow(true)
                     setMessageNotification('Não foi possivel alterar, tente novamente')
                         setVisibleNotification(true)
-                    //console.log('ertert', error)
+                    //// console.log('ertert', error)
                 })
         }else{
             setEditShow(true)
@@ -356,7 +356,7 @@ export default function MyHouses() {
     }
 
     async function takePictureGalery(data) {
-        //console.log(editShow)
+        //// console.log(editShow)
         if (!data.cancelled && data.uri) {
             if (!capturatePhoto1) {
 
@@ -506,7 +506,7 @@ export default function MyHouses() {
 
     async function selectHouseById(value) {
         setIsLoading(true)
-        //console.log(value)
+        //// console.log(value)
         housesService.selectHouseById(value)
             .then((response) => {
                 setSpecificHouses(response.data)
@@ -517,7 +517,7 @@ export default function MyHouses() {
                 setShowFilter(true)
                 setEditShow(false)
                 setButtonInsert(false)
-                //console.log('aaa', error)
+                //// console.log('aaa', error)
                 setMessageNotification('Não foi possivel buscar, tente novamente')
                 setVisibleNotification(true)
                 //setCatalogData('Seu sinais estarão aqui. (clique em Filtro)')
@@ -542,7 +542,7 @@ export default function MyHouses() {
 
             })
             .catch((error) => {
-                //console.log('oooo', error)
+                //// console.log('oooo', error)
                 //setCatalogData('Seu sinais estarão aqui. (clique em Filtro)')
             })
             setIsLoading(false)
@@ -560,10 +560,9 @@ export default function MyHouses() {
                 setMyHouses(response.data)
             })
             .catch((error) => {
-                //console.log('oooo', error)
+                //// console.log('oooo', error)
                 setMessageNotification('Não foi possivel encontrar, tente novamente')
                 setVisibleNotification(true)
-                allMyHouses()
                 //setCatalogData('Seu sinais estarão aqui. (clique em Filtro)')
             })
             setIsLoading(false)

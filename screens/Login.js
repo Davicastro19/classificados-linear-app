@@ -69,7 +69,7 @@ export default function Login({ navigation }) {
             showDialog("Ops!", "Erro interno", "SUCESSO")
 
           } else {
-            ////console.log('ww',error)
+            ////// console.log('ww',error)
             setLoading(false)
             showDialog("Dados inválidos", "Clique em cadastrar para ter acesso. Use token DEMO (garrateste) caso não tenha recebido um token VIP", "SUCESSO")
           }
@@ -84,7 +84,7 @@ export default function Login({ navigation }) {
     }
     tenantService.autoLogin(data)
       .then((response) => {
-
+        //// console.log(response.data)
         if (!response.data.status){//(response.data.device === Device.modelName + '/' + Device.osName + '/' + Device.deviceName) {
           setLoading(false)
         }
@@ -148,6 +148,9 @@ export default function Login({ navigation }) {
   function SignUp() {
     navigation.navigate("SignUp")
   }
+  function ForgotPassword() {
+    navigation.navigate("ForgotPassword")
+  }
   useEffect(() => {
     AsyncStorage.getItem("TOKEN")
       .then((token => {
@@ -169,7 +172,7 @@ export default function Login({ navigation }) {
       <KeyboardAvoidingView style={styles.keyboardAvoiding} behavior={Platform.OS == "ios" ? "padding" : "height"} KeyboardVerticalOffset={50}>
         
         <View style={styles.form}>
-          {!isLoading &&
+          {!isLoading && !visibleDialog &&
             <>
               <Text style={styles.errorMessage}>{erroMessageEmail}</Text>
               <Input autoComplete={true} inputContainerStyle={input.inputIcon}  placeholderTextColor='#C89A5B' style={input.input} onChangeText={value => { setEmail(value), setErroMessageEmail(null) }} placeholder=" E-mail" keyboardType="email-address" returnKeyType="done" leftIcon={{ size: 16, type: 'font-awesome', name: 'envelope', color: '#C89A5B' }} />
@@ -184,7 +187,7 @@ export default function Login({ navigation }) {
           {isLoading &&
             <FAB loading visible={true} icon={{ name: 'add' }} color='#C89A5B' borderColor='rgba(42, 42, 42,1)' size="small" />
           }
-          {!isLoading &&
+          {!isLoading && !visibleDialog &&
             <>
               
               <Button  onPress={() => Login()} title="   Entrar" icon={{ name: 'arrow-right', type: 'font-awesome', size: 19, color: '#1E4344', }} iconRight iconContainerStyle={{ marginLeft: 10 }}  buttonStyle={{ backgroundColor: '#C89A5B', borderColor: '#FFC77A', borderWidth: 1, borderRadius: 6, }} containerStyle={{ width: '50%',  marginHorizontal: 50, marginVertical: 10, }} titleStyle={{ color: '#1E4344' }} />
@@ -195,15 +198,15 @@ export default function Login({ navigation }) {
 
         </View>
         {!isLoading &&
-          <Button  onPress={() => SignUp()} title="Esqueci minha senha"   buttonStyle={{ backgroundColor: '#1E4344', borderColor: '#FFC77A', borderWidth: 0, borderRadius: 6, }} containerStyle={{ marginTop:'0%', width: '55%',  marginHorizontal: 50, marginVertical: 10, }} titleStyle={{ color: '#C89A5B',fontSize:12 }} />
+          <Button  onPress={() => ForgotPassword()} title="Esqueci minha senha"   buttonStyle={{ backgroundColor: '#1E4344', borderColor: '#FFC77A', borderWidth: 0, borderRadius: 6, }} containerStyle={{ marginTop:'0%', width: '55%',  marginHorizontal: 50, marginVertical: 10, }} titleStyle={{ color: '#C89A5B',fontSize:12 }} />
           
           }
          
-        {visibleDialog &&
+        
+      </KeyboardAvoidingView>
+      {visibleDialog &&
           <CustomDialog titulo={titulo} message={message} tipo={tipo} visible={visibleDialog} onClose={hideDialog}></CustomDialog>
         }
-      </KeyboardAvoidingView>
-      
     </Pressable>
   );
 }

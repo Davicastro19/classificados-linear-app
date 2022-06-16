@@ -17,6 +17,21 @@ class TenantService{
             return Promise.reject(error)
         })
     }
+    async updatePassword(data){
+        return axios({
+            url:Config.API_URL+ "tenant/updatePassword",
+			timeout: Config.TIMEOUT_REQUEST,
+            method:"POST",
+            data:data,
+            headers:Config.HEADER_REQUEST
+        }).then((response)=> {
+            return Promise.resolve(response)
+        }).catch((error)=>{
+            // console.log('ee',error)
+            return Promise.reject(error)
+        })
+    }
+
 
     async register(data){
         return axios({
@@ -31,7 +46,26 @@ class TenantService{
             return Promise.reject(error)
         })
     }
+
+    async updateAccount(data,id,token){
+        return axios({
+            url:Config.API_URL+ "tenant/updateAccount/"+id,
+			timeout: Config.TIMEOUT_REQUEST,
+            method:"PUT",
+            data:data,
+            headers: {
+                Accept: 'application/json',
+                Authorization: 'Bearer ' + token
+            }
+        }).then((response)=> {
+            return Promise.resolve(response)
+        }).catch((error)=>{
+            return Promise.reject(error)
+        })
+    }
 	
+    
+
 	async login(data){
         return axios({
             url:Config.API_URL+"tenant/login",
@@ -40,55 +74,20 @@ class TenantService{
             data:data,
             headers:Config.HEADER_REQUEST
         }).then((response)=> {
+            // // console.log(response.data)
             if (response && response.data && response.data.access_token) {
                 AsyncStorage.setItem("TOKEN", response.data.access_token)
+                AsyncStorage.setItem("ID", response.data.id.toString())
             }
             return Promise.resolve(response)
         }).catch((error)=>{
-            //console.log('qwjq',error)
+            //// // console.log('qwjq',error)
             return Promise.reject(error)
         })
     }
 	
-	async checkList(data){
-        let token = await AsyncStorage.getItem("TOKEN")
-        return axios({
-            url:Config.API_URL+"tenant/check",
-            timeout: Config.LON_TIMEOUT_REQUEST,
-            method:"POST",
-            data:data,
-            headers: {
-                Accept: 'application/json',
-                Authorization: 'Bearer ' + token
-            }
-        }).then((response)=> {
-            return Promise.resolve(response)
-        }).catch((error)=>{
-            ////console.log('qfwq',error)
-            return Promise.reject(error)
-        })
-    }
-
 	
-
-    async getStrategy(data){
-        let token = await AsyncStorage.getItem("TOKEN")
-        return axios({
-            url:Config.API_URL+"tenant/strategy",
-            timeout: Config.LON_TIMEOUT_REQUEST,
-            method:"POST",
-            data:data,
-            headers: {
-                Accept: 'application/json',
-                Authorization: 'Bearer ' + token
-            }
-        }).then((response)=> {
-            return Promise.resolve(response)
-        }).catch((error)=>{
-            ////console.log('qwsq',error)
-            return Promise.reject(error)
-        })
-    }
+    
 	async autoLogin(data){
         return axios({
             url:Config.API_URL+"tenant/autoLogin",
@@ -97,13 +96,13 @@ class TenantService{
             data:data,
             headers:Config.HEADER_REQUEST
         }).then((response)=> {
-            //console.log(response.data)
+            //// // console.log(response.data)
             if (response && response.data && response.data.access_token) {
 			    AsyncStorage.setItem("TOKEN", response.data.access_token)
             }
             return Promise.resolve(response)
         }).catch((error)=>{
-            ////console.log('aaa',error)
+            ////// // console.log('aaa',error)
             return Promise.reject(error)
         })
     }
@@ -116,13 +115,13 @@ class TenantService{
             data:data,
             headers:Config.HEADER_REQUEST
         }).then((response)=> {
-            //console.log(response.data)
+            //// // console.log(response.data)
             if (response && response.data && response.data.access_token) {
 			    AsyncStorage.setItem("TOKEN", response.data.access_token)
             }
             return Promise.resolve(response)
         }).catch((error)=>{
-            ////console.log('aaa',error)
+            ////// // console.log('aaa',error)
             return Promise.reject(error)
         })
     }
@@ -140,7 +139,7 @@ class TenantService{
         }).then((response)=> {
             return Promise.resolve(response)
         }).catch((error)=>{
-            ////console.log('qgwq',error)
+            ////// // console.log('qgwq',error)
 
             return Promise.reject(error)
         })

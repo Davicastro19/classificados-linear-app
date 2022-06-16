@@ -31,7 +31,7 @@ const styles = StyleSheet.create({
     
     },
     keyboardAvoiding:{
-        width:wp('80%'),
+        width:wp('100%'),
         alignItems: 'center',
         justifyContent: 'center',
     },
@@ -51,7 +51,7 @@ const styles = StyleSheet.create({
     nameApp:{
         marginBottom:'3%',
         letterSpacing:6,
-        fontSize:8,
+        fontSize:9,
         alignItems: 'center',
         justifyContent: 'center',
         color:'#C89A5B'

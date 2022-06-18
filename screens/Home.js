@@ -12,7 +12,7 @@ import { Avatar, Card, Title, Paragraph } from 'react-native-paper';
 import  AsyncStorage  from '@react-native-async-storage/async-storage';
 import { FontAwesome,FontAwesome5,MaterialCommunityIcons } from '@expo/vector-icons';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 
 
 export default function Home() {
@@ -37,7 +37,7 @@ export default function Home() {
         component={Homes}
         options={{
           headerStyle: {
-            height:'0%'
+            height:hp('3%')
           },
           tabBarLabel: 'Casa/Aptoº',
           tabBarIcon: ({ color }) => (
@@ -53,7 +53,7 @@ export default function Home() {
         component={MyHouses}
         options={{
           headerStyle: {
-            height:'0%'
+            height:hp('3%')
           },
           tabBarLabel: 'Minha casa',
           tabBarIcon: ({ color }) => (
@@ -67,7 +67,7 @@ export default function Home() {
         component={Profile}
         options={{
           headerStyle: {
-            height:'0%'
+            height:hp('3%')
           },
           tabBarLabel: 'Perfil',
           tabBarIcon: ({ color }) => (

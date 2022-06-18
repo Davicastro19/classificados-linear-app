@@ -249,6 +249,7 @@ export default function Profile(navigation) {
       <Pressable style={styles.container} onPress={Keyboard.dismiss}>
         <KeyboardAvoidingView style={styles.keyboardAvoiding} behavior={Platform.OS == "ios" ? "padding" : "height"} KeyboardVerticalOffset={50}>
           <Text style={styles.titleProfile}> ALTERAR PERFIL</Text>
+          {!isLoadings &&
           <View style={styles.form}>
             <Text style={styles.errorMessage}>{erroMessageName}</Text>
             <Input autoComplete={true} inputContainerStyle={input.inputIcon} placeholderTextColor='#C89A5B' style={input.input} value={name} onChangeText={value => { setName(value), setErroMessageName(null); }} placeholder="Nome e sobrenome" leftIcon={{ size: 20, type: 'font-awesome', name: 'user', color: '#C89A5B' }} />
@@ -259,6 +260,7 @@ export default function Profile(navigation) {
             <Text style={styles.errorMessage}>{erroMessagePhone}</Text>
             <Input autoComplete={true} inputContainerStyle={input.inputIcon} placeholderTextColor='#C89A5B' style={input.input} value={phone} onChangeText={value => { setPhone(value), setErroMessagePhone(null); }} placeholder="Telefone" keyboardType="number-pad" returnKeyType="done" leftIcon={{ size: 20, type: 'font-awesome', name: 'phone', color: '#C89A5B' }} />
           </View>
+          }
           {isLoadings &&
             <FAB
               loading

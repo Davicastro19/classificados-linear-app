@@ -69,7 +69,12 @@ export default function Homes() {
     }
     function validateImage(image, value) {
         try {
-            return Config.API_URL+'houses/'+image.split(',')[value-1]
+            console.log('homes',Config.AWS_URL + image.split(',')[value])
+            if (image.split(',')[value].includes('jpg') || image.split(',')[value].includes('png')) {
+                return Config.AWS_URL + image.split(',')[value]
+            } else {
+                return false
+            }
         } catch (e) {
             return false
         }
@@ -172,7 +177,7 @@ export default function Homes() {
     }, [])
     return (
         <View style={styles.container} onPress={() => setPairOptionFunction()}>
-            <StatusBar hidden />
+            <StatusBar translucent backgroundColor="#1E4344" />
             {!showFilter && !specificHouse &&
                 <View style={{ width: '100%', height: '6%' }}><Button title=" Filtro" onPress={() => (setIsLoading(false), setShowFilter(true))} icon={{ name: 'filter', type: 'font-awesome', size: 19, color: '#fdf5e8' }} iconRight iconContainerStyle={{ marginLeft: 10 }} buttonStyle={{ backgroundColor: '#1E4344', borderColor: '#152F30', borderWidth: 0.5 }} containerStyle={{ height: '100%' }} titleStyle={{ color: '#fdf5e8' }} />
                 </View>}
@@ -188,12 +193,12 @@ export default function Homes() {
                         
                             <View style={{ borderLeftWidth: 3, borderRightWidth: 3, borderRadius: 6, borderColor: '#1E4344', justifyContent: "space-evenly", flexDirection: 'row', backgroundColor: '#1E4344' }}>
                                 <ScrollView horizontal={true}>
+                                    <Card.Cover style={{ width: wp('90%'), height: hp('50%'), borderRadius: 10, borderWidth: 1, borderColor: '#1E4344', }} source={{ uri: validateImage(specificHouse.houses_images, 0) == false ? "https://daviastro.000webhostapp.com/house.png" : validateImage(specificHouse.houses_images, 0) }} />
                                     <Card.Cover style={{ width: wp('90%'), height: hp('50%'), borderRadius: 10, borderWidth: 1, borderColor: '#1E4344', }} source={{ uri: validateImage(specificHouse.houses_images, 1) == false ? "https://daviastro.000webhostapp.com/house.png" : validateImage(specificHouse.houses_images, 1) }} />
                                     <Card.Cover style={{ width: wp('90%'), height: hp('50%'), borderRadius: 10, borderWidth: 1, borderColor: '#1E4344', }} source={{ uri: validateImage(specificHouse.houses_images, 2) == false ? "https://daviastro.000webhostapp.com/house.png" : validateImage(specificHouse.houses_images, 2) }} />
                                     <Card.Cover style={{ width: wp('90%'), height: hp('50%'), borderRadius: 10, borderWidth: 1, borderColor: '#1E4344', }} source={{ uri: validateImage(specificHouse.houses_images, 3) == false ? "https://daviastro.000webhostapp.com/house.png" : validateImage(specificHouse.houses_images, 3) }} />
                                     <Card.Cover style={{ width: wp('90%'), height: hp('50%'), borderRadius: 10, borderWidth: 1, borderColor: '#1E4344', }} source={{ uri: validateImage(specificHouse.houses_images, 4) == false ? "https://daviastro.000webhostapp.com/house.png" : validateImage(specificHouse.houses_images, 4) }} />
                                     <Card.Cover style={{ width: wp('90%'), height: hp('50%'), borderRadius: 10, borderWidth: 1, borderColor: '#1E4344', }} source={{ uri: validateImage(specificHouse.houses_images, 5) == false ? "https://daviastro.000webhostapp.com/house.png" : validateImage(specificHouse.houses_images, 5) }} />
-                                    <Card.Cover style={{ width: wp('90%'), height: hp('50%'), borderRadius: 10, borderWidth: 1, borderColor: '#1E4344', }} source={{ uri: validateImage(specificHouse.houses_images, 6) == false ? "https://daviastro.000webhostapp.com/house.png" : validateImage(specificHouse.houses_images, 6) }} />
 
                                 </ScrollView>
                             </View>

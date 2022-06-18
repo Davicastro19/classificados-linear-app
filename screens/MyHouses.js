@@ -1,5 +1,6 @@
 import { View, Keyboard, KeyboardAvoidingView, RefreshControl, TouchableWithoutFeedback, StatusBar, Pressable, TouchableOpacity, Modal, Image } from 'react-native';
 import { Text, FAB, Button, } from 'react-native-elements';
+import  Config  from '../util/Config'
 import React, { useState, useEffect, useRef } from 'react'
 import tenantService from '../services/TenantSevice';
 import housesService from '../services/HousesService';
@@ -69,6 +70,7 @@ export default function MyHouses() {
     const [visibleConfimation, setVisibleConfimation] = useState(false)
     const [visibleConfimationDeletion, setVisibleConfimationDeletion] = useState(false)
     const [visibleConfimationUpdate, setVisibleConfimationUpdate] = useState(false)
+    const [oldImages, setOldImages] = useState('')
 
 
     const onRefresh = React.useCallback(() => {
@@ -102,7 +104,6 @@ export default function MyHouses() {
         setTitlePreCapturate("Adicionar a 1º")
         setTitleDelCapturate("Apagar a 1º")
     }
-
 
     function isValidate() {
 
@@ -156,38 +157,57 @@ export default function MyHouses() {
 
     function removePicture() {
         if (titleDelCapturate.includes('1')) {
+            let imgAlt = images.split(',')[0]
+            //removeImage(imgAlt)
+            imgAlt = images.replace(imgAlt)
+            setImages(imgAlt)
             setButtonInsert(false)
             setCapturatePhoto1(false)
             setTitlePreCapturate("Adicionar a 1º")
             setAlt(new Object)
         }
         if (titleDelCapturate.includes('2')) {
-            setButtonInsert(false)
+            let imgAlt = images.split(',')[1]
+            //removeImage(imgAlt)
+            imgAlt = images.replace(imgAlt)
+            setImages(imgAlt)
             setCapturatePhoto2(false)
             setTitleDelCapturate("Apagar a 1º")
             setTitlePreCapturate("Adicionar a 2º")
         }
         if (titleDelCapturate.includes('3')) {
-            setButtonInsert(false)
+            let imgAlt = images.split(',')[2]
+            //removeImage(imgAlt)
+            imgAlt = images.replace(imgAlt)
+            setImages(imgAlt)
             setCapturatePhoto3(false)
             setTitleDelCapturate("Apagar a 2º")
             setTitlePreCapturate("Adicionar a 3º")
         }
         if (titleDelCapturate.includes('4')) {
-            setButtonInsert(false)
+            let imgAlt = images.split(',')[3]
+            //removeImage(imgAlt)
+            imgAlt = images.replace(imgAlt)
+            setImages(imgAlt)
             setCapturatePhoto4(false)
             setTitleDelCapturate("Apagar a 3º")
             setTitlePreCapturate("Adicionar a 4º")
         }
         if (titleDelCapturate.includes('5')) {
-            setButtonInsert(false)
+            let imgAlt = images.split(',')[4]
+            //removeImage(imgAlt)
+            imgAlt = images.replace(imgAlt)
+            setImages(imgAlt)
             setCapturatePhoto5(false)
             setTitleDelCapturate("Apagar a 4º")
             setTitlePreCapturate("Adicionar a 5º")
 
         }
         if (titleDelCapturate.includes('6')) {
-            setButtonInsert(false)
+            let imgAlt = images.split(',')[5]
+            //removeImage(imgAlt)
+            imgAlt = images.replace(imgAlt)
+            setImages(imgAlt)
             setCapturatePhoto6(false)
             setTitleDelCapturate("Apagar a 5º")
             setTitlePreCapturate("Adicionar a 6º")
@@ -195,38 +215,61 @@ export default function MyHouses() {
 
     }
 
-    async function isValidateImage() {
+    async function removeImage(id) {
         try {
-            let newAlt = ''
-            //// console.log('ALT', alt)
-            for (var num in alt) {
-                //// console.log(num)
-                const xhr = new XMLHttpRequest();
-                xhr.withCredentials = true;
-                //// console.log('SIM', images.split(',')[parseInt(num - 1)])
-                const imagesData = new FormData();
-                imagesData.append('image', {
-                    uri: alt[num].uri,
-                    type: 'image/jpeg',
-                    name: images.split(',')[parseInt(num - 1)]
-                })
-                xhr.open('POST', 'http://192.168.0.104:3000/houses/uploadImg')
-                xhr.send(imagesData)
-
+            housesService.deleteImageHouse(id)
+            return true
+            } catch (e) {
+            return false
             }
+    }
+
+    function sleep(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
+    async function isValidateImage(value) {
+        try {
+            for (var num in alt) {
+                if (!images.split(',')[num - 1]){
+                }else{
+                    const xhr = new XMLHttpRequest();
+                    xhr.withCredentials = true;
+                    const imagesData = new FormData();
+                    imagesData.append('image', {
+                        uri: alt[num].uri,
+                        type: 'image/jpeg',
+                        name: images.split(',')[parseInt(num - 1)]})
+                    xhr.open('POST', Config.API_URL+'houses/uploadImg')
+                xhr.send(imagesData)
+            }
+        }
+            if (value === 'update'){
+            for (var nums in oldImages.split(',')){
+                
+                if (!oldImages.split(',')[nums - 1]){
+                }else{
+                    housesService.deleteImageHouse(oldImages.split(',')[nums - 1])
+                .then((response) => {
+                    
+                })
+                .catch((error) => {
+                })
+                }
+            }}
 
             return true
         } catch (e) {
+            console.log('erro',e)
             return false
         }
     }
 
-    async function insertHouse() {
+    function insertHouse() {
         setIsLoading(true)
         setCreateShow(false)
         setVisibleConfimation(false)
-        //// console.log(isValidate())
-        if (isValidate() && isValidateImage()) {
+        if (isValidate() && isValidateImage('insert')) {
             const dataCreateHouse = {
                 bed: bed,
                 shower: shower,
@@ -244,6 +287,7 @@ export default function MyHouses() {
                 images: images,
                 creationDate: DateAndHours
             }
+            console.log('images',images)
             housesService.insertHouse(dataCreateHouse)
                 .then((response) => {
                     
@@ -277,11 +321,11 @@ export default function MyHouses() {
     setIsLoading(false)
     }
 
-    async function updateHouse(id) {
+    function updateHouse(id) {
         setIsLoading(true)
         setEditShow(false)
         setVisibleConfimationUpdate(false)
-        if (isValidate() && isValidateImage()) {
+        if (isValidate() && isValidateImage('update')) {
             const dataUpdateHouse = {
                 bed: bed,
                 shower: shower,
@@ -298,6 +342,7 @@ export default function MyHouses() {
                 description: description,
                 images: images,
             }
+            setOldImages(images)
             housesService.updateHouse(dataUpdateHouse, id)
                 .then((response) => {
                     //// console.log(response.data.status)
@@ -356,37 +401,30 @@ export default function MyHouses() {
     }
 
     async function takePictureGalery(data) {
-        //// console.log(editShow)
         if (!data.cancelled && data.uri) {
             if (!capturatePhoto1) {
-
                 setButtonInsert(true)
                 let upAlt = alt
                 upAlt['1'] = { 'uri': data.uri }
                 setAlt(upAlt)
-                if (editShow == false) {
-                    let img = Array(4)
+                let img = Array(4)
                         .fill(null)
                         .map(() => Math.round(Math.random() * 16).toString(16))
                         .join('') + '1.jpg,'
-                    setImages(img)
-                }
+                setImages(img)
                 setCapturatePhoto1(data.uri)
                 setTitlePreCapturate("Adicionar a 2º")
                 setTitleDelCapturate("Apagar a 1º")
 
             } else if (!capturatePhoto2) {
-
                 let upAlt = alt
                 upAlt['2'] = { 'uri': data.uri }
                 setAlt(upAlt)
-                if (editShow == false) {
-                    let img2 = images + Array(4)
+                let img2 = images + Array(4)
                         .fill(null)
                         .map(() => Math.round(Math.random() * 16).toString(16))
                         .join('') + '2.jpg,'
-                    setImages(img2)
-                }
+                setImages(img2)
                 setCapturatePhoto2(data.uri)
                 setTitlePreCapturate("Adicionar a 3º")
                 setTitleDelCapturate("Apagar a 2º")
@@ -395,13 +433,11 @@ export default function MyHouses() {
                 let upAlt = alt
                 upAlt['3'] = { 'uri': data.uri }
                 setAlt(upAlt)
-                if (editShow == false) {
-                    let img3 = images + Array(4)
+                let img3 = images + Array(4)
                         .fill(null)
                         .map(() => Math.round(Math.random() * 16).toString(16))
                         .join('') + '3.jpg,'
-                    setImages(img3)
-                }
+                setImages(img3)
                 setCapturatePhoto3(data.uri)
                 setTitlePreCapturate("Adicionar a 4º")
                 setTitleDelCapturate("Apagar a 3º")
@@ -410,13 +446,11 @@ export default function MyHouses() {
                 let upAlt = alt
                 upAlt['4'] = { 'uri': data.uri }
                 setAlt(upAlt)
-                if (editShow == false) {
-                    let img4 = images + Array(4)
+                let img4 = images + Array(4)
                         .fill(null)
                         .map(() => Math.round(Math.random() * 16).toString(16))
                         .join('') + '4.jpg,'
-                    setImages(img4)
-                }
+                setImages(img4)
                 setCapturatePhoto4(data.uri)
                 setTitlePreCapturate("Adicionar a 5º")
                 setTitleDelCapturate("Apagar a 4º")
@@ -425,13 +459,11 @@ export default function MyHouses() {
                 let upAlt = alt
                 upAlt['5'] = { 'uri': data.uri }
                 setAlt(upAlt)
-                if (editShow == false) {
-                    let img5 = images + Array(4)
+                let img5 = images + Array(4)
                         .fill(null)
                         .map(() => Math.round(Math.random() * 16).toString(16))
                         .join('') + '5.jpg,'
-                    setImages(img5)
-                }
+                setImages(img5)
                 setCapturatePhoto5(data.uri)
                 setTitlePreCapturate("Adicionar a 6º")
                 setTitleDelCapturate("Apagar a 5º")
@@ -440,25 +472,28 @@ export default function MyHouses() {
                 let upAlt = alt
                 upAlt['6'] = { 'uri': data.uri }
                 setAlt(upAlt)
-                if (editShow == false) {
-                    let img6 = images + Array(4)
+                let img6 = images + Array(4)
                         .fill(null)
                         .map(() => Math.round(Math.random() * 16).toString(16))
                         .join('') + '6.jpg'
-                    setImages(img6)
-                }
+                setImages(img6)
                 setCapturatePhoto6(data.uri)
                 setTitleDelCapturate("Apagar a 6º")
                 setButtonInsert(true)
             }
 
+
         }
     }
 
-    function validateImage(image, value) {
+    function validateButton(image, value) {
         try {
             if (image.split(',')[value].includes('jpg') || image.split(',')[value].includes('png')) {
-                return "http://192.168.0.104:3000/houses/" + image.split(',')[value]
+                let del = value+1
+                let add = value+2
+                setTitleDelCapturate("Apagar a "+del.toString()+"º")
+                setTitlePreCapturate("Adicionar a "+add.toString()+"º")
+                return true
             } else {
                 return false
             }
@@ -467,8 +502,20 @@ export default function MyHouses() {
         }
     }
 
-    function loadData(image, data) {
-        setImages(image)
+    function validateImage(image, value) {
+        try {
+            console.log('myhouse',Config.AWS_URL + image.split(',')[value])
+            if (image.split(',')[value].includes('jpg') || image.split(',')[value].includes('png')) {
+                return Config.AWS_URL + image.split(',')[value]
+            } else {
+                return false
+            }
+        } catch (e) {
+            return false
+        }
+    }
+
+    function loadData(data) {
         setButtonInsert(true)
         setBed(data.houses_bed)
         setShower(data.houses_shower)
@@ -487,21 +534,26 @@ export default function MyHouses() {
         setEditShow(true)
         setIsLoading(false)
         let i = 1
-        for (var num in image.split(',')) {
+        for (var num in data.houses_images.split(',')) {
             let upAlt = alt
-            upAlt[i.toString()] = { 'uri': "http://192.168.0.104:3000/houses/" + image.split(',')[num] }
+            upAlt[i.toString()] = { 'uri': Config.AWS_URL+ data.houses_images.split(',')[num] }
             setAlt(upAlt)
             i = i + 1
         }
 
         setDeletePhotoEdit(true)
-        setCapturatePhoto1("http://192.168.0.104:3000/houses/" + image.split(',')[0])
-        setCapturatePhoto2("http://192.168.0.104:3000/houses/" + image.split(',')[1])
-        setCapturatePhoto3("http://192.168.0.104:3000/houses/" + image.split(',')[2])
-        setCapturatePhoto4("http://192.168.0.104:3000/houses/" + image.split(',')[3])
-        setCapturatePhoto5("http://192.168.0.104:3000/houses/" + image.split(',')[4])
-        setCapturatePhoto6("http://192.168.0.104:3000/houses/" + image.split(',')[5])
-        setTitleDelCapturate("Apagar a 6º")
+        setCapturatePhoto1(validateImage(data.houses_images,0))
+        setCapturatePhoto2(validateImage(data.houses_images,1))
+        setCapturatePhoto3(validateImage(data.houses_images,2))
+        setCapturatePhoto4(validateImage(data.houses_images,3))
+        setCapturatePhoto5(validateImage(data.houses_images,4))
+        setCapturatePhoto6(validateImage(data.houses_images,5)) 
+        validateButton(data.houses_images,0)
+        validateButton(data.houses_images,1)
+        validateButton(data.houses_images,2)
+        validateButton(data.houses_images,3)
+        validateButton(data.houses_images,4)
+        validateButton(data.houses_images,5) 
     }
 
     async function selectHouseById(value) {
@@ -509,8 +561,11 @@ export default function MyHouses() {
         //// console.log(value)
         housesService.selectHouseById(value)
             .then((response) => {
+                console.log('oush',response.data.houses_images)
                 setSpecificHouses(response.data)
-                loadData(response.data.houses_images, response.data)
+                setOldImages(response.data.houses_images)
+                setImages(response.data.houses_images)
+                loadData(response.data)
             })
             .catch((error) => {
                 setSpecificHouses(false)
@@ -583,7 +638,7 @@ export default function MyHouses() {
                 {!editShow && !createShow && !isLoading && !visibleNotification &&
                     //<><View style={{ width: '100%', height: '6%' }}><Button title=" Filtro" onPress={() => setFilter(!filter)} icon={{ name: 'filter', type: 'font-awesome', size: 19, color: '#fdf5e8' }} iconRight iconContainerStyle={{ marginLeft: 10 }} buttonStyle={{ backgroundColor: '#1E4344', borderColor: '#152F30', borderWidth: 0.5 }} containerStyle={{ height: '100%' }} titleStyle={{ color: '#fdf5e8' }} />
                    // </View>
-                            <View style={{ width: '100%', height: '6%' }}><Button title=" Adicionar casa/aptoº" onPress={() => (setCreateShow(!createShow), setTitleDelCapturate("Adicionar a 1ª"))} icon={{ name: 'add-box', type: 'material-icons', size: 19, color: '#fdf5e8' }} iconRight iconContainerStyle={{ marginLeft: 10 }} buttonStyle={{ backgroundColor: '#1E4344', borderColor: '#152F30', borderWidth: 0.5 }} containerStyle={{ height: '100%' }} titleStyle={{ color: '#fdf5e8' }} />
+                            <View style={{ width: '100%', height: '6%' }}><Button title=" Anunciar" onPress={() => (setCreateShow(!createShow), setTitleDelCapturate("Adicionar a 1ª"))} icon={{ name: 'add-box', type: 'material-icons', size: 19, color: '#fdf5e8' }} iconRight iconContainerStyle={{ marginLeft: 10 }} buttonStyle={{ backgroundColor: '#1E4344', borderColor: '#152F30', borderWidth: 0.5 }} containerStyle={{ height: '100%' }} titleStyle={{ color: '#fdf5e8' }} />
                         </View>}
 
                 <NativeBaseProvider >

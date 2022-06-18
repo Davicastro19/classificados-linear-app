@@ -200,7 +200,9 @@ function sendCode(){
         showDialog(titulo, response.data.message, "SUCESSO")         
       }})
       .catch((response) => {
-        //// // console.log('sssdsds',response.data)
+        console.log('sssdsds',response.data)
+        const titulo = (response.data.status) ? "Sucesso" : "Erro"
+        showDialog(titulo, response.data.message, "SUCESSO")
         setVisibleDialogCode(false)
         setLoading(false)
     //    showDialog(titulo, response, "SUCESSO")

@@ -3,7 +3,7 @@ import  AsyncStorage  from '@react-native-async-storage/async-storage';
 import  Config  from '../util/Config'
 
 class HousesService{
-
+    
     async insertHouse(data){
         let token = await AsyncStorage.getItem("TOKEN")
         return axios({
@@ -76,8 +76,6 @@ class HousesService{
         })
     }
 
-    
-
     async allMyHouses(){
         let token = await AsyncStorage.getItem("TOKEN")
         let id = await AsyncStorage.getItem("ID")
@@ -120,6 +118,18 @@ class HousesService{
         })
     }
 
+    async deleteImageHouse(id){
+        //// console.log('aa',id)
+        return axios({
+            url:Config.API_URL+"houses/deleteImageHouse/"+id,
+            timeout: Config.TIMEOUT_REQUEST,
+            method:"Delete",
+        }).then((response)=> {
+            return Promise.resolve(response)
+        }).catch((error)=>{
+            return Promise.reject(error)
+        })
+    }
 
     async selectHouseById(id){
         let token = await AsyncStorage.getItem("TOKEN")
@@ -138,6 +148,22 @@ class HousesService{
             //// console.log('aaaaaaaaasasa',error)
             return Promise.reject(error)
         })
+    }
+    async  UploadImage(data) {
+        return axios({
+            url: 'https://api.imgur.com/3/image',
+            timeout: Config.TIMEOUT_REQUEST,
+            method:"POST",
+            headers: { 
+                'Authorization': 'Client-ID 1ecdb35596fd7b0'
+              },
+              data : data
+        }).then((response)=> {
+          console.log(JSON.stringify(response.data));
+        }).catch((error)=>{
+          console.log('164',error);
+        })
+        
     }
 
     

@@ -1,4 +1,4 @@
-import {  View, Image, Pressable, Keyboard, Vibration, KeyboardAvoidingView } from 'react-native';
+import {  View, Image, Pressable, Keyboard, Vibration, KeyboardAvoidingView, StatusBar } from 'react-native';
 import { Icon, FormControl, WarningOutlineIcon, Box, Center, NativeBaseProvider,Stack } from "native-base";
 import { Text, Input, Button, FAB } from 'react-native-elements';
 import React, { useState, useEffect } from 'react'
@@ -161,7 +161,9 @@ export default function Login({ navigation }) {
       )).catch((setLoading(false)))
   }, [])
   return (
+    
     <Pressable style={styles.container} onPress={Keyboard.dismiss}>
+     <StatusBar translucent backgroundColor="#1E4344" />
         
           <View style={styles.Logo}>
         <Image style={styles.imageLogin} source={require("../assets/icon.png")} />

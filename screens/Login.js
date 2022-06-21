@@ -1,23 +1,30 @@
-import {  View, Image, Pressable, Keyboard, Vibration, KeyboardAvoidingView, StatusBar } from 'react-native';
-import { Icon, FormControl, WarningOutlineIcon, Box, Center, NativeBaseProvider,Stack } from "native-base";
-import { Text, Input, Button, FAB } from 'react-native-elements';
+import {  View, Image, Pressable, Keyboard, Vibration, KeyboardAvoidingView, StatusBar, BackHandler, SafeAreaView } from 'react-native';
+//import { Icon, FormControl, WarningOutlineIcon, Box, Center, NativeBaseProvider,Stack } from "native-base";
+//import { Text, Input, Button, FAB } from 'react-native-elements';
 import React, { useState, useEffect } from 'react'
-import styles from '../style/Login'
-import input from '../components/Input'
-import { MaterialIcons } from "@expo/vector-icons";
+import styles from './style/Login'
+//import input from '../components/Input'
+//import { MaterialIcons } from "@expo/vector-icons";
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import * as Device from 'expo-device';
+//import * as Device from 'expo-device';
 import tenantService from '../services/TenantSevice';
-import CustomDialog from '../components/CustomDialog';
+//import CustomDialog from '../components/CustomDialog';
+import { useFonts } from 'expo-font';
+
+
 
 export default function Login({ navigation }) {
+  const [loaded] = useFonts({
+    'Raleway-SemiBold': require("../assets/fonts/Raleway-SemiBold.ttf")
+  });
+  
   const [show, setShow] = React.useState(false);
   const [email, setEmail] = useState(null)
   const [password, setPassword] = useState(null)
   const [erroMessageEmail, setErroMessageEmail] = useState(null)
   const [erroMessagePass, setErroMessagePass] = useState(null)
   const [isLoading, setLoading] = useState(true)
-  const [isLoadingToken, setLoadingToken] = useState(false)
+  const [dataLoaded, setDataLoaded] = useState(false)
 
   const [visibleDialog, setVisibleDialog] = useState(false);
   const [titulo, setTitulo] = useState(null)
@@ -30,6 +37,7 @@ export default function Login({ navigation }) {
     setMessage(message)
     setTipo(tipo)
   }
+
   function hideDialog(status) {
     setVisibleDialog(status)
   }
@@ -116,6 +124,7 @@ export default function Login({ navigation }) {
       return false
     }
   }
+
   function Validate() {
     if (email != null && email != '') {
       if (!IsEmail()) {
@@ -145,13 +154,17 @@ export default function Login({ navigation }) {
     }
 
   }
+
   function SignUp() {
     navigation.navigate("SignUp")
   }
+
   function ForgotPassword() {
     navigation.navigate("ForgotPassword")
   }
+
   useEffect(() => {
+    BackHandler.addEventListener('hardwareBackPress', () =>  {return true})
     AsyncStorage.getItem("TOKEN")
       .then((token => {
         if (token) {
@@ -160,56 +173,22 @@ export default function Login({ navigation }) {
       }
       )).catch((setLoading(false)))
   }, [])
+  //<StatusBar translucent backgroundColor="#1E4344" />
+
+  if (!loaded ){
+    return null
+  }
   return (
     
-    <Pressable style={styles.container} onPress={Keyboard.dismiss}>
-     <StatusBar translucent backgroundColor="#1E4344" />
-        
-          <View style={styles.Logo}>
-        <Image style={styles.imageLogin} source={require("../assets/icon.png")} />
-        <Text style={styles.nameApp}>Linear   Imóveis</Text>
-        <Text style={styles.title}> LOGIN</Text>
-      </View>
+    <SafeAreaView style={{flex:1}} >
+      <Pressable style={styles.container} onPress={Keyboard.dismiss}>
+        <View style={styles.containerLogo}>
+          <Image style={styles.logo} source={require("../assets/icon.png")} />
+        </View>
       
-      <KeyboardAvoidingView style={styles.keyboardAvoiding} behavior={Platform.OS == "ios" ? "padding" : "height"} KeyboardVerticalOffset={50}>
-        
-        <View style={styles.form}>
-          {!isLoading && !visibleDialog &&
-            <>
-              <Text style={styles.errorMessage}>{erroMessageEmail}</Text>
-              <Input autoComplete={true} inputContainerStyle={input.inputIcon}  placeholderTextColor='#C89A5B' style={input.input} onChangeText={value => { setEmail(value), setErroMessageEmail(null) }} placeholder=" E-mail" keyboardType="email-address" returnKeyType="done" leftIcon={{ size: 16, type: 'font-awesome', name: 'envelope', color: '#C89A5B' }} />
-              <Text style={styles.errorMessage}>{erroMessagePass}</Text>
-              <Input autoComplete={true} inputContainerStyle={input.inputIcon}  placeholderTextColor='#C89A5B' style={input.input} onChangeText={value => { setPassword(value), setErroMessagePass(null) }} placeholder="Senha" secureTextEntry={true} returnKeyType="done" leftIcon={{ size: 16, type: 'font-awesome', name: 'key', color: '#C89A5B' }} />
-              
-              
-            </>
-          }
-        </View>
-        <View style={styles.viewMultiButton}>
-          {isLoading &&
-            <FAB loading visible={true} icon={{ name: 'add' }} color='#C89A5B' borderColor='rgba(42, 42, 42,1)' size="small" />
-          }
-          {!isLoading && !visibleDialog &&
-            <>
-              
-              <Button  onPress={() => Login()} title="   Entrar" icon={{ name: 'arrow-right', type: 'font-awesome', size: 19, color: '#1E4344', }} iconRight iconContainerStyle={{ marginLeft: 10 }}  buttonStyle={{ backgroundColor: '#C89A5B', borderColor: '#FFC77A', borderWidth: 1, borderRadius: 6, }} containerStyle={{ width: '50%',  marginHorizontal: 50, marginVertical: 10, }} titleStyle={{ color: '#1E4344' }} />
-              <Button  onPress={() => SignUp()} title=" Cadastre-se" icon={{ name: 'user', type: 'font-awesome', size: 19, color: '#C89A5B' }} iconRight iconContainerStyle={{ marginLeft: 10 }}  buttonStyle={{ backgroundColor: '#1E4344', borderColor: '#FFC77A', borderWidth: 1, borderRadius: 6, }} containerStyle={{ width: '55%', marginHorizontal: 50, marginVertical: 10, }} titleStyle={{ color: '#C89A5B' }} />
-            </>
-            
-          }
-
-        </View>
-        {!isLoading &&
-          <Button  onPress={() => ForgotPassword()} title="Esqueci minha senha"   buttonStyle={{ backgroundColor: '#1E4344', borderColor: '#FFC77A', borderWidth: 0, borderRadius: 6, }} containerStyle={{ marginTop:'0%', width: '55%',  marginHorizontal: 50, marginVertical: 10, }} titleStyle={{ color: '#C89A5B',fontSize:12 }} />
-          
-          }
-         
-        
-      </KeyboardAvoidingView>
-      {visibleDialog &&
-          <CustomDialog titulo={titulo} message={message} tipo={tipo} visible={visibleDialog} onClose={hideDialog}></CustomDialog>
-        }
+      
     </Pressable>
+   </SafeAreaView>
   );
 }
 

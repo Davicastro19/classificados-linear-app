@@ -1,10 +1,15 @@
 import { StyleSheet } from 'react-native'
+import {
+    responsiveHeight,
+    responsiveWidth,
+    responsiveFontSize
+  } from "react-native-responsive-dimensions";
 
 const styles = StyleSheet.create({
 
     container: {
         flex: 1,
-        width: '100%',
+        width: responsiveWidth(100),
         backgroundColor: '#1E4344',
         paddingBottom: 2
     },

@@ -4,7 +4,7 @@ import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-nat
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#1E4344',
+        backgroundColor: '#fff',
         alignItems: 'center'
     },
     Logo:{

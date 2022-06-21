@@ -28,7 +28,7 @@ export default function Home() {
       tabBarActiveTintColor: '#FFC77A',
       tabBarInactiveTintColor: '#3F8D8F'
     }}
-      initialRouteName="Catalog"
+      initialRouteName="Casas"
       activeColor="green"
       
     >
@@ -36,9 +36,7 @@ export default function Home() {
         name="Casas"
         component={Homes}
         options={{
-          headerStyle: {
-            height:hp('3%')
-          },
+          headerShown: false,
           tabBarLabel: 'Casa/Aptoº',
           tabBarIcon: ({ color }) => (
             <MaterialCommunityIcons name="warehouse" color={color} size={26} />
@@ -52,9 +50,7 @@ export default function Home() {
         name="Atulizar casas"
         component={MyHouses}
         options={{
-          headerStyle: {
-            height:hp('3%')
-          },
+          headerShown: false,
           tabBarLabel: 'Minha casa',
           tabBarIcon: ({ color }) => (
             <FontAwesome5 name="laptop-house" color={color} size={26} />
@@ -66,16 +62,35 @@ export default function Home() {
         name="Perfil"
         component={Profile}
         options={{
-          headerStyle: {
-            height:hp('3%')
-          },
+          headerShown: false,
           tabBarLabel: 'Perfil',
           tabBarIcon: ({ color }) => (
             <FontAwesome name="user" color={color} size={26} />
           ),
         }}
       />
-      
+      <Tab.Screen
+        name="Perjfil"
+        component={Profile}
+        options={{
+          headerShown: false,
+          tabBarLabel: 'Perfijl',
+          tabBarIcon: ({ color }) => (
+            <FontAwesome name="user" color={color} size={26} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="Perfilk"
+        component={Profile}
+        options={{
+          headerShown: false,
+          tabBarLabel: 'Perfik',
+          tabBarIcon: ({ color }) => (
+            <FontAwesome name="user" color={color} size={26} />
+          ),
+        }}
+      />
 
       
 	  

@@ -41,10 +41,10 @@ class HousesService{
         })
     }
     
-    async allHouses(skip,take){
+    async allHouses(skip){
         let token = await AsyncStorage.getItem("TOKEN")
         return axios({
-            url:Config.API_URL+"houses/all/"+skip.toString()+"/"+take.toString(),
+            url:Config.API_URL+"houses/all/"+skip.toString()+"/20",
             timeout: Config.TIMEOUT_REQUEST,
             method:"Get",
             headers: {
@@ -58,10 +58,10 @@ class HousesService{
             return Promise.reject(error)
         })
     }
-    async getHouseFiltered(skip,take, district,city,orderAll){
+    async getHouseFiltered(skip, district,city,orderAll){
         let token = await AsyncStorage.getItem("TOKEN")
         return axios({
-            url:Config.API_URL+"houses/orderByCityAndDistrictAndOrderValue/"+skip.toString()+"/"+take.toString()+"/"+district+"/"+city+"/"+orderAll,
+            url:Config.API_URL+"houses/orderByCityAndDistrictAndOrderValue/"+skip.toString()+"/20/"+district+"/"+city+"/"+orderAll,
             timeout: Config.TIMEOUT_REQUEST,
             method:"Get",
             headers: {

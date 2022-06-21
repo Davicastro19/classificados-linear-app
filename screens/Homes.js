@@ -10,6 +10,7 @@ import {
     ScrollView,
     FlatList,
     NativeBaseProvider,
+    Divider
 } from 'native-base';
 import { Avatar, Card, Title, Paragraph } from 'react-native-paper';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -17,12 +18,15 @@ import { FontAwesome, FontAwesome5, MaterialCommunityIcons, MaterialIcons } from
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import housesService from '../services/HousesService';
-
-
+import CustomCard from '../components/CustomCard'
+import {
+    responsiveHeight,
+    responsiveWidth,
+    responsiveFontSize
+  } from "react-native-responsive-dimensions";
 
 export default function Homes() {
     const [loading,setLoading] = useState(false)
-    const [take,setTake] = useState(20)
     const [orderCity,setOrderCity] = useState('Ibotirama')
     const [orderDistrict,setOrderDistrict] = useState('Todos Bairros')
     const [orderAll,setOrderAll] = useState('Mais Recentes')
@@ -30,46 +34,46 @@ export default function Homes() {
     const [isLoading, setIsLoading] = useState(false)
     const [showFilter, setShowFilter] = useState(false)
     const [houses, setHouses] = useState([])
+    const [oldLengh, setOldLengh] = useState(1)
     const [refreshing, setRefreshing] = useState(false);
     const [specificHouse, setSpecificHouse] = useState(false)
     //const memoizedValue = useMemo(() => renderItem, [houses]);
     const onRefresh = React.useCallback(() => {
-        setTake(20)
-        setSkip(0)
-        if (orderDistrict === 'Todos Bairros'){
-            allHouses(0,20)
-        }
-        else{ 
-            setTake(20)
-            setSkip(0) 
-            getHouseFiltered()
-        }
-        
-        setRefreshing(false);
-    }, []);
+            //console.log('manoo slc ',skip)
+            setSkip(0)
+            if (orderDistrict === 'Todos Bairros'){
+                allHouses(0)
+            }
+            else{ 
+                setSkip(0) 
+                getHouseFiltered(0)
+            }
 
+            setRefreshing(false);
+    }, []);
+    function filtered(value){
+       return  value.filter(function (a) {return !this[JSON.stringify(a)] && (this[JSON.stringify(a)] = true);}, Object.create(null))
+    }
     async function moreHouses(){
+        if(oldLengh !== 0){
         if (loading) return;
         setLoading(true);
         let nSkip = skip
         nSkip = nSkip+20
-        let nTake = take
-        nTake = nTake+20
         setSkip(nSkip)
-        setTake(nTake)
         if (orderDistrict === 'Todos Bairros'){
-            allHouses(nSkip, nTake)
+            allHouses(nSkip)
         }
         else{ 
-            setSkip(nSkip)
-            setTake(nTake)  
-            getHouseFiltered()
+            setSkip(nSkip) 
+            getHouseFiltered(nSkip)
         }
+    }
             
     }
     function validateImage(image, value) {
         try {
-            console.log('homes',Config.AWS_URL + image.split(',')[value])
+            //console.log('homes',Config.AWS_URL + image.split(',')[value])
             if (image.split(',')[value].includes('jpg') || image.split(',')[value].includes('png')) {
                 return Config.AWS_URL + image.split(',')[value]
             } else {
@@ -111,78 +115,95 @@ export default function Homes() {
             })
 
     }
-
-    async function getHouseFiltered() {
+    function upHouse(objA, objB){
+        
+        if (objA === objB) {}else{
+            setHouses(objA)
+          }
+    }
+    async function getHouseFiltered(skips) {
         if (orderDistrict != 'Todos Bairros'){
             setIsLoading(true)
             setShowFilter(false)
-            housesService.getHouseFiltered(skip,take, orderDistrict,orderCity,orderAll)
-
+            let oldHouse = houses
+            housesService.getHouseFiltered(skips, orderDistrict,orderCity,orderAll)
                 .then((response) => {
-                    if (skip !== 0){
-                    if (response.data.length !== 0){
-                        let newList = [...houses, ...response.data]
-                        newList = useMemo(() => newList.filter(function (a) {return !this[JSON.stringify(a)] && (this[JSON.stringify(a)] = true);}, Object.create(null)),[newList])
-                        setHouses(newList)
-                    }}else{
-                        setHouses(response.data)
-                    }
-                    setLoading(false)
-
-                })
-                .catch((error) => {
-                    setIsLoading(false)
-                    //// // console.log('75 - Homes', error)
-                    //setCatalogData('Seu sinais estarão aqui. (clique em Filtro)')
-                })
-                if (orderAll === 'bigger'){
-                    setOrderAll('Maior Valor')
-                }else if(orderAll === 'smaller'){
-                    setOrderAll('Menor Valor')
-                }else{
-                    setOrderAll('Mais Recentes')
-                }
-        }else{
-            allHouses(skip,take)
-        }
-    }
-
-    async function allHouses(skip,take) {
-        setIsLoading(true)
-        setShowFilter(false)
-        housesService.allHouses(skip,take)
-            .then((response) => {
-                if (skip !== 0){
+                    setOldLengh(response.data.length)
+            if (skips !== 0){
                 if (response.data.length !== 0){
-                    let newList = [...houses, ...response.data]
-                    newList = newList.filter(function (a) {
-                        return !this[JSON.stringify(a)] && (this[JSON.stringify(a)] = true);
-                    }, Object.create(null))
-                    setHouses(newList)
-                }}else{
-                    setHouses(response.data)
+                    let newList = filtered([...houses, ...response.data])
+                    upHouse(newList,oldHouse)
                 }
-                setLoading(false)
+            }else{
+                upHouse(response.data,oldHouse)
+            }
+            setLoading(false)
 
-            })
+        })
             .catch((error) => {
                 setIsLoading(false)
-                //// // console.log('75 - Homes', error)
+                 console.log('75 - Homes', error)
                 //setCatalogData('Seu sinais estarão aqui. (clique em Filtro)')
             })
+            if (orderAll === 'bigger'){
+                setOrderAll('Maior Valor')
+            }else if(orderAll === 'smaller'){
+                setOrderAll('Menor Valor')
+            }else{
+                setOrderAll('Mais Recentes')
+            }
+        }else{
+            allHouses(skips)
+        }
+    }
+    const renderItem = ({ item }) => (
+        //<View><Text allowFontScaling={true} maxFontSizeMultiplier={1.3} style={{fontSize:responsiveFontSize(27), color:'white'}}>{item.id}</Text></View>
+        
+        <CustomCard item={item} selectHouseById={() => selectHouseById(item.id)} validateImage={() => validateImage(item.images, '1') == false ? "https://daviastro.000webhostapp.com/house.png" : validateImage(item.images, '1') }/>                         
+      );
+    async function allHouses(skips) {
+        setIsLoading(true)
+        setShowFilter(false)
+        let oldHouse = houses
+        housesService.allHouses(skips)
+        .then((response) => {
+            setOldLengh(response.data.length)
+            if (skips !== 0){
+                if (response.data.length !== 0){
+                    let newList = filtered([...houses, ...response.data])
+                    upHouse(newList,oldHouse)
+                }
+            }else{
+                upHouse(response.data,oldHouse)
+            }
+            setLoading(false)
+
+        })
+            .catch((error) => {
+                setIsLoading(false)
+                 console.log('75 - Homes', error)
+                //setCatalogData('Seu sinais estarão aqui. (clique em Filtro)')
+            })
+            if (orderAll === 'bigger'){
+                setOrderAll('Maior Valor')
+            }else if(orderAll === 'smaller'){
+                setOrderAll('Menor Valor')
+            }else{
+                setOrderAll('Mais Recentes')
+            }
     }
 
     useEffect(() => {
-        allHouses(0,20)
+        allHouses(0)
     }, [])
     return (
         <View style={styles.container} onPress={() => setPairOptionFunction()}>
             <StatusBar translucent backgroundColor="#1E4344" />
             {!showFilter && !specificHouse &&
-                <View style={{ width: '100%', height: '6%' }}><Button title=" Filtro" onPress={() => (setIsLoading(false), setShowFilter(true))} icon={{ name: 'filter', type: 'font-awesome', size: 19, color: '#fdf5e8' }} iconRight iconContainerStyle={{ marginLeft: 10 }} buttonStyle={{ backgroundColor: '#1E4344', borderColor: '#152F30', borderWidth: 0.5 }} containerStyle={{ height: '100%' }} titleStyle={{ color: '#fdf5e8' }} />
+                <View style={{ width: '100%', height: '6%' }}><Button title="Filtro" onPress={() => (setIsLoading(false), setShowFilter(true))} icon={{ name: 'filter', type: 'ant-design', size: 19, color: '#fdf5e8' }} iconLeft buttonStyle={{ backgroundColor: '#1E4344', borderColor: '#152F30', borderWidth: 0.5 }} containerStyle={{ width:'25%',height: '100%' }} titleStyle={{ color: '#fdf5e8' }} />
                 </View>}
             {showFilter && !specificHouse &&
-                <View style={{ width: '100%', height: '6%' }}><Button title=" Filtrar" onPress={() => getHouseFiltered()} icon={{ name: 'search', type: 'font-awesome', size: 19, color: '#fdf5e8' }} iconRight iconContainerStyle={{ marginLeft: 10 }} buttonStyle={{ backgroundColor: '#1E4344', borderColor: '#152F30', borderWidth: 0.5 }} containerStyle={{ height: '100%' }} titleStyle={{ color: '#fdf5e8' }} />
+                <View style={{ width: '100%', height: '6%' }}><Button title=" Filtrar" onPress={() => getHouseFiltered(0)} icon={{ name: 'search', type: 'font-awesome', size: 19, color: '#fdf5e8' }} iconRight iconContainerStyle={{ marginLeft: 10 }} buttonStyle={{ backgroundColor: '#1E4344', borderColor: '#152F30', borderWidth: 0.5 }} containerStyle={{ height: '100%' }} titleStyle={{ color: '#fdf5e8' }} />
                 </View>}
 
 
@@ -323,18 +344,7 @@ export default function Homes() {
                             <FlatList refreshControl={<RefreshControl
                                 refreshing={refreshing}
                                 onRefresh={onRefresh}
-                            />} showsVerticalScrollIndicator={false} data={houses} renderItem={({ item }) =>
-                                <Card style={{ justifyContent: "space-evenly", borderWidth: 1.5, backgroundColor: '#fdf5e8', margin: 5, borderColor: '#152F30', borderRadius: 6 }}>
-                                     <Card.Cover style={{ height: hp('65%'), borderRadius: 6, borderWidth: 3, borderColor: '#fdf5e8' }} source={{ uri: validateImage(item.images, '1') == false ? "https://daviastro.000webhostapp.com/house.png" : validateImage(item.images, '1') }} />
-                                    <Card.Content >
-                                        <Text style={{ fontWeight: 'bold', fontSize: 17 }}>{item.publicPlace} - {item.district}</Text>
-                                        <Paragraph><FontAwesome name="bed" color='#000' size={15} /> {item.bed}      <FontAwesome5 name="shower" color='#000' size={15} /> {item.shower}      <FontAwesome5 name="car" color='#000' size={15} /> {item.car}     <FontAwesome name="handshake-o" color='#000' size={15} /> {item.type}      <Text style={{ fontWeight: 'bold' }}>R$</Text>{item.price}</Paragraph>
-                                    </Card.Content>
-                                    <Card.Actions>
-                                        <Button title=" Ver mais" onPress={() => selectHouseById(item.id)} icon={{ name: 'info', type: 'font-awesome', size: 15, color: '#1E4344' }} iconRight iconContainerStyle={{ marginLeft: 10 }} buttonStyle={{ height: hp('5%'), backgroundColor: '#FFF8EE', borderColor: '#295E60', borderWidth: 1, borderRadius: 6, }} containerStyle={{ width: '30%' }} titleStyle={{ fontSize: 13, color: '#1E4344' }} />
-                                        <Text style={{ fontSize: 10, marginLeft: wp('50%'), marginTop:hp('3%') }}>   {item.creationDate.split(' ')[0]}  </Text>
-                                        </Card.Actions>
-                                </Card>} onEndReached={moreHouses}  onEndReachedThreshold={0.03} ListFooterComponent={<FAB loading visible={loading} icon={{ name: 'add' }} color='#C89A5B' borderColor='rgba(42, 42, 42,1)' size="small" />} keyExtractor={value => value.id} />
+                            />} showsVerticalScrollIndicator={false} data={houses} renderItem={renderItem} onEndReached={moreHouses}  onEndReachedThreshold={0.03} ListFooterComponent={<FAB loading visible={loading} icon={{ name: 'add' }} color='#C89A5B' borderColor='rgba(42, 42, 42,1)' size="small" />} keyExtractor={value => value.id} />
                         }
                     </View>
                 }

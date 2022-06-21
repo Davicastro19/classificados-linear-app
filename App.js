@@ -1,7 +1,9 @@
 import React from 'react'
+import { View, Image, StyleSheet } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import Login from './screens/Login';
 import Home from './screens/Home';
+import Splash from './screens/Splash';
 import {
   createStackNavigator,
   TransitionPresets,
@@ -9,6 +11,8 @@ import {
 import SignUp from './screens/SignUp';
 import ForgotPassword from './screens/forgotPassword';
 import interceptor from './services/interceptor'
+
+
 
 
 
@@ -30,15 +34,21 @@ function MyStack() {
   return (
     <Stack.Navigator
     screenOptions={{
-      headerShown: false,
-      gestureEnabled: true,
-      cardOverlayEnabled: true,
-      ...TransitionPresets.ModalPresentationIOS,
-    }} presentation="modal">
-      <Stack.Screen  name="Login" component={Login} />
-      <Stack.Screen options={{headerShown: false,}} name="Home" component={Home} />
-      <Stack.Screen  name="SignUp" component={SignUp} />
-      <Stack.Screen  name="ForgotPassword" component={ForgotPassword} />
+      //headerShown: false,
+      gestureEnabled: false,
+      //cardOverlayEnabled: true,
+      //...TransitionPresets.ModalPresentationIOS,
+      
+    }}
+      activeColor="green"
+       presentation="modal">
+      <Stack.Screen options={{headerShown: false,}} name="Splash" component={Splash} />
+      <Stack.Screen options={{headerShown: false,}}  name="Login" component={Login} />
+      <Stack.Screen  options={{headerShown: false,}} name="Home" component={Home} />
+      <Stack.Screen  options={{gestureEnabled: true,
+        headerShown: false,}}name="SignUp" component={SignUp} />
+      <Stack.Screen options={{gestureEnabled: true,
+        headerShown: false,}} name="ForgotPassword" component={ForgotPassword} />
     </Stack.Navigator>
   );
 }
@@ -46,8 +56,15 @@ function MyStack() {
 export default function App() {
   interceptor.refresh()
   return (
+    //<View style={styles.container}>
+    //    <Image
+    //      style={{width: wp('100%'), height:hp('60%'),marginBottom:hp('0%')}}
+    //      source={{uri: Config.AWS_URL+'splash.gif'}} />
+    //  </View>
     <NavigationContainer theme={MyTheme}>
       <MyStack />
     </NavigationContainer>
   );
+
+  
 }

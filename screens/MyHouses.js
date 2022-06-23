@@ -7,10 +7,9 @@ import housesService from '../services/HousesService';
 import styles from '../style/MyHouses'
 import DateAndHours from '../util/DateAndHours'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import cameras from '../style/camera'
+//import cameras from '../style/camera'
 import * as ImagePicker from "expo-image-picker";
-import { Camera } from 'expo-camera';
-import { Card, Title, Paragraph } from 'react-native-paper';
+//import { Camera } from 'expo-camera';
 import Notification from '../components/Notification';
 import Confirmation from '../components/Confirmation';
 
@@ -30,11 +29,11 @@ export default function MyHouses() {
     const [take,setTake] = useState(5)
     const [skip,setSkip] = useState(10)
     const [refreshing, setRefreshing] = useState(false);
-    const [types, setTypes] = useState(Camera.Constants.Type.back);
+ //   const [types, setTypes] = useState(Camera.Constants.Type.back);
     const camRef = useRef(null)
     const [titlePreCapturate, setTitlePreCapturate] = useState("Adicionar a 1º")
     const [titleDelCapturate, setTitleDelCapturate] = useState("Apagar a 1º")
-    const [openCamera, setOpenCamera] = useState(false)
+ //   const [openCamera, setOpenCamera] = useState(false)
     const [alt, setAlt] = useState(new Object)
     const [buttonInsert, setButtonInsert] = useState(false)
     const [capturatePhoto1, setCapturatePhoto1] = useState(false)
@@ -382,7 +381,7 @@ export default function MyHouses() {
         const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync()
         if (status === "granted") {
             const data = await ImagePicker.launchImageLibraryAsync({
-                mediaTypes: ImagePicker.MediaTypeOptions.All
+                mediaTypes: ImagePicker.MediaTypeOptions.Image
             });
             //const { status } = await Camera.requestCameraPermissionsAsync();
             //
@@ -582,10 +581,9 @@ export default function MyHouses() {
 
     function deleteHouse(id) {
         setVisibleConfimationDeletion(false)
-        setOpenCamera(false)
+ //       setOpenCamera(false)
         setEditShow(false)
         setCreateShow(false)
-        setOpenCamera(false)
         setIsLoading(true)
         housesService.deleteHouse(id)
             .then((response) => {
@@ -605,10 +603,9 @@ export default function MyHouses() {
     }
 
     async function allMyHouses() {
-        setOpenCamera(false)
+ //       setOpenCamera(false)
         setEditShow(false)
         setCreateShow(false)
-        setOpenCamera(false)
         setIsLoading(true)
         housesService.allMyHouses()
             .then((response) => {
@@ -642,33 +639,8 @@ export default function MyHouses() {
                         </View>}
 
                 <NativeBaseProvider >
-                    {openCamera && !isLoading &&
-                        <Camera style={cameras.camera} type={types} ref={camRef}>
-                            <View style={cameras.buttonContainer}>
-                                <TouchableOpacity
-                                    style={cameras.button}
-                                    onPress={() => {
-                                        setTypes(
-                                            types === Camera.Constants.Type.back
-                                                ? Camera.Constants.Type.front
-                                                : Camera.Constants.Type.back
-                                        );
-                                    }}>
-                                    <FontAwesome name='exchange' size={23} color="red"></FontAwesome>
-                                </TouchableOpacity>
-                                <TouchableOpacity
-                                    style={cameras.buttonCam}
-                                    onPress={takePicture}>
-                                    <FontAwesome name='camera' size={23} color="blue"></FontAwesome>
-                                </TouchableOpacity>
-                                <TouchableOpacity style={cameras.closeButton} onPress={() => { setOpenCamera(false) }}>
-                                    <FontAwesome name='close' size={50} color="red"></FontAwesome>
-                                </TouchableOpacity>
 
-                            </View>
-                        </Camera>}
-
-                    {!isLoading && editShow && !openCamera && !visibleConfimationUpdate && !visibleNotification && !visibleConfimationDeletion && !visibleNotification &&
+                    {!isLoading && editShow && !visibleConfimationUpdate && !visibleNotification && !visibleConfimationDeletion && !visibleNotification &&
                         <View style={{ height: hp('93%'), justifyContent: "space-evenly", borderWidth: 1.5, backgroundColor: '#fdf5e8', borderColor: '#152F30', borderRadius: 6 }}>
                             <View style={{ paddingLeft: 5, paddingRight: 5, justifyContent: "space-evenly" }}>
 
@@ -739,7 +711,7 @@ export default function MyHouses() {
 
                         </View>
                     }
-                    {!isLoading && createShow && !openCamera && !visibleConfimationUpdate && !visibleNotification && !visibleConfimationDeletion && !visibleNotification &&
+                    {!isLoading && createShow  && !visibleConfimationUpdate && !visibleNotification && !visibleConfimationDeletion && !visibleNotification &&
 
                         <View style={{ height: hp('93%'), justifyContent: "space-evenly", borderWidth: 1.5, backgroundColor: '#fdf5e8', borderColor: '#152F30', borderRadius: 6 }}>
                             <View style={{ paddingLeft: 5, paddingRight: 5, justifyContent: "space-evenly" }}>
@@ -810,26 +782,7 @@ export default function MyHouses() {
                         </View>
                     }
 
-                    {!editShow && !isLoading && !visibleConfimationUpdate && !visibleNotification && !visibleConfimationDeletion && !visibleNotification &&
-                        <View style={{ backgroundColor: '#1E4344', flex: 1, justifyContent: 'center', }}>
-                            {myHouses &&
-                                <FlatList refreshControl={<RefreshControl
-                                    refreshing={refreshing}
-                                    onRefresh={onRefresh}
-                                />} showsVerticalScrollIndicator={false} data={myHouses} renderItem={({ item }) =>
-                                    <Card style={{ justifyContent: "space-evenly", borderWidth: 1.5, backgroundColor: '#fdf5e8', margin: 5, borderColor: '#152F30', borderRadius: 6 }}>
-                                        <Card.Cover style={{ height: hp('65%'), borderRadius: 6, borderWidth: 3, borderColor: '#fdf5e8' }} source={{ uri: validateImage(item.houses_images, 0) == false ? "https://daviastro.000webhostapp.com/house.png" : validateImage(item.houses_images, 0) }} />
-                                        <Card.Content >
-                                            <Text style={{ fontWeight: 'bold', fontSize: 17 }}>{item.houses_publicPlace} - {item.houses_district}</Text>
-                                            <Paragraph><FontAwesome name="bed" color='#000' size={15} /> {item.houses_bed}      <FontAwesome5 name="shower" color='#000' size={15} /> {item.houses_shower}      <FontAwesome5 name="car" color='#000' size={15} /> {item.houses_car}     <FontAwesome name="handshake-o" color='#000' size={15} /> {item.houses_type}      <Text style={{ fontWeight: 'bold' }}>R$</Text>{item.houses_price}</Paragraph>
-                                        </Card.Content>
-                                        <Card.Actions>
-                                            <Button title=" Editar" onPress={() => selectHouseById(item.houses_id)} icon={{ name: 'edit', type: 'font-awesome', size: 19, color: '#fdf5e8' }} iconRight iconContainerStyle={{ marginLeft: 10 }} buttonStyle={{ backgroundColor: '#1E4344', borderColor: '#1E4344', borderWidth: 1, borderRadius: 6, }} containerStyle={{ width: wp('30%') }} titleStyle={{ fontSize: 13, color: '#fdf5e8' }} />
-                                        </Card.Actions>
-                                    </Card>} keyExtractor={value => value.houses_id} />
-                            }
-                        </View>
-                    }
+                   
                     {isLoading &&
                         <View style={{ marginTop: wp('80%') }}>
                             <FAB loading visible={true} icon={{ name: 'add' }} color='#C89A5B' borderColor='rgba(42, 42, 42,1)' size="small" />

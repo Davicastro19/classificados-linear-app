@@ -11,9 +11,7 @@ import {
 import SignUp from './screens/SignUp';
 import ForgotPassword from './screens/forgotPassword';
 import interceptor from './services/interceptor'
-
-
-
+import {ViewPropTypes} from 'deprecated-react-native-prop-types'
 
 
 

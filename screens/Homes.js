@@ -2,7 +2,6 @@ import { View, Pressable, Keyboard, TextInput, Linking, RefreshControl, StatusBa
 import { Text, FAB, Button } from 'react-native-elements';
 import React, { useState, useEffect,useMemo } from 'react'
 import tenantService from '../services/TenantSevice';
-import { RadioButton } from 'react-native-paper';
 import SelectDropdown from 'react-native-select-dropdown'
 import  Config  from '../util/Config'
 import styles from '../style/Homes'
@@ -12,18 +11,13 @@ import {
     NativeBaseProvider,
     Divider
 } from 'native-base';
-import { Avatar, Card, Title, Paragraph } from 'react-native-paper';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { FontAwesome, FontAwesome5, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import housesService from '../services/HousesService';
 import CustomCard from '../components/CustomCard'
-import {
-    responsiveHeight,
-    responsiveWidth,
-    responsiveFontSize
-  } from "react-native-responsive-dimensions";
+
 
 export default function Homes() {
     const [loading,setLoading] = useState(false)
@@ -156,11 +150,11 @@ export default function Homes() {
             allHouses(skips)
         }
     }
-    const renderItem = ({ item }) => (
-        //<View><Text allowFontScaling={true} maxFontSizeMultiplier={1.3} style={{fontSize:responsiveFontSize(27), color:'white'}}>{item.id}</Text></View>
-        
+    const renderItem = React.useCallback(({ item }) => {
+        return (
         <CustomCard item={item} selectHouseById={() => selectHouseById(item.id)} validateImage={() => validateImage(item.images, '1') == false ? "https://daviastro.000webhostapp.com/house.png" : validateImage(item.images, '1') }/>                         
-      );
+        )
+    },[houses]);
     async function allHouses(skips) {
         setIsLoading(true)
         setShowFilter(false)
@@ -224,12 +218,7 @@ export default function Homes() {
                                 </ScrollView>
                             </View>
                             <View style={{ paddingLeft: 10, justifyContent: "space-evenly", }} >
-                                <Title>{specificHouse.houses_city} - {specificHouse.houses_publicPlace}</Title>
-                                <Paragraph><FontAwesome name="bed" color='#000' size={15} /> 4      <FontAwesome5 name="shower" color='#000' size={15} /> 2      <FontAwesome5 name="car" color='#000' size={15} /> 1     <FontAwesome name="handshake-o" color='#000' size={15} /> {specificHouse.houses_type}      <Text style={{ fontWeight: 'bold' }}>R$</Text>{specificHouse.houses_price}</Paragraph>
-                                <Paragraph><Text style={{ fontWeight: 'bold' }}>m²</Text> {specificHouse.houses_bed}      <Text style={{ fontWeight: 'bold' }}>IPTU-R$</Text>{specificHouse.houses_tax}       <MaterialIcons name="pets" color='#000' size={15} /> {specificHouse.houses_pet}      <FontAwesome5 name="couch" color='#000' size={15} /> {specificHouse.houses_furniture}</Paragraph>
-                                <Text style={{ fontWeight: 'bold', fontSize: 17, marginTop: 5 }}>Descrição</Text>
-                                <Paragraph style={{  }}>{specificHouse.houses_description}</Paragraph>
-
+                            
                             </View>
                         </View>
 

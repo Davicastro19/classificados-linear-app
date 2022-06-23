@@ -1,15 +1,7 @@
-import {  View,  Linking,StatusBar } from 'react-native';
 import React, { useState, useEffect } from 'react'
-import {Button, Text} from 'react-native-elements';
 import Profile from '../screens/Profile'
-import {
-  FlatList,
-  NativeBaseProvider,
-} from 'native-base';
 import Homes from '../screens/Homes'
 import MyHouses from '../screens/MyHouses'
-import { Avatar, Card, Title, Paragraph } from 'react-native-paper';
-import  AsyncStorage  from '@react-native-async-storage/async-storage';
 import { FontAwesome,FontAwesome5,MaterialCommunityIcons } from '@expo/vector-icons';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';

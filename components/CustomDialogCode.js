@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { View, Text } from 'react-native';
-import { Provider, Paragraph, Dialog, Portal,Colors  } from 'react-native-paper';
 import { Input, Button } from 'react-native-elements';
 import styles from '../style/MainStyle'
 import input from './Input'

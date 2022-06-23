@@ -2,8 +2,6 @@ import {  View, Image, Pressable,Keyboard,Vibration,KeyboardAvoidingView } from 
 import { FAB,Text, Input, Button, CheckBox } from 'react-native-elements';
 import React, {useState} from 'react'
 import tenantService from '../services/TenantSevice';
-import styles from '../style/SignUp'
-import input from '../components/Input'
 import CustomDialog from '../components/CustomDialog';
 import CustomDialogCode from '../components/CustomDialogCode';
 import * as Device from 'expo-device';
@@ -216,43 +214,7 @@ function sendCode(){
   return (
     <Pressable style={styles.container} onPress={Keyboard.dismiss}>
       <KeyboardAvoidingView style={styles.keyboardAvoiding} behavior={Platform.OS == "ios" ? "padding" : "height"} KeyboardVerticalOffset={50}>
-      <View style={styles.Logo}>
-            <Image style={styles.imageSignUp} source={require("../assets/icon.png")} />
-            <Text style={styles.nameApp}>Linear   Imóveis</Text>
-            <Text style={styles.title}> CADASTRE-SE</Text>
-          </View><View style={styles.form}>
-              <Text style={styles.errorMessage}>{erroMessageName}</Text>
-              <Input autoComplete={true} inputContainerStyle={input.inputIcon} placeholderTextColor='#C89A5B' style={input.input} onChangeText={value => { setName(value), setErroMessageName(null); } } placeholder="Nome e sobrenome" leftIcon={{ size: 20, type: 'font-awesome', name: 'user', color: '#C89A5B' }} />
-              <Text style={styles.errorMessage}>{erroMessageEmail}</Text>
-              <Input autoComplete={true} inputContainerStyle={input.inputIcon} placeholderTextColor='#C89A5B' style={input.input} onChangeText={value => { setEmail(value), setErroMessageEmail(null); } } placeholder=" E-mail" keyboardType="email-address" returnKeyType="done" leftIcon={{ size: 16, type: 'font-awesome', name: 'envelope', color: '#C89A5B' }} />
-              <Text style={styles.errorMessage}>{erroMessagePass}</Text>
-              <Input autoComplete={true} inputContainerStyle={input.inputIcon} placeholderTextColor='#C89A5B' style={input.input} onChangeText={value => { setPassword(value), setErroMessagePass(null); } } placeholder="Senha" secureTextEntry={true} returnKeyType="done" leftIcon={{ size: 16, type: 'font-awesome', name: 'key', color: '#C89A5B' }} />
-              <Text style={styles.errorMessage}>{erroMessagePhone}</Text>
-              <Input autoComplete={true} inputContainerStyle={input.inputIcon} placeholderTextColor='#C89A5B' style={input.input} onChangeText={value => { setPhone(value), setErroMessagePhone(null); } } placeholder="Telefone" keyboardType="number-pad" returnKeyType="done" leftIcon={{ size: 20, type: 'font-awesome', name: 'phone', color: '#C89A5B' }} />
-              <Text style={styles.errorMessageTerm}>{erroMessageSelect}</Text>
-            </View>
-      <CheckBox containerStyle ={styles.termsUse} center checkedIcon="dot-circle-o"  checkedColor="rgba(106,255, 16, 1)" uncheckedColor="red" uncheckedIcon="circle-o" title="Eu aceito os termos de uso" checked={isSelected} onPress={() => setSelected(!isSelected)} />
-      { isLoadings &&
-      <FAB
-      loading
-      visible={true}
-      icon={{ name: 'add' }}
-      color='rgba(106,255, 16, 1)'
-      borderColor= 'rgba(42, 42, 42,1)' 
-      size="small"
-    />
-      } 
-    { !isLoadings && 
-       
-       <Button  onPress={() => sendCode()} title=" Cadastrar" icon={{ name: 'check', type: 'font-awesome', size: 19, color: '#1E4344' }} iconRight iconContainerStyle={{ marginLeft: 10 }}  buttonStyle={{ backgroundColor: '#C89A5B', borderColor: '#FFC77A', borderWidth: 1, borderRadius: 6, }} containerStyle={{ width: '80%',  marginHorizontal: 50, marginVertical: 10, }} titleStyle={{ color: '#1E4344' }} />
-    }
-  { visibleDialog && !isLoadings && !visibleDialogCode &&
-    <CustomDialog titulo={titulo} message={message} tipo={tipo} visible={visibleDialog} onClose={hideDialog}></CustomDialog>
-  }
-  { visibleDialogCode &&  !isLoadings &&
-    <CustomDialogCode onChangeText={setCodeFull} onClose={hideDialogCode} visible={visibleDialogCode} FullSignUp={FullSignUp}></CustomDialogCode>
-  }
-  
+     
     
     </KeyboardAvoidingView>
     </Pressable>

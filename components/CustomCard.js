@@ -1,6 +1,5 @@
 import React, { memo } from 'react';
 import { Text, FAB, Button } from 'react-native-elements';
-import { Avatar, Card, Title, Paragraph } from 'react-native-paper';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import { FontAwesome, FontAwesome5, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
 import { View } from 'react-native';

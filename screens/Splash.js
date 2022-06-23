@@ -12,7 +12,7 @@ export default function Splash({navigation}) {
         source={require('../assets/splash.json')} 
         autoPlay
         loop={false} 
-        speed={0.6}
+        speed={0.9}
         onAnimationFinish={() => navigation.navigate("Login")}
         />
     </View>

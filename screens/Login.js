@@ -1,46 +1,44 @@
-import {  View, Image, Pressable, Keyboard, Vibration, KeyboardAvoidingView, StatusBar, BackHandler, SafeAreaView } from 'react-native';
-//import { Icon, FormControl, WarningOutlineIcon, Box, Center, NativeBaseProvider,Stack } from "native-base";
-//import { Text, Input, Button, FAB } from 'react-native-elements';
+
+import { Text, Input, FAB } from 'react-native-elements';
+import { View, Image, Pressable, Keyboard, Vibration, KeyboardAvoidingView, StatusBar, BackHandler, SafeAreaView,ImageBackground } from 'react-native';
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import React, { useState, useEffect } from 'react'
-import styles from './style/Login'
-//import input from '../components/Input'
+import styles from '../style/Login'
 //import { MaterialIcons } from "@expo/vector-icons";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 //import * as Device from 'expo-device';
 import tenantService from '../services/TenantSevice';
 //import CustomDialog from '../components/CustomDialog';
 import { useFonts } from 'expo-font';
-
-
+import stylesColor from '../style/colorApp';
+import PInput from '../components/input/input'
+import PButton from '../components/button/button'
+import MLoad from '../components/loading/miniLoad'
+import Notification from '../components/notification/notification'
+// import LInputButton from '../components/loadInputButton'
 
 export default function Login({ navigation }) {
   const [loaded] = useFonts({
-    'Raleway-SemiBold': require("../assets/fonts/Raleway-SemiBold.ttf")
+    'Raleway-SemiBold': require("../assets/fonts/Raleway-SemiBold.ttf"),
+    'Raleway-Light': require("../assets/fonts/Raleway-Light.ttf"),
+    'Raleway-Regular': require("../assets/fonts/Raleway-Regular.ttf"),
+    'Raleway-Medium': require("../assets/fonts/Raleway-Medium.ttf")
   });
-  
-  const [show, setShow] = React.useState(false);
-  const [email, setEmail] = useState(null)
-  const [password, setPassword] = useState(null)
-  const [erroMessageEmail, setErroMessageEmail] = useState(null)
-  const [erroMessagePass, setErroMessagePass] = useState(null)
-  const [isLoading, setLoading] = useState(true)
-  const [dataLoaded, setDataLoaded] = useState(false)
-
-  const [visibleDialog, setVisibleDialog] = useState(false);
-  const [titulo, setTitulo] = useState(null)
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [erroMessageEmail, setErroMessageEmail] = useState('')
+  const [erroMessagePass, setErroMessagePass] = useState('')
+  const [isLoading, setLoading] = useState(false)
+  const [visableNotification, setVisableNotification] = useState(false);
+  const [title, setTitle] = useState(null)
   const [message, setMessage] = useState(null)
-  const [tipo, setTipo] = useState(null)
 
-  function showDialog(titulo, message, tipo) {
-    setVisibleDialog(true)
-    setTitulo(titulo)
+  function showNotification(title, message) {
+    setVisableNotification(true)
+    setTitle(title)
     setMessage(message)
-    setTipo(tipo)
   }
 
-  function hideDialog(status) {
-    setVisibleDialog(status)
-  }
 
   function Login() {
     if (Validate()) {
@@ -54,33 +52,27 @@ export default function Login({ navigation }) {
           if (response.data.status) {
             if (true){//(response.data.device === Device.modelName + '/' + Device.osName + '/' + Device.deviceName) {
               setLoading(false)
-              setErroMessageEmail('')
-              setErroMessagePass('')
               navigation.reset({
                 index: 0,
                 routes: [{ name: "Home" }]
               })
             }
-            else {
-              setLoading(false)
-              showDialog("Muitas conexões", "Só é possível cadastrar o L-Safe em um Smartphone", "SUCESSO")
-
-            }
           } else {
             setLoading(false)
-            showDialog("Dados inválidos", response.data.message, "SUCESSO")
+            showNotification("Dados inválidos", response.data.message)
           }
         })
         .catch((error) => {
           if (error.toString().includes('ined is not an object')) {
             setLoading(false)
-            showDialog("Ops!", "Erro interno", "SUCESSO")
+            showNotification("Ops!", "Erro interno, contate o suporte se precisa. Tente novamte")
 
           } else {
-            ////// console.log('ww',error)
             setLoading(false)
-            showDialog("Dados inválidos", "Clique em cadastrar para ter acesso. Use token DEMO (garrateste) caso não tenha recebido um token VIP", "SUCESSO")
+            showNotification("Ops!", "Erro interno - Contate o suporte: "+error.toString())
           }
+          
+
         })
     }
   }
@@ -154,7 +146,6 @@ export default function Login({ navigation }) {
     }
 
   }
-
   function SignUp() {
     navigation.navigate("SignUp")
   }
@@ -162,8 +153,8 @@ export default function Login({ navigation }) {
   function ForgotPassword() {
     navigation.navigate("ForgotPassword")
   }
-
   useEffect(() => {
+    
     BackHandler.addEventListener('hardwareBackPress', () =>  {return true})
     AsyncStorage.getItem("TOKEN")
       .then((token => {
@@ -173,22 +164,64 @@ export default function Login({ navigation }) {
       }
       )).catch((setLoading(false)))
   }, [])
-  //<StatusBar translucent backgroundColor="#1E4344" />
+  //
 
   if (!loaded ){
     return null
   }
   return (
-    
-    <SafeAreaView style={{flex:1}} >
+  <SafeAreaView style={styles.preContainer} >
+  
+    <StatusBar  backgroundColor={stylesColor.primaryColor} />
+    <ImageBackground source={require("../assets/back.png")} resizeMode="cover" style={styles.image}>
+    <KeyboardAvoidingView behavior={Platform.OS == "ios" ? "padding" : "height"} KeyboardVerticalOffset={50}>
       <Pressable style={styles.container} onPress={Keyboard.dismiss}>
-        <View style={styles.containerLogo}>
-          <Image style={styles.logo} source={require("../assets/icon.png")} />
-        </View>
+      
+      {!isLoading && 
+      
+        <><View style={styles.containerLogo}>
+        
+              <Image style={styles.logo} source={require("../assets/icon.png")} />
+              
+            </View>
+            <View style={styles.form}>
+            
+
+
+                <Text style={styles.errorMessage}>{erroMessageEmail}</Text>
+                <PInput    onChangeText={value => { setEmail(value), setErroMessageEmail(null); } } placeholder=" E-mail" keyboardType="email-address" size={hp('2.2%')} type='material-icons' name='alternate-email' />
+                <Text style={styles.errorMessage}>{erroMessagePass}</Text>
+                <PInput onChangeText={value => { setPassword(value), setErroMessagePass(null); } } placeholder="Senha" secureTextEntry={true} size={hp('2.2%')} type='material-community' name='form-textbox-password' />
+
+
+                <View style={styles.rowButtons}>
+
+
+                  <PButton onPress={Login} title="Entrar   " type='material-community' name='location-enter' size={hp('2.1%')} color={stylesColor.tertiaryColor} colorTitle={stylesColor.tertiaryColor} backgroundColor={stylesColor.primaryColor} />
+                  <PButton onPress={SignUp} title="Catastre-se   " type='ant-design' name='form' size={hp('1.9%')} color={stylesColor.tertiaryColor} colorTitle={stylesColor.tertiaryColor} backgroundColor={stylesColor.secondaryColor} />
+
+                </View>
+
+                <PButton onPress={Login} title="Esqueci minha senha   " type='material-community' name='lock-reset' size={hp('2.2%')} color={stylesColor.secondaryColor} colorTitle={stylesColor.secondaryColor} backgroundColor={stylesColor.tertiaryColor} />
+
+
+              </View></>
+      }
+      {isLoading && !visableNotification &&
+      <View style={styles.mLoad}>
+            <MLoad  color={stylesColor.secondaryColor} borderColor={stylesColor.primaryColor} />
+            </View>
+      }
       
       
+      {visableNotification && !isLoading &&
+      <View style={{marginTop:hp('1%') }}>
+      <Notification  status='error' title={title} message={message} onPress={() => setVisableNotification(false)}/>
+      </View>
+      }
     </Pressable>
+    </KeyboardAvoidingView>
+    </ImageBackground>
    </SafeAreaView>
   );
 }
-

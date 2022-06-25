@@ -15,6 +15,8 @@ import PInput from '../components/input/input'
 import PButton from '../components/button/button'
 import MLoad from '../components/loading/miniLoad'
 import Notification from '../components/notification/notification'
+import DialogCode from '../components/dialogCode/dialogCode';
+import { useDisclose } from "native-base";
 // import LInputButton from '../components/loadInputButton'
 
 export default function Login({ navigation }) {
@@ -22,7 +24,8 @@ export default function Login({ navigation }) {
     'Raleway-SemiBold': require("../assets/fonts/Raleway-SemiBold.ttf"),
     'Raleway-Light': require("../assets/fonts/Raleway-Light.ttf"),
     'Raleway-Regular': require("../assets/fonts/Raleway-Regular.ttf"),
-    'Raleway-Medium': require("../assets/fonts/Raleway-Medium.ttf")
+    'Raleway-Medium': require("../assets/fonts/Raleway-Medium.ttf"),
+    'Raleway-LightItalic': require("../assets/fonts/Raleway-LightItalic.ttf")
   });
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -30,11 +33,18 @@ export default function Login({ navigation }) {
   const [erroMessagePass, setErroMessagePass] = useState('')
   const [isLoading, setLoading] = useState(false)
   const [visableNotification, setVisableNotification] = useState(false);
+  const [visable, setVisable] = useState(true);
   const [title, setTitle] = useState(null)
   const [message, setMessage] = useState(null)
+  const {
+    isOpen,
+    onOpen,
+    onClose
+  } = useDisclose();
 
   function showNotification(title, message) {
     setVisableNotification(true)
+
     setTitle(title)
     setMessage(message)
   }
@@ -146,6 +156,9 @@ export default function Login({ navigation }) {
     }
 
   }
+  function clossse(){
+    setVisableNotification(false)
+  }
   function SignUp() {
     navigation.navigate("SignUp")
   }
@@ -170,12 +183,13 @@ export default function Login({ navigation }) {
     return null
   }
   return (
+    <ImageBackground source={require("../assets/back.png")} resizeMode="cover" style={styles.image}>
+   <StatusBar  translucent={true}  barStyle="light-content" backgroundColor={stylesColor.primaryColor} />
+    
   <SafeAreaView style={styles.preContainer} >
   
-    <StatusBar  backgroundColor={stylesColor.primaryColor} />
-    <ImageBackground source={require("../assets/back.png")} resizeMode="cover" style={styles.image}>
-    <KeyboardAvoidingView behavior={Platform.OS == "ios" ? "padding" : "height"} KeyboardVerticalOffset={50}>
-      <Pressable style={styles.container} onPress={Keyboard.dismiss}>
+     <KeyboardAvoidingView style={styles.keyboardAvoiding}  KeyboardVerticalOffset={50}>
+      <Pressable style={styles.container} onPress={() => {Keyboard.dismiss(), setVisableNotification(false)}}>
       
       {!isLoading && 
       
@@ -197,12 +211,12 @@ export default function Login({ navigation }) {
                 <View style={styles.rowButtons}>
 
 
-                  <PButton onPress={Login} title="Entrar   " type='material-community' name='location-enter' size={hp('2.1%')} color={stylesColor.tertiaryColor} colorTitle={stylesColor.tertiaryColor} backgroundColor={stylesColor.primaryColor} />
-                  <PButton onPress={SignUp} title="Catastre-se   " type='ant-design' name='form' size={hp('1.9%')} color={stylesColor.tertiaryColor} colorTitle={stylesColor.tertiaryColor} backgroundColor={stylesColor.secondaryColor} />
+                  <PButton onPress={Login} title="Entrar" type='material-community' name='location-enter' size={hp('2.1%')} color={stylesColor.tertiaryColor} colorTitle={stylesColor.tertiaryColor} backgroundColor={stylesColor.primaryColor} fontFamily='Raleway-SemiBold' />
+                  <PButton onPress={SignUp} title="Catastre-se" type='ant-design' name='form' size={hp('1.9%')} color={stylesColor.tertiaryColor} colorTitle={stylesColor.tertiaryColor} backgroundColor={stylesColor.secondaryColor} fontFamily='Raleway-SemiBold' />
 
                 </View>
 
-                <PButton onPress={Login} title="Esqueci minha senha   " type='material-community' name='lock-reset' size={hp('2.2%')} color={stylesColor.secondaryColor} colorTitle={stylesColor.secondaryColor} backgroundColor={stylesColor.tertiaryColor} />
+                <PButton onPress={() => ForgotPassword()} title="Esqueci minha senha" type='material-community' name='lock-question' size={hp('2.2%')} color={stylesColor.secondaryColor} colorTitle={stylesColor.secondaryColor} backgroundColor={stylesColor.tertiaryColor} fontFamily='Raleway-SemiBold'/>
 
 
               </View></>
@@ -214,14 +228,17 @@ export default function Login({ navigation }) {
       }
       
       
-      {visableNotification && !isLoading &&
-      <View style={{marginTop:hp('1%') }}>
-      <Notification  status='error' title={title} message={message} onPress={() => setVisableNotification(false)}/>
-      </View>
-      }
+      
+      
     </Pressable>
+    {visableNotification && !isLoading &&
+      <Notification status='error'  visable={visableNotification} title={title} message={message} onPress={() => setVisableNotification(false)} close={clossse} />
+       
+     }
+    
     </KeyboardAvoidingView>
-    </ImageBackground>
+    
    </SafeAreaView>
+   </ImageBackground>
   );
 }

@@ -1,4 +1,4 @@
-import {  View, Image, Pressable,Keyboard,Vibration,KeyboardAvoidingView } from 'react-native';
+import {  View, Image, Pressable,Keyboard,Vibration,KeyboardAvoidingView,SafeAreaView,StatusBar,ImageBackground } from 'react-native';
 import { FAB,Text, Input, Button, CheckBox } from 'react-native-elements';
 import React, {useState} from 'react'
 import tenantService from '../services/TenantSevice';
@@ -7,29 +7,38 @@ import input from '../components/Input'
 import CustomDialog from '../components/CustomDialog';
 import CustomDialogCode from '../components/CustomDialogCode';
 import * as Device from 'expo-device';
+import stylesColor from '../style/colorApp';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
+import PInput from '../components/input/input'
+import PButton from '../components/button/button';
+import Notification from '../components/notification/notification';
+import MLoad from '../components/loading/miniLoad'
 
 export default function ForgotPassword({navigation}) {
   const  [email,setEmail] = useState(null)
   const  [erroMessageEmail,setErroMessageEmail] = useState(null)
-  const  [isLoadings, setLoading] = useState(false)
+  const  [isLoading, setLoading] = useState(false)
+  const  [error,setError] = useState(null)
   const [visibleDialog, setVisibleDialog] = useState(false)
-  const [titulo, setTitulo] = useState(null)
+  const [title, setTitle] = useState(null)
   const [message, setMessage] = useState(null)
   const [tipo, setTipo] = useState(null)
+  const [visableNotification, setVisableNotification] = useState(false);
   
 
-
-function showDialog (titulo, message, tipo) {
-    setVisibleDialog(true)
-    setTitulo(titulo)
+  function clossse(){
+    console.log('caraii')
+    setVisableNotification(false)
+  }
+  function showNotification(title, message) {
+    setVisableNotification(true)
+    setTitle(title)
     setMessage(message)
-    setTipo(tipo)
   }
   
 function hideDialog(status) {
     setVisibleDialog(status)
-    if (titulo === "Sucesso"){
+    if (title === "Sucesso"){
     navigation.navigate("Login")
     }
   }
@@ -57,17 +66,17 @@ function sendCode(){
       .then((response) => {
        if (response.data.status){
         setLoading(false)
-        const titulo = (response.data.status) ? "Sucesso" : "Erro"
-        showDialog(titulo, response.data.message, "SUCESSO") 
+        setError('success')
+        showNotification('Sucesso', response.data.message) 
         
        }else{
+        setError('error')
         setLoading(false)
-		    const titulo = (response.data.status) ? "Sucesso" : "Erro"
-        showDialog(titulo, response.data.message, "SUCESSO")         
+		   showNotification('Ops!', response.data.message)         
       }})
       .catch((response) => {
         setLoading(false)
-    //    showDialog(titulo, response, "SUCESSO")
+    //    showDialog(title, response, "SUCESSO")
       })
 }else{
   setLoading(false)
@@ -75,41 +84,49 @@ function sendCode(){
 }
   
   return (
-    <Pressable style={styles.container} onPress={Keyboard.dismiss}>
-      <KeyboardAvoidingView style={styles.keyboardAvoiding} behavior={Platform.OS == "ios" ? "padding" : "height"} KeyboardVerticalOffset={50}>
-      {!isLoadings && 
-      <><View style={{
-                      height: hp('20%'),
-                      marginTop: '0%',
-                      marginBottom: '5%',
-                      justifyContent: 'center',
-                      alignItems: 'center'
-                  }}>
-                      <Image style={styles.imageSignUp} source={require("../assets/icon.png")} />
-                      <Text style={styles.nameApp}>Linear   Imóveis</Text>
-                      <Text style={styles.title}>Uma nova senha será enviada para seu e-mail.</Text>
-                  </View><View style={{ width: wp('80%'), marginBottom: wp('40%') }}>
-                          <Text style={styles.errorMessage}>{erroMessageEmail}</Text>
-                          <Input autoComplete={true} inputContainerStyle={input.inputIcon} placeholderTextColor='#C89A5B' style={input.input} onChangeText={value => { setEmail(value), setErroMessageEmail(null); } } placeholder=" E-mail" keyboardType="email-address" returnKeyType="done" leftIcon={{ size: 16, type: 'font-awesome', name: 'envelope', color: '#C89A5B' }} />
-                          <Button onPress={() => sendCode()} title="Nova Senha" iconRight iconContainerStyle={{ marginLeft: 10 }} buttonStyle={{ backgroundColor: '#C89A5B', borderColor: '#FFC77A', borderWidth: 1, borderRadius: 6, }} containerStyle={{ width: '80%', marginHorizontal: 50, marginVertical: 10, }} titleStyle={{ color: '#1E4344' }} />
-                      </View></>
+    <SafeAreaView style={styles.preContainer} >
+    <StatusBar  translucent={true}  barStyle="dark-content" backgroundColor={stylesColor.primaryColor} />
+     <ImageBackground source={require("../assets/backForgot.png")} resizeMode="cover" style={styles.image}>
+      <Pressable style={styles.container} onPress={() => {Keyboard.dismiss(), setVisableNotification(false)}}>
+      
+      {!isLoading  &&
+      
+        <><View style={styles.containerLogo}>
+        
+              <Image style={styles.logo} source={require("../assets/icon.png")} />
+              
+            </View>
+            <View style={styles.form}>
+            
+
+
+                <Text style={styles.errorMessage}>{erroMessageEmail}</Text>
+                <PInput    onChangeText={value => { setEmail(value), setErroMessageEmail(null); } } placeholder=" E-mail" keyboardType="email-address" size={hp('2.2%')} type='material-icons' name='alternate-email' />
+               
+                <View style={styles.rowButtons}>
+
+
+                  <PButton onPress={sendCode} title="Enviar senha" type='material-community' name='lock-reset' size={hp('2.1%')} color={stylesColor.tertiaryColor} colorTitle={stylesColor.tertiaryColor} backgroundColor={stylesColor.primaryColor} fontFamily='Raleway-SemiBold' />
+                  
+                </View>
+
+              
+              </View></>
       }
-       { isLoadings &&
-      <FAB
-      loading
-      visible={true}
-      icon={{ name: 'add' }}
-      color='rgba(106,255, 16, 1)'
-      borderColor= 'rgba(42, 42, 42,1)' 
-      size="small"
-    />
-      } 
-   
-  { visibleDialog && !isLoadings &&
-    <CustomDialog titulo={titulo} message={message} tipo={tipo} visible={visibleDialog} onClose={hideDialog}></CustomDialog>
-  }
-    </KeyboardAvoidingView>
+      {isLoading && !visableNotification &&
+      <View style={styles.mLoad}>
+            <MLoad  color={stylesColor.secondaryColor} borderColor={stylesColor.primaryColor} />
+            </View>
+      }
+      
+      
+      
     </Pressable>
+    {visableNotification && !isLoading &&
+        <Notification  visable={visableNotification}  status={error} title={title} message={message} onPress={() => setVisableNotification(false)} close={clossse}/>
+      
+      }
+    </ImageBackground>
+   </SafeAreaView>
   );
 }
-

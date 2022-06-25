@@ -10,7 +10,7 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 //import cameras from '../style/camera'
 import * as ImagePicker from "expo-image-picker";
 //import { Camera } from 'expo-camera';
-import Notification from '../components/Notification';
+import Notification from '../components/notification/notification';
 import Confirmation from '../components/Confirmation';
 
 import axios from 'axios'

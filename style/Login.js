@@ -8,22 +8,26 @@ const styles = StyleSheet.create({
     },
     image: {
         flex: 1,
-        justifyContent: "center"
+        justifyContent: "center",
+        width:wp('100%')
       },
+      keyboardAvoiding:{
+        flex: 1,
+    },
     container: {
         flex: 1,
         alignItems: 'center'
     },
     containerLogo:{
-        height:hp('24%'),
+        height:hp('20%'),
         marginTop:hp('10%'),
-        marginBottom:hp('2%'),
+        marginBottom:hp('0%'),
         justifyContent: 'center',
         alignItems: 'center',
     },
     logo:{
-        width: wp('30%'),
-        height: hp('20%'),
+        width: wp('25%'),
+        height: hp('15%'),
     },
     form:{
         width:wp('70%'),

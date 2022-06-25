@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react'
 import Profile from '../screens/Profile'
-import Homes from '../screens/Homes'
+import Houses from '../screens/Houses'
+import stylesColor from '../style/colorApp';
 import MyHouses from '../screens/MyHouses'
 import { FontAwesome,FontAwesome5,MaterialCommunityIcons } from '@expo/vector-icons';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
+import styles from '../style/Login';
 
 
 export default function Home() {
@@ -15,23 +17,22 @@ export default function Home() {
     
     <Tab.Navigator
     screenOptions={{
-      //tabBarShowLabel: false,
-      
-      tabBarActiveTintColor: '#FFC77A',
-      tabBarInactiveTintColor: '#3F8D8F'
+      tabBarShowLabel:false,
+      tabBarActiveBackgroundColor: stylesColor.primaryColor,
+      tabBarInactiveBackgroundColor: stylesColor.primaryColor,
+      tabBarActiveTintColor: stylesColor.tertiaryColor,
+      tabBarInactiveTintColor: stylesColor.primaryColor20,
     }}
-      initialRouteName="Casas"
-      activeColor="green"
       
     >
 	<Tab.Screen
         name="Casas"
-        component={Homes}
+        component={Houses}
         options={{
           headerShown: false,
           tabBarLabel: 'Casa/Aptoº',
           tabBarIcon: ({ color }) => (
-            <MaterialCommunityIcons name="warehouse" color={color} size={26} />
+            <FontAwesome5 name="search-location" color={color} size={hp('3%')} />
           ),
         }}
       />
@@ -41,11 +42,13 @@ export default function Home() {
 <Tab.Screen
         name="Atulizar casas"
         component={MyHouses}
+        
         options={{
+          
           headerShown: false,
           tabBarLabel: 'Minha casa',
           tabBarIcon: ({ color }) => (
-            <FontAwesome5 name="laptop-house" color={color} size={26} />
+            <FontAwesome5 name="house-user" color={color} size={hp('3%')} />
           ),
         }}
       />
@@ -57,7 +60,7 @@ export default function Home() {
           headerShown: false,
           tabBarLabel: 'Perfil',
           tabBarIcon: ({ color }) => (
-            <FontAwesome name="user" color={color} size={26} />
+            <MaterialCommunityIcons name="account-edit" color={color} size={hp('4%')} />
           ),
         }}
       />
@@ -68,7 +71,7 @@ export default function Home() {
           headerShown: false,
           tabBarLabel: 'Perfijl',
           tabBarIcon: ({ color }) => (
-            <FontAwesome name="user" color={color} size={26} />
+            <FontAwesome name="code" color={color} size={26} />
           ),
         }}
       />
@@ -79,7 +82,7 @@ export default function Home() {
           headerShown: false,
           tabBarLabel: 'Perfik',
           tabBarIcon: ({ color }) => (
-            <FontAwesome name="user" color={color} size={26} />
+            <FontAwesome name="code" color={color} size={26} />
           ),
         }}
       />

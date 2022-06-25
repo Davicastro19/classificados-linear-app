@@ -9,7 +9,7 @@ import {
   TransitionPresets,
 } from '@react-navigation/stack';
 import SignUp from './screens/SignUp';
-import ForgotPassword from './screens/forgotPassword';
+import ForgotPassword from './screens/ForgotPassword';
 import interceptor from './services/interceptor'
 import {ViewPropTypes} from 'deprecated-react-native-prop-types'
 

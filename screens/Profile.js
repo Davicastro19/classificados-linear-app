@@ -7,7 +7,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import styles from '../style/SignUp'
 import input from '../components/Input'
 import CustomDialog from '../components/CustomDialog';
-import CustomDialogCode from '../components/CustomDialogCode';
+import DialogCode from '../components/dialogCode/dialogCode';
 import * as Device from 'expo-device';
 
 export default function Profile(navigation) {
@@ -281,13 +281,14 @@ export default function Profile(navigation) {
           {visibleDialog &&
             <CustomDialog titulo={titulo} message={message} tipo={tipo} visible={visibleDialog} onClose={hideDialog}></CustomDialog>
           }
-          {visibleDialogCode &&
-            <CustomDialogCode onChangeText={setCodeFull} onClose={hideDialogCode} visible={visibleDialogCode} FullSignUp={FullSignUp}></CustomDialogCode>
-          }
+          
 
 
         </KeyboardAvoidingView>
       </Pressable>
+      {!visibleDialogCode &&
+            <DialogCode onChangeText={setCodeFull}  visable={!visibleDialogCode} FullSignUp={FullSignUp}></DialogCode>
+          }
     </NativeBaseProvider>
   );
 }

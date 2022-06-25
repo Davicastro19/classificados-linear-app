@@ -9,8 +9,8 @@ const PButton = (props) => {
         icon={{ size: props.size, type: props.type, name: props.name, color: props.color }}
         iconLeft iconContainerStyle={ button.iconContainerStyle }  
         buttonStyle={{backgroundColor: props.backgroundColor, borderColor: props.color, borderWidth: 1, borderRadius: 6, }} 
-        containerStyle={{ width: props.width}} 
-        titleStyle={{ color: props.color, fontSize:props.fontSize, fontFamily:'Raleway-SemiBold'}} />
+        containerStyle={{ width: props.width ,marginLeft: props.marginLeft}} 
+        titleStyle={{ color: props.color, fontSize:props.fontSize, fontFamily:props.fontFamily, marginRight:10}} />
                     
     )
 }

@@ -1,54 +1,47 @@
 
-import { Text, Input, FAB } from 'react-native-elements';
-import { View, Image, Pressable, Keyboard, Vibration, KeyboardAvoidingView, StatusBar, BackHandler, SafeAreaView,ImageBackground } from 'react-native';
+import { Text, View, Image, Pressable, Keyboard, KeyboardAvoidingView, StatusBar, BackHandler, SafeAreaView, ImageBackground } from 'react-native';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import React, { useState, useEffect } from 'react'
 import styles from '../style/Login'
-//import { MaterialIcons } from "@expo/vector-icons";
 import AsyncStorage from '@react-native-async-storage/async-storage';
-//import * as Device from 'expo-device';
 import tenantService from '../services/TenantSevice';
-//import CustomDialog from '../components/CustomDialog';
 import { useFonts } from 'expo-font';
 import stylesColor from '../style/colorApp';
 import PInput from '../components/input/input'
 import PButton from '../components/button/button'
 import MLoad from '../components/loading/miniLoad'
 import Notification from '../components/notification/notification'
-import DialogCode from '../components/dialogCode/dialogCode';
-import { useDisclose } from "native-base";
-// import LInputButton from '../components/loadInputButton'
 
 export default function Login({ navigation }) {
-  const [loaded] = useFonts({
-    'Raleway-SemiBold': require("../assets/fonts/Raleway-SemiBold.ttf"),
-    'Raleway-Light': require("../assets/fonts/Raleway-Light.ttf"),
-    'Raleway-Regular': require("../assets/fonts/Raleway-Regular.ttf"),
-    'Raleway-Medium': require("../assets/fonts/Raleway-Medium.ttf"),
-    'Raleway-LightItalic': require("../assets/fonts/Raleway-LightItalic.ttf")
-  });
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [erroMessageEmail, setErroMessageEmail] = useState('')
   const [erroMessagePass, setErroMessagePass] = useState('')
   const [isLoading, setLoading] = useState(false)
   const [visableNotification, setVisableNotification] = useState(false);
-  const [visable, setVisable] = useState(true);
   const [title, setTitle] = useState(null)
   const [message, setMessage] = useState(null)
-  const {
-    isOpen,
-    onOpen,
-    onClose
-  } = useDisclose();
+  const [loaded] = useFonts({
+    'MPLUS1p-Medium': require("../assets/fonts/MPLUS1p-Medium.ttf"),
+    'MPLUS1p-Bold': require("../assets/fonts/MPLUS1p-Bold.ttf"),
+    'MPLUS1p-Light': require("../assets/fonts/MPLUS1p-Light.ttf"),
+    'MPLUS1p-Regular': require("../assets/fonts/MPLUS1p-Regular.ttf"),
+    'MPLUS1p-Medium': require("../assets/fonts/MPLUS1p-Medium.ttf"),
+    'Raleway-Bold': require("../assets/fonts/Raleway-Bold.ttf"),
+    'MPLUS1p-ExtraBold': require("../assets/fonts/MPLUS1p-ExtraBold.ttf"),
+     'Raleway-SemiBold': require("../assets/fonts/Raleway-SemiBold.ttf"),
+    'Raleway-Light': require("../assets/fonts/Raleway-Light.ttf"),
+    'Raleway-Regular': require("../assets/fonts/Raleway-Regular.ttf"),
+    'Raleway-Medium': require("../assets/fonts/Raleway-Medium.ttf"),
+    'Raleway-LightItalic': require("../assets/fonts/Raleway-LightItalic.ttf")
+  
+  });
 
   function showNotification(title, message) {
     setVisableNotification(true)
-
     setTitle(title)
     setMessage(message)
   }
-
 
   function Login() {
     if (Validate()) {
@@ -60,7 +53,7 @@ export default function Login({ navigation }) {
       tenantService.login(data)
         .then((response) => {
           if (response.data.status) {
-            if (true){//(response.data.device === Device.modelName + '/' + Device.osName + '/' + Device.deviceName) {
+            if (true) {//(response.data.device === Device.modelName + '/' + Device.osName + '/' + Device.deviceName) {
               setLoading(false)
               navigation.reset({
                 index: 0,
@@ -79,9 +72,9 @@ export default function Login({ navigation }) {
 
           } else {
             setLoading(false)
-            showNotification("Ops!", "Erro interno - Contate o suporte: "+error.toString())
+            showNotification("Ops!", "Erro interno - Contate o suporte: " + error.toString())
           }
-          
+
 
         })
     }
@@ -95,7 +88,7 @@ export default function Login({ navigation }) {
     tenantService.autoLogin(data)
       .then((response) => {
         //// console.log(response.data)
-        if (!response.data.status){//(response.data.device === Device.modelName + '/' + Device.osName + '/' + Device.deviceName) {
+        if (!response.data.status) {//(response.data.device === Device.modelName + '/' + Device.osName + '/' + Device.deviceName) {
           setLoading(false)
         }
         else {
@@ -106,7 +99,7 @@ export default function Login({ navigation }) {
             index: 0,
             routes: [{ name: "Home" }]
           })
-          
+
 
         }
       })
@@ -116,9 +109,12 @@ export default function Login({ navigation }) {
 
   }
 
-  function IsEmail() {
-    const usuario = email.substring(0, email.indexOf("@"));
-    const dominio = email.substring(email.indexOf("@") + 1, email.length);
+  function IsEmail(value) {
+    if (!value) {
+      return false
+    }
+    const usuario = value.substring(0, value.indexOf("@"));
+    const dominio = value.substring(value.indexOf("@") + 1, value.length);
     if ((usuario.length >= 1) && (dominio.length >= 3) && (usuario.search("@") == -1) && (dominio.search("@") == -1) && (usuario.search(" ") == -1) && (dominio.search(" ") == -1) && (dominio.search(".") != -1) && (dominio.indexOf(".") >= 1) && (dominio.lastIndexOf(".") < dominio.length - 1)) {
       return true
     }
@@ -127,38 +123,38 @@ export default function Login({ navigation }) {
     }
   }
 
-  function Validate() {
-    if (email != null && email != '') {
-      if (!IsEmail()) {
-        Vibration.vibrate()
-        setErroMessageEmail("Email invalido*")
-        setLoading(false)
-        return false
-      }
+  function isPAss(value) {
+    if (value === null || value === '') {
+      return false
     }
-    if (email === null || password === null || email === '' || password === '') {
-      Vibration.vibrate()
-      if (email === null || email === '') {
-        setErroMessageEmail("Campo obrigatório*")
-      } else {
-        setErroMessageEmail(null)
-      }
-      if (password === null || password === '') {
-        setErroMessagePass("Campo obrigatório*")
-      } else {
-        setErroMessagePass(null)
-      }
-      setLoading(false)
+    if (value.length < 6) {
+      return false
+    }
+    return true
+  }
+
+  function Validate() {
+
+    if (!IsEmail(email)) {
+      setErroMessageEmail("Email inválido*")
       return false
     } else {
-      setLoading(false)
-      return true
+      setErroMessageEmail(null)
     }
+    if (!isPAss(password)) {
+      setErroMessagePass("Sua senha tem 6 ou mais caractere*")
+      return false
+    } else {
+      setErroMessagePass(null)
+    }
+    return true
 
   }
-  function clossse(){
+
+  function closeNotification() {
     setVisableNotification(false)
   }
+
   function SignUp() {
     navigation.navigate("SignUp")
   }
@@ -166,9 +162,10 @@ export default function Login({ navigation }) {
   function ForgotPassword() {
     navigation.navigate("ForgotPassword")
   }
+
   useEffect(() => {
-    
-    BackHandler.addEventListener('hardwareBackPress', () =>  {return true})
+
+    BackHandler.addEventListener('hardwareBackPress', () => { return true })
     AsyncStorage.getItem("TOKEN")
       .then((token => {
         if (token) {
@@ -177,68 +174,43 @@ export default function Login({ navigation }) {
       }
       )).catch((setLoading(false)))
   }, [])
-  //
 
-  if (!loaded ){
+  if (!loaded) {
     return null
   }
   return (
     <ImageBackground source={require("../assets/back.png")} resizeMode="cover" style={styles.image}>
-   <StatusBar  translucent={true}  barStyle="light-content" backgroundColor={stylesColor.primaryColor} />
-    
-  <SafeAreaView style={styles.preContainer} >
-  
-     <KeyboardAvoidingView style={styles.keyboardAvoiding}  KeyboardVerticalOffset={50}>
-      <Pressable style={styles.container} onPress={() => {Keyboard.dismiss(), setVisableNotification(false)}}>
-      
-      {!isLoading && 
-      
-        <><View style={styles.containerLogo}>
-        
-              <Image style={styles.logo} source={require("../assets/icon.png")} />
-              
-            </View>
-            <View style={styles.form}>
-            
-
-
-                <Text style={styles.errorMessage}>{erroMessageEmail}</Text>
-                <PInput    onChangeText={value => { setEmail(value), setErroMessageEmail(null); } } placeholder=" E-mail" keyboardType="email-address" size={hp('2.2%')} type='material-icons' name='alternate-email' />
-                <Text style={styles.errorMessage}>{erroMessagePass}</Text>
-                <PInput onChangeText={value => { setPassword(value), setErroMessagePass(null); } } placeholder="Senha" secureTextEntry={true} size={hp('2.2%')} type='material-community' name='form-textbox-password' />
-
-
-                <View style={styles.rowButtons}>
-
-
-                  <PButton onPress={Login} title="Entrar" type='material-community' name='location-enter' size={hp('2.1%')} color={stylesColor.tertiaryColor} colorTitle={stylesColor.tertiaryColor} backgroundColor={stylesColor.primaryColor} fontFamily='Raleway-SemiBold' />
-                  <PButton onPress={SignUp} title="Catastre-se" type='ant-design' name='form' size={hp('1.9%')} color={stylesColor.tertiaryColor} colorTitle={stylesColor.tertiaryColor} backgroundColor={stylesColor.secondaryColor} fontFamily='Raleway-SemiBold' />
-
-                </View>
-
-                <PButton onPress={() => ForgotPassword()} title="Esqueci minha senha" type='material-community' name='lock-question' size={hp('2.2%')} color={stylesColor.secondaryColor} colorTitle={stylesColor.secondaryColor} backgroundColor={stylesColor.tertiaryColor} fontFamily='Raleway-SemiBold'/>
-
-
-              </View></>
-      }
-      {isLoading && !visableNotification &&
-      <View style={styles.mLoad}>
-            <MLoad  color={stylesColor.secondaryColor} borderColor={stylesColor.primaryColor} />
-            </View>
-      }
-      
-      
-      
-      
-    </Pressable>
-    {visableNotification && !isLoading &&
-      <Notification status='error'  visable={visableNotification} title={title} message={message} onPress={() => setVisableNotification(false)} close={clossse} />
-       
-     }
-    
-    </KeyboardAvoidingView>
-    
-   </SafeAreaView>
-   </ImageBackground>
+      <StatusBar translucent={true} barStyle="light-content" backgroundColor={stylesColor.primaryColor} />
+      <SafeAreaView style={styles.preContainer} >
+        <KeyboardAvoidingView style={styles.keyboardAvoiding} KeyboardVerticalOffset={50}>
+          <Pressable style={styles.container} onPress={() => { Keyboard.dismiss(), setVisableNotification(false) }}>
+            {!isLoading &&
+              <><View style={styles.containerLogo}>
+                <Image style={styles.logo} source={require("../assets/icon.png")} />
+              </View>
+                <View style={styles.form}>
+                  <Text style={styles.errorMessage}>{erroMessageEmail}</Text>
+                  <PInput onChangeText={value => { setEmail(value), setErroMessageEmail(null); }} placeholder=" E-mail" keyboardType="email-address" size={hp('2.2%')} type='material-icons' name='alternate-email' />
+                  <Text style={styles.errorMessage}>{erroMessagePass}</Text>
+                  <PInput onChangeText={value => { setPassword(value), setErroMessagePass(null); }} placeholder="Senha" secureTextEntry={true} size={hp('2.2%')} type='material-community' name='form-textbox-password' />
+                  <View style={styles.rowButtons}>
+                    <PButton onPress={Login} title="Entrar" type='material-community' name='location-enter' size={hp('2.1%')} color={stylesColor.tertiaryColor} colorTitle={stylesColor.tertiaryColor} backgroundColor={stylesColor.primaryColor} fontFamily='Raleway-SemiBold' />
+                    <PButton onPress={SignUp} title="Catastre-se" type='ant-design' name='form' size={hp('1.9%')} color={stylesColor.tertiaryColor} colorTitle={stylesColor.tertiaryColor} backgroundColor={stylesColor.secondaryColor} fontFamily='Raleway-SemiBold' />
+                  </View>
+                  <PButton onPress={() => ForgotPassword()} title="Esqueci minha senha" type='material-community' name='lock-question' size={hp('2.2%')} color={stylesColor.secondaryColor} colorTitle={stylesColor.secondaryColor} backgroundColor={stylesColor.tertiaryColor} fontFamily='Raleway-SemiBold' />
+                </View></>
+            }
+            {isLoading && !visableNotification &&
+              <View style={styles.mLoad}>
+                <MLoad color={stylesColor.secondaryColor} borderColor={stylesColor.primaryColor} />
+              </View>
+            }
+          </Pressable>
+          {visableNotification && !isLoading &&
+            <Notification status='error' visable={visableNotification} title={title} message={message} onPress={() => setVisableNotification(false)} close={closeNotification} />
+          }
+        </KeyboardAvoidingView>
+      </SafeAreaView>
+    </ImageBackground>
   );
 }

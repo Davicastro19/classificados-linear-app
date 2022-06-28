@@ -1,10 +1,14 @@
+
 import {StyleSheet} from 'react-native'
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import stylesColor from '../style/colorApp';
 
 const styles = StyleSheet.create({
+    viewFilter:{ marginLeft: hp('0%'), width: wp('93%'), height: '6%' },
     preContainer:{
-        flex:1
+        flex:1,
+        backgroundColor:'#f3f3f3',
+        alignItems: 'center'
     },
     image: {
         flex: 1,
@@ -58,7 +62,7 @@ const styles = StyleSheet.create({
         fontSize:hp('1.5%'),
         color:"red",
         paddingLeft:15,
-        fontFamily:'Raleway-SemiBold'
+        fontFamily:'MPLUS1p-Medium'
     },
     mLoad:{
         marginTop:hp('50%')

@@ -236,7 +236,7 @@ export default function MyHouses() {
                     xhr.withCredentials = true;
                     const imagesData = new FormData();
                     imagesData.append('image', {
-                        uri: alt[num].uri,
+                        uri: alt[num - 1].uri,
                         type: 'image/jpeg',
                         name: images.split(',')[parseInt(num - 1)]})
                     xhr.open('POST', Config.API_URL+'houses/uploadImg')

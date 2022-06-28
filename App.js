@@ -3,6 +3,7 @@ import { View, Image, StyleSheet } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import Login from './screens/Login';
 import Home from './screens/Home';
+import House from './screens/House';
 import Splash from './screens/Splash';
 import {
   createStackNavigator,
@@ -42,11 +43,10 @@ function MyStack() {
        presentation="modal">
       <Stack.Screen options={{headerShown: false,}} name="Splash" component={Splash} />
       <Stack.Screen options={{headerShown: false,}}  name="Login" component={Login} />
-      <Stack.Screen  options={{headerShown: false,}} name="Home" component={Home} />
-      <Stack.Screen  options={{gestureEnabled: true,
-        headerShown: false,}}name="SignUp" component={SignUp} />
-      <Stack.Screen options={{gestureEnabled: true,
-        headerShown: false,}} name="ForgotPassword" component={ForgotPassword} />
+      <Stack.Screen options={{headerShown: false,}} name="Home" component={Home} />
+      <Stack.Screen options={{gestureEnabled: true, headerShown: false,}}name="SignUp" component={SignUp} />
+      <Stack.Screen options={{gestureEnabled: true, headerShown: false,}} name="ForgotPassword" component={ForgotPassword} />
+      <Stack.Screen options={{gestureEnabled: true, headerShown: false,}} name="House" component={House} />
     </Stack.Navigator>
   );
 }

@@ -7,7 +7,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import styles from '../style/SignUp'
 import input from '../components/Input'
 import CustomDialog from '../components/CustomDialog';
-import DialogCode from '../components/dialogCode/dialogCode';
+import CustomDialogCode from '../components/CustomDialogCode';
 import * as Device from 'expo-device';
 
 export default function Profile(navigation) {
@@ -246,49 +246,13 @@ export default function Profile(navigation) {
   }, [])
   return (
     <NativeBaseProvider>
-      <Pressable style={styles.container} onPress={Keyboard.dismiss}>
-        <KeyboardAvoidingView style={styles.keyboardAvoiding} behavior={Platform.OS == "ios" ? "padding" : "height"} KeyboardVerticalOffset={50}>
-          <Text style={styles.titleProfile}> ALTERAR PERFIL</Text>
-          {!isLoadings &&
-          <View style={styles.form}>
-            <Text style={styles.errorMessage}>{erroMessageName}</Text>
-            <Input autoComplete={true} inputContainerStyle={input.inputIcon} placeholderTextColor='#C89A5B' style={input.input} value={name} onChangeText={value => { setName(value), setErroMessageName(null); }} placeholder="Nome e sobrenome" leftIcon={{ size: 20, type: 'font-awesome', name: 'user', color: '#C89A5B' }} />
-            <Text style={styles.errorMessage}>{erroMessageEmail}</Text>
-            <Input autoComplete={true} inputContainerStyle={input.inputIcon} placeholderTextColor='#C89A5B' style={input.input} value={email} onChangeText={value => { setEmail(value), setErroMessageEmail(null); }} placeholder=" E-mail" keyboardType="email-address" returnKeyType="done" leftIcon={{ size: 16, type: 'font-awesome', name: 'envelope', color: '#C89A5B' }} />
-            <Text style={styles.errorMessage}>{erroMessagePass}</Text>
-            <Input autoComplete={true} inputContainerStyle={input.inputIcon} placeholderTextColor='#C89A5B' style={input.input} onChangeText={value => { setPassword(value), setErroMessagePass(null); }} placeholder="Senha" secureTextEntry={true} returnKeyType="done" leftIcon={{ size: 16, type: 'font-awesome', name: 'key', color: '#C89A5B' }} />
-            <Text style={styles.errorMessage}>{erroMessagePhone}</Text>
-            <Input autoComplete={true} inputContainerStyle={input.inputIcon} placeholderTextColor='#C89A5B' style={input.input} value={phone} onChangeText={value => { setPhone(value), setErroMessagePhone(null); }} placeholder="Telefone" keyboardType="number-pad" returnKeyType="done" leftIcon={{ size: 20, type: 'font-awesome', name: 'phone', color: '#C89A5B' }} />
-          </View>
-          }
-          {isLoadings &&
-            <FAB
-              loading
-              visible={true}
-              icon={{ name: 'add' }}
-              color='rgba(106,255, 16, 1)'
-              borderColor='rgba(42, 42, 42,1)'
-              size="small"
-            />
-          }
-          {!isLoadings &&
+       <Button onPress={() => LogOut(navigation)} title="   Sair"
+        icon={{ name: 'exit-to-app', type: 'material-icons', size: 25, color: '#FFC77A', }} 
+        iconRight iconContainerStyle={{ marginLeft: 10 }} 
+        buttonStyle={{ backgroundColor: '#1E4344', borderColor: '#FFC77A', borderWidth: 1, borderRadius: 6, }}
+         containerStyle={{ width: '95%', marginHorizontal: 50, marginVertical: 10, }} 
+         titleStyle={{ color: '#FFC77A' }} />
 
-            <><Button onPress={() => sendCode()} title=" Salvar" icon={{ name: 'check', type: 'font-awesome', size: 19, color: '#1E4344' }} iconRight iconContainerStyle={{ marginLeft: 10 }} buttonStyle={{ backgroundColor: '#C89A5B', borderColor: '#FFC77A', borderWidth: 1, borderRadius: 6, }} containerStyle={{ width: '95%', marginHorizontal: 50, marginVertical: 10, }} titleStyle={{ color: '#1E4344' }} />
-              <Divider my="2" bg="#122829" mx="2" />
-              <Button onPress={() => LogOut(navigation)} title="   Sair" icon={{ name: 'exit-to-app', type: 'material-icons', size: 25, color: '#FFC77A', }} iconRight iconContainerStyle={{ marginLeft: 10 }} buttonStyle={{ backgroundColor: '#1E4344', borderColor: '#FFC77A', borderWidth: 1, borderRadius: 6, }} containerStyle={{ width: '95%', marginHorizontal: 50, marginVertical: 10, }} titleStyle={{ color: '#FFC77A' }} /></>
-
-          }
-          {visibleDialog &&
-            <CustomDialog titulo={titulo} message={message} tipo={tipo} visible={visibleDialog} onClose={hideDialog}></CustomDialog>
-          }
-          
-
-
-        </KeyboardAvoidingView>
-      </Pressable>
-      {!visibleDialogCode &&
-            <DialogCode onChangeText={setCodeFull}  visable={!visibleDialogCode} FullSignUp={FullSignUp}></DialogCode>
-          }
     </NativeBaseProvider>
   );
 }

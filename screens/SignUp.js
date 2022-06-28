@@ -1,9 +1,7 @@
-import { View, Image, Pressable, Keyboard, Vibration, KeyboardAvoidingView, SafeAreaView, StatusBar, ImageBackground } from 'react-native';
-import { FAB, Text, Input, Button, CheckBox } from 'react-native-elements';
+import { Text, View, Image, Pressable, Keyboard, Vibration, KeyboardAvoidingView, SafeAreaView, StatusBar, ImageBackground } from 'react-native';
 import React, { useState } from 'react'
 import tenantService from '../services/TenantSevice';
 import stylesColor from '../style/colorApp';
-import CustomDialogCode from '../components/CustomDialogCode';
 import * as Device from 'expo-device';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import styles from '../style/SignUp';
@@ -13,25 +11,21 @@ import MLoad from '../components/loading/miniLoad';
 import DialogCode from '../components/dialogCode/dialogCode';
 import Notification from '../components/notification/notification';
 
-export default function SignUp({ navigation }) {
+export default function SignUp() {
   const [code, setCode] = useState(null)
   const [newCode, setNewCode] = useState(null)
-  const [email, setEmail] = useState(null)
-  const [name, setName] = useState(null)
-  const [phone, setPhone] = useState(null)
-  const [isSelected, setSelected] = useState(false)
-  const [password, setPassword] = useState(null)
+  const [email, setEmail] = useState('')
+  const [name, setName] = useState('')
+  const [phone, setPhone] = useState('')
+  const [password, setPassword] = useState('')
   const [erroMessagePass, setErroMessagePass] = useState(null)
   const [erroMessageEmail, setErroMessageEmail] = useState(null)
   const [erroMessageName, setErroMessageName] = useState(null)
   const [erroMessagePhone, setErroMessagePhone] = useState(null)
   const [erroMessageCode, setErroMessageCode] = useState(null)
-  const [erroMessageSelect, setErroMessageSelect] = useState(null)
   const [isLoadings, setLoading] = useState(false)
   const [visableDialogCode, setVisableDialogCode] = useState(false);
-  const [titulo, setTitulo] = useState(null)
   const [message, setMessage] = useState(null)
-  const [tipo, setTipo] = useState(null)
   const [visableNotification, setVisableNotification] = useState(false);
   const [title, setTitle] = useState(null)
   const  [error,setError] = useState(null)
@@ -46,21 +40,42 @@ export default function SignUp({ navigation }) {
     
   }
 
-  function hideDialogCode() {
-    setVisableDialogCode(false)
-    setLoading(false)
-  }
-  function hideDialog(status) {
-    setVisableDialog(status)
-    if (titulo === "Sucesso") {
-      navigation.navigate("Login")
+  function validateName(value){
+    try{
+      
+      let vname =  value.split(' ')[0]
+      let lastname =  value.split(' ')[1]
+      if (!vname || !lastname){
+        return false
+      }else{
+      var pattern = /[^a-zà-ú]/gi;
+   
+      var validate_name = vname.match(pattern);
+      var validate_lastname = lastname.match(pattern);
+   
+      if( validate_name ){
+        return false
+      }else{
+        if( validate_lastname){
+          return false
+        }else{
+           return true
+        }
+      }
     }
+    }catch (e){
+      return false
+    }
+   
+      
   }
-
-  function IsEmail() {
-
-    const usuario = email.substring(0, email.indexOf("@"));
-    const dominio = email.substring(email.indexOf("@") + 1, email.length);
+  
+  function IsEmail(value) {
+    if (!value){
+      return false
+    }
+    const usuario = value.substring(0, value.indexOf("@"));
+    const dominio = value.substring(value.indexOf("@") + 1, value.length);
     if ((usuario.length >= 1) && (dominio.length >= 3) && (usuario.search("@") == -1) && (dominio.search("@") == -1) && (usuario.search(" ") == -1) && (dominio.search(" ") == -1) && (dominio.search(".") != -1) && (dominio.indexOf(".") >= 1) && (dominio.lastIndexOf(".") < dominio.length - 1)) {
       return true
     }
@@ -69,55 +84,86 @@ export default function SignUp({ navigation }) {
     }
   }
 
-  function isNumber(str) {
-    return !isNaN(str)
+  function isPAss(value){
+    if(value === null || value === ''){
+      return false
+    }
+    if (value.length < 6){
+      return false
+    }
+    return true
+  }
+
+  function telefone_validation(telefone) {
+    //retira todos os caracteres menos os numeros
+    telefone = telefone.replace(/\D/g, '');
+
+    //verifica se tem a qtde de numero correto
+    if (!(telefone.length >= 10 && telefone.length <= 11)) return false;
+
+    //Se tiver 11 caracteres, verificar se começa com 9 o celular
+    if (telefone.length == 11 && parseInt(telefone.substring(2, 3)) != 9) return false;
+
+    //verifica se não é nenhum numero digitado errado (propositalmente)
+    for (var n = 0; n < 10; n++) {
+        //um for de 0 a 9.
+        //estou utilizando o metodo Array(q+1).join(n) onde "q" é a quantidade e n é o
+        //caractere a ser repetido
+        if (telefone == new Array(11).join(n) || telefone == new Array(12).join(n)) return false;
+    }
+    //DDDs validos
+    var codigosDDD = [11, 12, 13, 14, 15, 16, 17, 18, 19,
+        21, 22, 24, 27, 28, 31, 32, 33, 34,
+        35, 37, 38, 41, 42, 43, 44, 45, 46,
+        47, 48, 49, 51, 53, 54, 55, 61, 62,
+        64, 63, 65, 66, 67, 68, 69, 71, 73,
+        74, 75, 77, 79, 81, 82, 83, 84, 85,
+        86, 87, 88, 89, 91, 92, 93, 94, 95,
+        96, 97, 98, 99];
+    //verifica se o DDD é valido (sim, da pra verificar rsrsrs)
+    if (codigosDDD.indexOf(parseInt(telefone.substring(0, 2))) == -1) return false;
+
+    //  E por ultimo verificar se o numero é realmente válido. Até 2016 um celular pode
+    //ter 8 caracteres, após isso somente numeros de telefone e radios (ex. Nextel)
+    //vão poder ter numeros de 8 digitos (fora o DDD), então esta função ficará inativa
+    //até o fim de 2016, e se a ANATEL realmente cumprir o combinado, os numeros serão
+    //validados corretamente após esse período.
+    //NÃO ADICIONEI A VALIDAÇÂO DE QUAIS ESTADOS TEM NONO DIGITO, PQ DEPOIS DE 2016 ISSO NÃO FARÁ DIFERENÇA
+    //Não se preocupe, o código irá ativar e desativar esta opção automaticamente.
+    //Caso queira, em 2017, é só tirar o if.
+    if (new Date().getFullYear() < 2017) return true;
+    if (telefone.length == 10 && [2, 3, 4, 5, 7].indexOf(parseInt(telefone.substring(2, 3))) == -1) return false;
+
+    //se passar por todas as validações acima, então está tudo certo
+    return true;
   }
 
   function ValidateSignUp() {
-    if (email != null && email != '') {
-      if (!IsEmail()) {
-        Vibration.vibrate()
-        setErroMessageEmail("Email invalido*")
+      if (!validateName(name)) {
+        setErroMessageName("Nome ou sobrenome inválido*")
         return false
-      }
-    }
-    if (name === null || email === null || password === null || phone === null || name === '' || email === '' || password === '' || phone === '' || !isNumber(phone)) {
-      Vibration.vibrate()
-      if (email === null || email === '') {
-        setErroMessageEmail("Campo obrigatório*")
-      } else {
-        setErroMessageEmail(null)
-      }
-      if (name === null || name === '') {
-        setErroMessageName("Campo obrigatório*")
       } else {
         setErroMessageName(null)
       }
-      if (phone === null || phone === '') {
-        setErroMessagePhone("Campo obrigatório*")
+      if (!IsEmail(email)) {
+        setErroMessageEmail("Email inválido*")
+        return false
       } else {
-        setErroMessagePhone(null)
+        setErroMessageEmail(null)
       }
-      if (!isNumber(phone)) {
-        setErroMessagePhone("Digite um número valido com DDD*")
-      } else {
-        setErroMessagePhone(null)
-      }
-      if (password === null || password === '') {
-        setErroMessagePass("Campo obrigatório*")
+      if (!isPAss(password)) {
+        setErroMessagePass("Sua senha deve ter 6 ou mais caractere*")
+        return false
       } else {
         setErroMessagePass(null)
       }
-      return false
-    } else {
-      setErroMessagePass(null)
-      setErroMessagePhone(null)
-      setErroMessageName(null)
-      setErroMessageSelect(null)
-      setErroMessageEmail(null)
+      if (!telefone_validation(phone)) {
+        setErroMessagePhone("Número inválido, use o DDD Ex: 7788226655*")
+        return false
+      } else {
+        setErroMessagePhone(null)
+      }
       return true
-    }
-
   }
 
   function FullSignUp() {
@@ -149,11 +195,14 @@ export default function SignUp({ navigation }) {
             setEmail(null)
             setName(null)
             setPhone(null)
-            setSelected(false)
             setPassword(null)
             setLoading(false)
             setVisableDialogCode(false)
-            showNotification('Sucesso!', response.data.message,'success')
+            if (response.data.status){
+              showNotification('Sucesso!', response.data.message,'success')
+            }else{
+              showNotification('Ops!', response.data.message,'error ')
+            }
           })
           .catch((response) => {
             //// // console.log('sssdsds',response.data)
@@ -165,7 +214,7 @@ export default function SignUp({ navigation }) {
         setLoading(false)
         setVisableDialogCode(false)
         setCode(null)
-        showNotification('Ops!', 'Código invalido','error')
+        showNotification('Ops!', 'Código inválido','error')
       }
     }
   }
@@ -173,6 +222,7 @@ export default function SignUp({ navigation }) {
   function closeNotification() {
     setVisableNotification(false)
   }
+
   function closeDialog() {
     setVisableDialogCode(false)
   }
@@ -180,8 +230,6 @@ export default function SignUp({ navigation }) {
   function setCodeFull(value) {
     setCode(value)
   }
-
-
 
   function sendCode() {
     setLoading(true)
@@ -210,29 +258,23 @@ export default function SignUp({ navigation }) {
           //    showDialog(titulo, response, "SUCESSO")
         })
     } else {
+      Vibration.vibrate()
       setLoading(false)
       setVisableDialogCode(false)
     }
   }
+
   return (
     <ImageBackground source={require("../assets/backSign.png")} resizeMode="cover" style={styles.image}>
       <StatusBar translucent={true} barStyle="light-content" backgroundColor={stylesColor.secondaryColor} />
-
       <SafeAreaView style={styles.preContainer} >
-
         <KeyboardAvoidingView style={styles.keyboardAvoiding} behavior={Platform.OS == "ios" ? "padding" : "height"} KeyboardVerticalOffset={0}>
           <Pressable style={styles.container} onPress={Keyboard.dismiss}>
-
             {!isLoadings &&
-
               <><View style={styles.containerLogo}>
-
                 <Image style={styles.logo} source={require("../assets/icon.png")} />
-
               </View>
                 <View style={styles.form}>
-
-
                   <Text style={styles.errorMessage}>{erroMessageName}</Text>
                   <PInput onChangeText={value => { setName(value), setErroMessageName(null); }} placeholder=" Nome e sobrenome" keyboardType="email-address" size={hp('2.1%')} type='font-awesome' name='user-o' />
                   <Text style={styles.errorMessage}>{erroMessageEmail}</Text>
@@ -240,15 +282,10 @@ export default function SignUp({ navigation }) {
                   <Text style={styles.errorMessage}>{erroMessagePass}</Text>
                   <PInput onChangeText={value => { setPassword(value), setErroMessagePass(null); }} secureTextEntry={true} placeholder=" Senha" size={hp('2.1%')} type='material-community' name='form-textbox-password' />
                   <Text style={styles.errorMessage}>{erroMessagePhone}</Text>
-                  <PInput onChangeText={value => { setPhone(value), setErroMessageEmail(null); }} placeholder=" Numero" keyboardType="numeric" size={hp('2.4%')} type='material-community' name='whatsapp' />
-
+                  <PInput onChangeText={value => { setPhone(value), setErroMessagePhone(null); }} placeholder=" Numero" keyboardType="numeric" size={hp('2.4%')} type='material-community' name='whatsapp' />
                   <View style={styles.rowButtons}>
-
-                    <PButton onPress={() => sendCode()} title="Cadastrar" type='material-community' name='check-outline' size={hp('2.0%')} color={stylesColor.tertiaryColor} colorTitle={stylesColor.tertiaryColor} backgroundColor={stylesColor.primaryColor} fontFamily='Raleway-SemiBold' />
-
+                    <PButton onPress={() => sendCode()} title="Cadastrar" type='material-community' name='check-outline' size={hp('2.0%')} color={stylesColor.tertiaryColor} colorTitle={stylesColor.tertiaryColor} backgroundColor={stylesColor.primaryColor} fontFamily='MPLUS1p-Medium' />
                   </View>
-
-
                 </View></>
             }
             {isLoadings && !visableNotification &&
@@ -256,22 +293,14 @@ export default function SignUp({ navigation }) {
                 <MLoad color={stylesColor.secondaryColor} borderColor={stylesColor.primaryColor} />
               </View>
             }
-
-
-            
-
-
-
           </Pressable>
           {visableNotification && !isLoadings && !visableDialogCode &&
               <Notification visable={visableNotification} status={error} title={title} message={message} onPress={() => setVisableNotification(false)} close={closeNotification} />
-             
             }
           {!visableNotification && !isLoadings && visableDialogCode &&
-            <DialogCode erroMessageCode={erroMessageCode} onChangeText={setCodeFull} visable={visableDialogCode} FullSignUp={FullSignUp} close={closeDialog} />
+            <DialogCode containerColor={stylesColor.primaryColor} erroMessageCode={erroMessageCode} onChangeText={setCodeFull} visable={visableDialogCode} FullSignUp={FullSignUp} close={closeDialog} />
           }
         </KeyboardAvoidingView>
-
       </SafeAreaView>
     </ImageBackground>
   );

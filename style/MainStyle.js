@@ -17,11 +17,8 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
     },
-    title:{
-        alignItems: 'center',
-        justifyContent: 'center'
-    
-    },
+    title:{ color: 'white', fontFamily: "MPLUS1p-Medium" },
+    description:{ color: 'white',fontFamily: "MPLUS1p-Light" },
     viewMultiButton:{
         width:"80%",
         flexDirection:"row",

@@ -43,8 +43,8 @@ class HousesService{
     
     async allHouses(skip){
         let token = await AsyncStorage.getItem("TOKEN")
-        return axios({
-            url:Config.API_URL+"houses/all/"+skip.toString()+"/20",
+        return await axios({
+            url:Config.API_URL+"houses/all/"+skip.toString()+"/30",
             timeout: Config.TIMEOUT_REQUEST,
             method:"Get",
             headers: {

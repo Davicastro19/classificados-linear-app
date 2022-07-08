@@ -26,7 +26,7 @@ export default function Home() {
 
     >
       <Tab.Screen
-        name="Casas"
+        name="Houses"
         component={Houses}
         options={{
           headerShown: false,
@@ -40,7 +40,7 @@ export default function Home() {
 
 
       <Tab.Screen
-        name="Atulizar casas"
+        name="MyHouses"
         component={MyHouses}
 
         options={{
@@ -54,7 +54,7 @@ export default function Home() {
       />
 
       <Tab.Screen
-        name="Perfil"
+        name="Profile"
         component={Profile}
         options={{
           headerShown: false,

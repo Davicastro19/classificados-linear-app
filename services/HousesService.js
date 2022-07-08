@@ -59,9 +59,10 @@ class HousesService{
         })
     }
     async getHouseFiltered(skip, district,city,orderAll){
+        console.log(Config.API_URL+"houses/orderByCityAndDistrictAndOrderValue/"+skip.toString()+"/30/"+district+"/"+city+"/"+orderAll)
         let token = await AsyncStorage.getItem("TOKEN")
         return axios({
-            url:Config.API_URL+"houses/orderByCityAndDistrictAndOrderValue/"+skip.toString()+"/20/"+district+"/"+city+"/"+orderAll,
+            url:Config.API_URL+"houses/orderByCityAndDistrictAndOrderValue/"+skip.toString()+"/30/"+district+"/"+city+"/"+orderAll,
             timeout: Config.TIMEOUT_REQUEST,
             method:"Get",
             headers: {

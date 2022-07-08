@@ -8,6 +8,7 @@ import PInput from '../components/input/input'
 import PButton from '../components/button/button';
 import Notification from '../components/notification/notification';
 import MLoad from '../components/loading/miniLoad'
+import { NativeBaseProvider } from 'native-base';
 
 export default function ForgotPassword() {
   const [email, setEmail] = useState('')
@@ -71,6 +72,7 @@ export default function ForgotPassword() {
   }
 
   return (
+    <NativeBaseProvider>
     <SafeAreaView style={styles.preContainer} >
       <StatusBar translucent={true} barStyle="dark-content" backgroundColor={stylesColor.secondaryColor} />
       <ImageBackground source={require("../assets/backForgot.png")} resizeMode="cover" style={styles.image}>
@@ -98,5 +100,6 @@ export default function ForgotPassword() {
         }
       </ImageBackground>
     </SafeAreaView>
+    </NativeBaseProvider>
   );
 }

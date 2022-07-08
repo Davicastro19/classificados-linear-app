@@ -2,6 +2,7 @@
 import { Text, View, Image, Pressable, Keyboard, KeyboardAvoidingView, StatusBar, BackHandler, SafeAreaView, ImageBackground } from 'react-native';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import React, { useState, useEffect } from 'react'
+import {NativeBaseProvider} from 'native-base'
 import styles from '../style/Login'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import tenantService from '../services/TenantSevice';
@@ -179,11 +180,12 @@ export default function Login({ navigation }) {
     return null
   }
   return (
+    <NativeBaseProvider>
     <ImageBackground source={require("../assets/back.png")} resizeMode="cover" style={styles.image}>
       <StatusBar translucent={true} barStyle="light-content" backgroundColor={stylesColor.primaryColor} />
       <SafeAreaView style={styles.preContainer} >
         <KeyboardAvoidingView style={styles.keyboardAvoiding} KeyboardVerticalOffset={50}>
-          <Pressable style={styles.container} onPress={() => { Keyboard.dismiss(), setVisableNotification(false) }}>
+          <Pressable style={styles.container} onPress={() => Keyboard.dismiss()}>
             {!isLoading &&
               <><View style={styles.containerLogo}>
                 <Image style={styles.logo} source={require("../assets/icon.png")} />
@@ -212,5 +214,6 @@ export default function Login({ navigation }) {
         </KeyboardAvoidingView>
       </SafeAreaView>
     </ImageBackground>
+    </NativeBaseProvider>
   );
 }

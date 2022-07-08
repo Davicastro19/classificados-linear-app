@@ -4,14 +4,21 @@ import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-nat
 import {View, Actionsheet , Alert, Box, IconButton, CloseIcon, HStack, VStack, Text, Center, NativeBaseProvider, Collapse } from "native-base";
 
 const Notification = (props) => {
+  let color = ''
+  if (props.status == 'error'){
+    color = 'red.200'
+  }else if (props.status == 'success'){
+    color = 'green.200'
+  }else{
+    color = 'blue.300'
+  }
   return (
-    <NativeBaseProvider>
             <Center>
       <Actionsheet   isOpen={props.visable}   onTouchMove={() => props.close()}  disableOverlay>
-      <Actionsheet.Content background={props.status == 'error' ? 'red.200' : 'green.200'}>
-      <Actionsheet.Item    background={props.status == 'error' ? 'red.200' : 'green.200'}>
+      <Actionsheet.Content background={color}>
+      <Actionsheet.Item    background={color}>
       <View style={{height:hp('10%'), width:wp('90%')}}>
-      <Alert maxW="500"  status={props.status == 'error' ? 'error' : 'success'}>
+      <Alert maxW="500"  status={props.status} backgroundColor={color}>
           <VStack space={1} flexShrink={1} w="100%">
             <HStack flexShrink={1} space={2} alignItems="center" justifyContent="space-between">
               <HStack flexShrink={1} space={2} alignItems="center">
@@ -37,7 +44,6 @@ const Notification = (props) => {
           </Actionsheet.Content>
       </Actionsheet>
     </Center>
-        </NativeBaseProvider>
    
   )
 }

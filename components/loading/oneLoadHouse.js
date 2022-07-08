@@ -9,7 +9,6 @@ import styles from '../input/style'
 
 const OneLoadHouse = () => {
   return (
-    <NativeBaseProvider>
       <Center flex={1} px="1" my={1}>
         <HStack w={wp('95%')} maxW="500" borderWidth={wp("0.1%")} space={8} rounded="md"
           _light={{
@@ -32,7 +31,6 @@ const OneLoadHouse = () => {
 
         </HStack>
       </Center>
-    </NativeBaseProvider>
   )
 }
 

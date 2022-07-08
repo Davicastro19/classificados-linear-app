@@ -284,7 +284,7 @@ export default function SignUp() {
                   <Text style={styles.errorMessage}>{erroMessagePhone}</Text>
                   <PInput onChangeText={value => { setPhone(value), setErroMessagePhone(null); }} placeholder=" Numero" keyboardType="numeric" size={hp('2.4%')} type='material-community' name='whatsapp' />
                   <View style={styles.rowButtons}>
-                    <PButton onPress={() => sendCode()} title="Cadastrar" type='material-community' name='check-outline' size={hp('2.0%')} color={stylesColor.tertiaryColor} colorTitle={stylesColor.tertiaryColor} backgroundColor={stylesColor.primaryColor} fontFamily='MPLUS1p-Medium' />
+                    <PButton onPress={() => sendCode()} title="Cadastrar" type='material-community' name='check-outline' size={hp('2.0%')} color={stylesColor.tertiaryColor} colorTitle={stylesColor.tertiaryColor} backgroundColor={stylesColor.primaryColor} fontFamily='Raleway-SemiBold' />
                   </View>
                 </View></>
             }

@@ -30,10 +30,10 @@ export default function Houses({navigation}) {
             if (image.includes('jpg') || image.includes('png')) {
                 return Config.AWS_URL + image
             } else {
-                return 'https://daviastro.000webhostapp.com/favicon.png'
+                return Config.AWS_URL +'favicon.png'
             }
         } catch (e) {
-            return 'https://daviastro.000webhostapp.com/favicon.png'
+            return Config.AWS_URL +'favicon.png'
         }
     }
 

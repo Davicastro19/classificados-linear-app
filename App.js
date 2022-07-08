@@ -4,13 +4,15 @@ import { NavigationContainer } from '@react-navigation/native';
 import Login from './screens/Login';
 import Home from './screens/Home';
 import House from './screens/House';
+import EditHouse from './screens/EditHouse'
+import InsertHouse from './screens/InsertHouse'
 import Splash from './screens/Splash';
 import {
   createStackNavigator,
   TransitionPresets,
 } from '@react-navigation/stack';
 import SignUp from './screens/SignUp';
-import ForgotPassword from './screens/ForgotPassword';
+import ForgotPassword from './screens/forgotPassword'
 import interceptor from './services/interceptor'
 import {ViewPropTypes} from 'deprecated-react-native-prop-types'
 
@@ -47,6 +49,10 @@ function MyStack() {
       <Stack.Screen options={{gestureEnabled: true, headerShown: false,}}name="SignUp" component={SignUp} />
       <Stack.Screen options={{gestureEnabled: true, headerShown: false,}} name="ForgotPassword" component={ForgotPassword} />
       <Stack.Screen options={{gestureEnabled: true, headerShown: false,}} name="House" component={House} />
+      <Stack.Screen options={{gestureEnabled: true, headerShown: false,}} name="EditHouse" component={EditHouse} />
+      <Stack.Screen options={{gestureEnabled: true, headerShown: false,}} name="InsertHouse" component={InsertHouse} />
+      
+    
     </Stack.Navigator>
   );
 }

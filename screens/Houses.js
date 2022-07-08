@@ -1,15 +1,11 @@
 
-import { View,  Pressable, StatusBar, SafeAreaView, RefreshControl } from 'react-native';
-import React, { useState, useEffect, useMemo } from 'react'
+import { View,  StatusBar, SafeAreaView, RefreshControl } from 'react-native';
+import React, { useState, useEffect } from 'react'
 import Config from '../util/Config'
 import stylesColor from '../style/colorApp';
 import styles from '../style/Houses'
-import {
-    FlatList,
-    NativeBaseProvider,
-} from 'native-base';
-import { Alert, VStack, HStack, IconButton, CloseIcon, Box, Text, Center, } from "native-base";
-import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
+import { NativeBaseProvider,FlatList} from "native-base";
+import { heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import housesService from '../services/HousesService';
 import CardHouses from '../components/cardHouses/cardHouses'
 import LoadHouse from '../components/loading/loadHouses'
@@ -17,29 +13,30 @@ import OneLoadHouse from '../components/loading/oneLoadHouse'
 import PButton from '../components/button/button';
 import DialogFilter from '../components/dialogFilter/dialogFilter';
 import Notification from '../components/notification/notification';
-import CardHouse from '../components/cardHouse/cardHouse'
-import { render } from 'react-dom';
+
 
 export default function Houses({navigation}) {
     
     const [loading, setLoading] = useState(false)
     const [orderCity, setOrderCity] = useState('Ibotirama')
     const [orderDistrict, setOrderDistrict] = useState('Todos Bairros')
-    const [orderAll, setOrderAll] = useState('Mais Recentes')
+    const [orderAll, setOrderAll] = useState('recent')
     const [type, setType] = useState('city')
     const [nameIcon, setNameIcon] = useState('filter-plus-outline')
     const [question, setQuesetion] = useState('Qual cidade?')
     const [dataSelect, setDataSelect] = useState(['Ibotirama', 'Javi'])
     const [oldHouse, setOldHouses] = useState([])
     const [skip, setSkip] = useState(0)
-    const [isLoading, setIsLoading] = useState(false)
+    const [isLoading, setIsLoading] = useState(true)
     const [houses, setHouses] = useState([])
+    const [title, setTitle] = useState(null)
+    const [message, setMessage] = useState(null)
+    const [status, setStatus] = useState(null)
     const [oldLengh, setOldLengh] = useState(1)
     const [refreshing, setRefreshing] = useState(false);
-    const [specificHouse, setSpecificHouse] = useState(false)
     const [visableDialogFilter, setVisableDialogFilter] = useState(true);
     const [visableNotification, setVisableNotification] = useState(false);
-    //const memoizedValue = useMemo(() => renderItem, [houses]);
+    
     const onRefresh = React.useCallback(() => {
         setHouses([])
         let nSkip = skip
@@ -54,37 +51,62 @@ export default function Houses({navigation}) {
         }
         setSkip(nSkip)
         setRefreshing(false)
-    }, [skip]);
+    }, []);
+
     const renderItem = React.useCallback(({ item }) => {
         return (
-            <CardHouses item={item} selectHouseById={() => selectHouseById(item.id)} validateImage={() => validateImage(item.images, '1')} />
+            <CardHouses item={item} selectHouseById={() => selectHouseById(item.id)} validateImage={() => validateImage(item.images, '1')}  title="Ver mais"  name='information-variant'/>
         )
     }, [houses]);
 
 
-    function setFilter() {
-        
+    function setFilter(value) {
         if (type == 'city') {
+            setOrderCity(value)
             setType('district')
             setDataSelect(['Todos Bairros', 'Alto do Cruzeiro', 'Alto do Fundão', 'Calumbi', 'Centro', 'Ibotiraminha', 'Morada Real', 'Bairro São Francisco', 'Barão 242', 'Bairro São João', 'Santa Rosa', 'Veredinha', 'Xixa'])
             setQuesetion('Qual bairro?')
         } else if (type == 'district') {
+            setOrderDistrict(value)
             setDataSelect(['Mais Recentes', 'Menor Valor', 'Maior Valor'])
             setType('order')
             setQuesetion('Qual ordem?')
             setNameIcon('filter-check-outline')
         } else {
-            setHouses([])
-            getHouseFiltered(0)
-            setDataSelect(['Ibotirama', 'Javi'])
-            setType('city')
-            setQuesetion('Qual cidade?')
+            if (value === 'Maior Valor') {
+                setOrderAll('bigger')
+            } else if (value === 'Menor Valor') {
+                setOrderAll('smaller')
+            } else {
+                setOrderAll('recent')
+            }
 
         }
         
+        
+
     }
+
+    function getFilter() {
+        setHouses([])
+        getHouseFiltered(0)
+        setDataSelect(['Ibotirama', 'Javi'])
+        setType('city')
+        setQuesetion('Qual cidade?')
+    }  
+
+    function showNotification(status, title, message) {
+        setVisableNotification(true)
+        setTitle(title)
+        setMessage(message)
+        setStatus(status)
+      }
+        
     function closeDialogFilter() {
         setVisableDialogFilter(false)
+        setDataSelect(['Ibotirama', 'Javi'])
+        setType('city')
+        setQuesetion('Qual cidade?')
         
     }
 
@@ -92,14 +114,12 @@ export default function Houses({navigation}) {
         setVisableNotification(false)
     }
 
-    function filtered(value) {
-        return value.filter(function (a) { return !this[JSON.stringify(a)] && (this[JSON.stringify(a)] = true); }, Object.create(null))
-    }
-
     function setSpecificHouseFull(values){
         navigation.navigate("House",{specificHouse:values})
     }
-    async function moreHouses() {
+
+    function moreHouses() {
+        setHouses([])
         if (oldLengh !== 0) {
             if (loading) return;
             setLoading(true);
@@ -113,47 +133,22 @@ export default function Houses({navigation}) {
             }
             
         }
+        setRefreshing(false)
 
-    }
-
-    function validateImages(image) {
-        try {
-            //console.log('homes',Config.AWS_URL + image.split(',')[value])
-            if (image.includes('jpg') || image.includes('png')) {
-                return Config.AWS_URL + image
-            } else {
-                return 'https://daviastro.000webhostapp.com/favicon.png'
-            }
-        } catch (e) {
-            return 'https://daviastro.000webhostapp.com/favicon.png'
-        }
     }
 
     function validateImage(image, value) {
+
         try {
             //console.log('homes',Config.AWS_URL + image.split(',')[value])
             if (image.split(',')[value].includes('jpg') || image.split(',')[value].includes('png')) {
                 return Config.AWS_URL + image.split(',')[value]
             } else {
-                return 'https://daviastro.000webhostapp.com/favicon.png'
+                return Config.AWS_URL +'favicon.png'
             }
         } catch (e) {
-            return 'https://daviastro.000webhostapp.com/favicon.png'
+            return Config.AWS_URL +'favicon.png'
         }
-    }
-
-   
-
-    function setOrderMain(value) {
-        //// // console.log(value)
-        if (value === 'Maior Valor') {
-            setOrderAll('bigger')
-        } else if (value === 'Menor Valor') {
-            setOrderAll('smaller')
-        } else {
-            setOrderAll('recent')
-        }
-        //// // console.log(orderAll)
     }
 
     function selectHouseById(value) {
@@ -163,17 +158,18 @@ export default function Houses({navigation}) {
                 setSpecificHouseFull(response.data)
             })
             .catch((error) => {
-                console.log('61 - Homes', error)
-                resetState()
-                //setCatalogData('Seu sinais estarão aqui. (clique em Filtro)')
+                showNotification('error', 'Ops!', error.toString())
             })
             setIsLoading(false)
+            setLoading(false)
 
     }
 
     function upHouse(objA, objB) {
 
-        if (objA === objB) { } else {
+        if (objA === objB) { 
+            console.log('igual')
+        } else {
             setHouses(objA)
         }
     }
@@ -186,30 +182,23 @@ export default function Houses({navigation}) {
             setSkip(skips)
             housesService.getHouseFiltered(skips, orderDistrict, orderCity, orderAll)
                 .then((response) => {
+                    console.log(response.data.length)
                     setOldLengh(response.data.length)
-                    if (skips !== 0) {
-                        if (response.data.length !== 0) {
+                    if (response.data.length !== 0) {
                             //let newList = filtered([...houses, ...response.data])
-                            upHouse(response.data, oldHouse)
-                        }
-                    } else {
                         upHouse(response.data, oldHouse)
+                    }else{
+                        showNotification('info', 'Então...', 'Nada foi encontrado com esse filtro.')
                     }
                 })
                 .catch((error) => {
-                    console.log('75 - Homes', error)
-                    //setCatalogData('Seu sinais estarão aqui. (clique em Filtro)')
+                    showNotification('error', 'Ops!', error.toString())
                 })
-            if (orderAll === 'bigger') {
-                setOrderAll('Maior Valor')
-            } else if (orderAll === 'smaller') {
-                setOrderAll('Menor Valor')
-            } else {
-                setOrderAll('Mais Recentes')
-            }
+            
         } else {
             allHouses(skips)
         }
+        
         setIsLoading(false)
         setLoading(false)
     }
@@ -220,22 +209,20 @@ export default function Houses({navigation}) {
         housesService.allHouses(skips)
             .then((response) => {
                 setOldLengh(response.data.length)
-                if (skips !== 0) {
-                    if (response.data.length !== 0) {
+                if (response.data.length !== 0) {
                         //let newList = filtered([...houses, ...response.data])
-                        upHouse(response.data, oldHouse)
-                    }
-                } else {
                     upHouse(response.data, oldHouse)
                 }
-                setIsLoading(false)
-                setLoading(false)
+                else{
+                    showNotification('info', 'Então...', 'Nada foi encontrado com esse filtro.')
+                    }
 
             })
             .catch((error) => {
-                setIsLoading(false)
-                setLoading(false)
+                showNotification('error', 'Ops!', error.toString())
             })
+        setIsLoading(false)
+        setLoading(false)
         if (orderAll === 'bigger') {
             setOrderAll('Maior Valor')
         } else if (orderAll === 'smaller') {
@@ -245,21 +232,25 @@ export default function Houses({navigation}) {
         }
     }
 
+
+
+
     useEffect(() => {
         allHouses(0)
     }, [])
+
     return (
         <NativeBaseProvider >
             <StatusBar barStyle="dark-content" backgroundColor={stylesColor.primaryColor} />
             <SafeAreaView style={styles.preContainer} >
-                {!specificHouse && !isLoading &&
+                {!isLoading &&
                     <View style={styles.viewFilter}>
                         <PButton onPress={() => setVisableDialogFilter(true)} title="Filtro" type='material-community' name='filter-menu-outline' size={hp('3%')} color={stylesColor.tertiaryColor} colorTitle={stylesColor.tertiaryColor} backgroundColor={stylesColor.primaryColor} fontFamily='MPLUS1p-Medium' />
                     </View>}
                 {isLoading &&
                     <><LoadHouse /></>
                 }
-                {houses && !isLoading && !specificHouse &&
+                {houses && !isLoading &&
                     <FlatList refreshControl={
                         <RefreshControl
                             refreshing={refreshing}
@@ -273,17 +264,22 @@ export default function Houses({navigation}) {
                             borderColor={stylesColor.primaryColor} />}
                         keyExtractor={value => value.id} />
                 }
-                {!isLoading && specificHouse &&
-                    <CardHouse specificHouse={specificHouse} resetState={() => setSpecificHouse(false)}  validateImages={value => validateImages(value)} />
-                } 
-                {visableNotification && !isLoading && !specificHouse &&
-                    <Notification status='error' dataSelect={dataSelect} visable={visableNotification} title={'adasd'} message={'message'} onPress={() => setVisableNotification(false)} close={closeNotificaion} />
+                {visableNotification && !isLoading &&
+                    <Notification status={status} visable={visableNotification} title={title} message={message} close={closeNotificaion} />
                 }
                 {visableDialogFilter && !isLoading && 
-                    <DialogFilter question={question} dataSelect={dataSelect} nameIcon={nameIcon} type={type} orderCity={orderCity} visable={visableDialogFilter} onPress={() => setFilter()} close={closeDialogFilter} setOrderCity={value => (setOrderCity(value), setFilter())} setOrderDistrict={value => (setOrderDistrict(value), setFilter())} setOrderMain={value => (setIsLoading(true),setOrderMain(value), setFilter())} />
+                    <DialogFilter question={question} dataSelect={dataSelect} nameIcon={nameIcon} type={type} orderCity={orderCity} visable={visableDialogFilter} onPress={() => getFilter()} setFilter={value => setFilter(value)} close={closeDialogFilter}  />
                 }
             </SafeAreaView>
             
         </NativeBaseProvider>
     );
 }
+
+
+
+
+//const memoizedValue = useMemo(() => renderItem, [houses]);
+    //function filtered(value) {
+    //    return value.filter(function (a) { return !this[JSON.stringify(a)] && (this[JSON.stringify(a)] = true); }, Object.create(null))
+    //}

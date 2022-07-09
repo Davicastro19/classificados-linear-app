@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "linearRealEstate",
+    "name": "Linear Imóveis",
     "slug": "linearRealEstate",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -18,16 +18,17 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.dclineardev.linearrealestate",
+      "buildNumber": "1.0.0"
     },
     "android": {
+      "package": "com.dclineardev.linearrealestate",
+      "versionCode": 1,
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
       }
-    },
-    "web": {
-      "favicon": "./assets/favicon.png"
     }
   }
 }

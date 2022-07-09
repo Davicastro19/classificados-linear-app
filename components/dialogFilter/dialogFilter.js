@@ -3,7 +3,7 @@
 import React, { memo } from 'react';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 
-import { View, Text, Center, NativeBaseProvider,Pressable,Divider } from "native-base";
+import { View, Text, Center, Pressable,Divider } from "native-base";
 import SelectDropdown from 'react-native-select-dropdown'
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import dialogCode from './style'

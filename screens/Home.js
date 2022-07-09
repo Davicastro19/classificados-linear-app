@@ -1,12 +1,11 @@
-import React, { useState, useEffect } from 'react'
+import React, {  } from 'react'
 import Profile from '../screens/Profile'
 import Houses from '../screens/Houses'
 import stylesColor from '../style/colorApp';
 import MyHouses from '../screens/MyHouses'
 import { FontAwesome, FontAwesome5, MaterialCommunityIcons } from '@expo/vector-icons';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
-import styles from '../style/Login';
+import { heightPercentageToDP as hp } from 'react-native-responsive-screen';
 
 
 export default function Home() {

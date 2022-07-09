@@ -12,7 +12,8 @@ const dialogCode = StyleSheet.create({
         fontSize:hp('1.5%'),
         color:stylesColor.primaryColor20,
         paddingRight:hp('33%'),
-}
+},
+input:{ color:'white'}
 
 }
 )

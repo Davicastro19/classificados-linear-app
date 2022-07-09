@@ -119,6 +119,7 @@ export default function Houses({navigation}) {
     }
 
     function moreHouses() {
+        if (housesService.length > 3){
         setHouses([])
         if (oldLengh !== 0) {
             if (loading) return;
@@ -126,6 +127,7 @@ export default function Houses({navigation}) {
             let nSkip = skip
             nSkip = nSkip + 30
             if (orderDistrict === 'Todos Bairros') {
+                console.log('orderDistrict', orderDistrict)
                 allHouses(nSkip)
             }
             else {
@@ -133,7 +135,9 @@ export default function Houses({navigation}) {
             }
             
         }
+    }
         setRefreshing(false)
+        setLoading(false);
 
     }
 
@@ -167,10 +171,8 @@ export default function Houses({navigation}) {
 
     function upHouse(objA, objB) {
 
-        if (objA === objB) { 
-            console.log('igual')
-        } else {
-            setHouses(objA)
+        if (objA !== objB) { 
+        setHouses(objA)
         }
     }
 
@@ -241,8 +243,8 @@ export default function Houses({navigation}) {
 
     return (
         <NativeBaseProvider >
-            <StatusBar barStyle="dark-content" backgroundColor={stylesColor.primaryColor} />
             <SafeAreaView style={styles.preContainer} >
+            <StatusBar barStyle="light-content" backgroundColor={stylesColor.primaryColor} />
                 {!isLoading &&
                     <View style={styles.viewFilter}>
                         <PButton onPress={() => setVisableDialogFilter(true)} title="Filtro" type='material-community' name='filter-menu-outline' size={hp('3%')} color={stylesColor.tertiaryColor} colorTitle={stylesColor.tertiaryColor} backgroundColor={stylesColor.primaryColor} fontFamily='MPLUS1p-Medium' />
@@ -260,7 +262,8 @@ export default function Houses({navigation}) {
                         renderItem={renderItem}
                         onEndReached={moreHouses}
                         onEndReachedThreshold={0.03}
-                        ListFooterComponent={<OneLoadHouse color={stylesColor.secondaryColor}
+                        ListFooterComponent={
+                        <OneLoadHouse color={stylesColor.secondaryColor}
                             borderColor={stylesColor.primaryColor} />}
                         keyExtractor={value => value.id} />
                 }

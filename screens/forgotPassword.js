@@ -1,9 +1,9 @@
-import { Text, View, Image, Pressable, Keyboard, Vibration, KeyboardAvoidingView, SafeAreaView, StatusBar, ImageBackground } from 'react-native';
+import { Text, View, Image, Pressable, Keyboard, Vibration, SafeAreaView, StatusBar, ImageBackground } from 'react-native';
 import React, { useState } from 'react'
 import tenantService from '../services/TenantSevice';
 import styles from '../style/ForgotPassword'
 import stylesColor from '../style/colorApp';
-import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
+import { heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import PInput from '../components/input/input'
 import PButton from '../components/button/button';
 import Notification from '../components/notification/notification';
@@ -62,7 +62,7 @@ export default function ForgotPassword() {
         })
         .catch((response) => {
           setLoading(false)
-          //    showDialog(title, response, "SUCESSO")
+          showNotification('Ops!', response.toString())
         })
     } else {
       Vibration.vibrate()

@@ -44,8 +44,8 @@ export default function Houses({navigation}) {
     }
     return (
         <NativeBaseProvider >
-            <StatusBar translucent barStyle="dark-content" backgroundColor={stylesColor.secondaryColor} />
             <SafeAreaView style={styles.preContainer} >
+            <StatusBar barStyle="light-content" backgroundColor={stylesColor.primaryColor} />
                <CardHouse specificHouse={route.params.specificHouse}   validateImages={value => validateImages(value)} />
                
                 {visableNotification && !isLoading && !specificHouse &&

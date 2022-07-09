@@ -109,8 +109,8 @@ export default function MyHouses({ navigation }) {
     }, [])
     return (
         <NativeBaseProvider >
-            <StatusBar barStyle="dark-content" backgroundColor={stylesColor.primaryColor} />
             <SafeAreaView style={styles.preContainer} >
+            <StatusBar  barStyle="light-content" backgroundColor={stylesColor.primaryColor}  />
             {!isLoading &&
                 <View style={styles.viewFilter}>
                     <PButton onPress={() => insertHouseFull()} title="Anunciar" type='material-community' name='plus' size={hp('3%')} color={stylesColor.tertiaryColor} colorTitle={stylesColor.tertiaryColor} backgroundColor={stylesColor.primaryColor} fontFamily='Raleway-SemiBold' />

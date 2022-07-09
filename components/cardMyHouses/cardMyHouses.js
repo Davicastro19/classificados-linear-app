@@ -6,7 +6,7 @@ import {  VStack, HStack, Center, Image } from "native-base";
 import cardHouses from './style'
 import stylesColor from '../../style/colorApp';
 import PButton from '../button/button';
-import { FontAwesome, FontAwesome5, MaterialCommunityIcons, MaterialIcons,Ionicons } from '@expo/vector-icons';
+import { MaterialCommunityIcons, Ionicons } from '@expo/vector-icons';
 const CardMyHouses = (props) => {
     return (
 

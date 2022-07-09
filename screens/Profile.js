@@ -4,7 +4,7 @@ import tenantService from '../services/TenantSevice';
 import stylesColor from '../style/colorApp';
 import * as Device from 'expo-device';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
+import { heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import styles from '../style/SignUp';
 import PInput from '../components/input/input'
 import PButton from '../components/button/button'
@@ -28,7 +28,6 @@ export default function Profile({navigation}) {
   const [phone, setPhone] = useState(null)
   const [dateRegister, setDateRegister] = useState(false)
   const [isLoading, setLoading] = useState(true)
-  const [visableDialog, setVisableDialog] = useState(false);
   const [visableDialogCode, setVisableDialogCode] = useState(false);
   const [title, setTitle] = useState(null)
   const [message, setMessage] = useState(null)
@@ -79,21 +78,7 @@ export default function Profile({navigation}) {
     setStatus(status)
 }
 
-  function hideDialogCode() {
-    setVisableDialogCode(false)
-    setLoading(false)
-  }
   
-  function hideDialogFull(status,{navigation}) {
-    setVisableDialog(status)
-    if (title === "Sucesso") {
-      navigation.navigate("Houses")
-    }
-  }
-  function hideDialog(status) {
-    hideDialogFull(status,navigation)
-  }
-
   function validateName(value){
     try{
       
@@ -231,8 +216,6 @@ export default function Profile({navigation}) {
     setLoading(true)
     if (!code) {
       Vibration.vibrate()
-      setLoading(false)
-      setCode(null)
       setErroMessageCode('Campo obrigatório*')
     } else {
       if (code === newCode) {
@@ -252,14 +235,6 @@ export default function Profile({navigation}) {
         }
         tenantService.updateAccount(data, id, token)
           .then((response) => {
-            setLoading(false)
-            setCode(null)
-            setNewCode(null)
-            setEmail(null)
-            setName(null)
-            setPhone(null)
-            setPassword(null)
-            setVisableDialogCode(false)
             if (response.data.status){
               showNotification('success', 'Salvo!', response.data.message)
             }else{
@@ -267,15 +242,15 @@ export default function Profile({navigation}) {
             }
           })
           .catch((response) => {
-            setVisableDialogCode(false)
             showNotification('error', 'Ops!', response.toString())
           })
       }else{
-        setVisableDialogCode(false)
-        setCode(null)
         showNotification('info', 'Então...', 'Código inválido')
       }
     }
+    setCode(null)
+    setVisableDialogCode(false)
+    setPassword(null)
     setLoading(false)
   }
 
@@ -321,11 +296,11 @@ export default function Profile({navigation}) {
   return (
     <NativeBaseProvider>
     <ImageBackground source={require("../assets/backSign.png")} resizeMode="cover" style={styles.image}>
-      <StatusBar translucent={true} barStyle="light-content" backgroundColor={stylesColor.secondaryColor} />
       <SafeAreaView style={styles.preContainer} >
+      <StatusBar  barStyle="light-content" backgroundColor={stylesColor.primaryColor}  />
         <KeyboardAvoidingView style={styles.keyboardAvoiding} behavior={Platform.OS == "ios" ? "padding" : "height"} KeyboardVerticalOffset={0}>
           <Pressable style={styles.container} onPress={Keyboard.dismiss}>
-            {!isLoading &&
+            {!isLoading && name &&
               <><View style={styles.containerLogo}>
                 <Image style={styles.logo} source={require("../assets/icon.png")} />
               </View>

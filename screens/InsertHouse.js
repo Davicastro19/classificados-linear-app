@@ -428,8 +428,9 @@ export default function InsertHouse({ navigation }) {
     }
     return (
         <NativeBaseProvider >
-            <StatusBar barStyle="dark-content" backgroundColor={stylesColor.primaryColor} />
+            
             <SafeAreaView style={styles.preContainer} >
+            <StatusBar barStyle="light-content" backgroundColor={stylesColor.primaryColor} />
                 {isLoading &&
                     <View style={styles.mLoad}>
                         <MLoad color={stylesColor.secondaryColor} borderColor={stylesColor.primaryColor} />

@@ -3,7 +3,7 @@ import React, { useState } from 'react'
 import tenantService from '../services/TenantSevice';
 import stylesColor from '../style/colorApp';
 import * as Device from 'expo-device';
-import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
+import { heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import styles from '../style/SignUp';
 import PInput from '../components/input/input'
 import PButton from '../components/button/button'

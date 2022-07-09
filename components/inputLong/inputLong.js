@@ -2,9 +2,6 @@ import React, { memo } from 'react'
 import stylesColor from '../../style/colorApp';
 import styles from './style'
 import { Input } from 'react-native-elements';
-import InputILongText from '../InputILongText';
-//import { MaterialIcons } from "@expo/vector-icons";
-//import * as Device from 'expo-device';
 
 const PInputLong = (props) => {
     return (

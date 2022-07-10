@@ -17,6 +17,7 @@ class TenantService{
             return Promise.reject(error)
         })
     }
+
     async updatePassword(data){
         return axios({
             url:Config.API_URL+ "tenant/updatePassword",
@@ -27,11 +28,9 @@ class TenantService{
         }).then((response)=> {
             return Promise.resolve(response)
         }).catch((error)=>{
-            // console.log('ee',error)
             return Promise.reject(error)
         })
     }
-
 
     async register(data){
         return axios({
@@ -64,8 +63,6 @@ class TenantService{
         })
     }
 	
-    
-
 	async login(data){
         return axios({
             url:Config.API_URL+"tenant/login",
@@ -74,20 +71,16 @@ class TenantService{
             data:data,
             headers:Config.HEADER_REQUEST
         }).then((response)=> {
-            // // console.log(response.data)
             if (response && response.data && response.data.access_token) {
                 AsyncStorage.setItem("TOKEN", response.data.access_token)
                 AsyncStorage.setItem("ID", response.data.id.toString())
             }
             return Promise.resolve(response)
         }).catch((error)=>{
-            //// // console.log('qwjq',error)
             return Promise.reject(error)
         })
     }
 	
-	
-    
 	async autoLogin(data){
         return axios({
             url:Config.API_URL+"tenant/autoLogin",
@@ -96,13 +89,11 @@ class TenantService{
             data:data,
             headers:Config.HEADER_REQUEST
         }).then((response)=> {
-            //// // console.log(response.data)
             if (response && response.data && response.data.access_token) {
 			    AsyncStorage.setItem("TOKEN", response.data.access_token)
             }
             return Promise.resolve(response)
         }).catch((error)=>{
-            ////// // console.log('aaa',error)
             return Promise.reject(error)
         })
     }
@@ -115,36 +106,15 @@ class TenantService{
             data:data,
             headers:Config.HEADER_REQUEST
         }).then((response)=> {
-            //// // console.log(response.data)
             if (response && response.data && response.data.access_token) {
 			    AsyncStorage.setItem("TOKEN", response.data.access_token)
             }
             return Promise.resolve(response)
         }).catch((error)=>{
-            ////// // console.log('aaa',error)
             return Promise.reject(error)
         })
     }
 
-    async  pairs(){
-        let token = await AsyncStorage.getItem("TOKEN")
-        return axios({
-            url:Config.API_URL+"tenant/pairs",
-            method:"POST",
-            timeout: Config.LON_TIMEOUT_REQUEST,
-            headers: {
-                Accept: 'application/json',
-                Authorization: 'Bearer ' + token
-            }
-        }).then((response)=> {
-            return Promise.resolve(response)
-        }).catch((error)=>{
-            ////// // console.log('qgwq',error)
-
-            return Promise.reject(error)
-        })
-
-    }
 }
 const tenantService = new TenantService()
 export default tenantService

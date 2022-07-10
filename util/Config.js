@@ -1,5 +1,6 @@
 const Config = {
     API_URL: "https://api-linear-real-state.herokuapp.com/",
+    API_URL_TO: "https://linear-real-state-api-services.herokuapp.com/",
     TIMEOUT_REQUEST: 5000,
     LON_TIMEOUT_REQUEST: 240000,
     HEADER_REQUEST: {

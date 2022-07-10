@@ -26,11 +26,6 @@ const button = StyleSheet.create({
     iconContainerStyle:{ 
         marginLeft: 10
     },
-    //textInput:{
-    //    fontSize:15,
-    //    color:"red",
-    //    
-    //}
     buttonStyle:{},
     containerStyle:{},
     titleStyle:{}

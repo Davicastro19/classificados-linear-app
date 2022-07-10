@@ -23,10 +23,6 @@ const input = StyleSheet.create({
         width: wp('90%')
         
     },
-    //textInput:{
-    //    fontSize:15,
-    //    color:"red",
-    //    
-    //}
+  
 })
 export default input

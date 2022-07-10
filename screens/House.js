@@ -26,7 +26,6 @@ export default function Houses({navigation}) {
 
     function validateImages(image) {
         try {
-            //console.log('homes',Config.AWS_URL + image.split(',')[value])
             if (image.includes('jpg') || image.includes('png')) {
                 return Config.AWS_URL + image
             } else {

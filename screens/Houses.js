@@ -18,13 +18,14 @@ import Notification from '../components/notification/notification';
 export default function Houses({navigation}) {
     
     const [loading, setLoading] = useState(false)
-    const [orderCity, setOrderCity] = useState('Ibotirama')
-    const [orderDistrict, setOrderDistrict] = useState('Todos Bairros')
+    const [citys, setCitys] = useState(false)
+    const [orderCity, setOrderCity] = useState(citys)
+    const [orderDistrict, setOrderDistrict] = useState('Todos os Bairros')
     const [orderAll, setOrderAll] = useState('recent')
     const [type, setType] = useState('city')
     const [nameIcon, setNameIcon] = useState('filter-plus-outline')
     const [question, setQuesetion] = useState('Qual cidade?')
-    const [dataSelect, setDataSelect] = useState(['Ibotirama', 'Javi'])
+    const [dataSelect, setDataSelect] = useState(false)
     const [oldHouse, setOldHouses] = useState([])
     const [skip, setSkip] = useState(0)
     const [isLoading, setIsLoading] = useState(true)
@@ -43,7 +44,7 @@ export default function Houses({navigation}) {
         nSkip = nSkip - 30
         if (nSkip < 0)
             nSkip = 0
-        if (orderDistrict === 'Todos Bairros') {
+        if (orderDistrict === 'Todos os Bairros') {
             allHouses(nSkip)
         }
         else {
@@ -64,7 +65,7 @@ export default function Houses({navigation}) {
         if (type == 'city') {
             setOrderCity(value)
             setType('district')
-            setDataSelect(['Todos Bairros', 'Alto do Cruzeiro', 'Alto do Fundão', 'Calumbi', 'Centro', 'Ibotiraminha', 'Morada Real', 'Bairro São Francisco', 'Barão 242', 'Bairro São João', 'Santa Rosa', 'Veredinha', 'Xixa'])
+            districyBycity(value)
             setQuesetion('Qual bairro?')
         } else if (type == 'district') {
             setOrderDistrict(value)
@@ -90,7 +91,7 @@ export default function Houses({navigation}) {
     function getFilter() {
         setHouses([])
         getHouseFiltered(0)
-        setDataSelect(['Ibotirama', 'Javi'])
+        getCitys()
         setType('city')
         setQuesetion('Qual cidade?')
     }  
@@ -104,7 +105,7 @@ export default function Houses({navigation}) {
         
     function closeDialogFilter() {
         setVisableDialogFilter(false)
-        setDataSelect(['Ibotirama', 'Javi'])
+        getCitys()
         setType('city')
         setQuesetion('Qual cidade?')
         
@@ -117,6 +118,32 @@ export default function Houses({navigation}) {
     function setSpecificHouseFull(values){
         navigation.navigate("House",{specificHouse:values})
     }
+     
+    
+    function getCitys() {  
+        setIsLoading(true)
+        housesService.city()
+            .then((response) => {
+                setDataSelect(response.data.message)
+            })
+            .catch((error) => {
+                showNotification('error', 'Ops!', error.toString())
+            })
+            setIsLoading(false)      
+    }
+
+
+    function districyBycity(cits) {
+        setIsLoading(true)
+        housesService.districtsByCity(cits,'2')
+            .then((response) => {
+                setDataSelect(response.data.message)
+            })
+            .catch((error) => {
+                showNotification('error', 'Ops!', error.toString())
+            })
+            setIsLoading(false)
+    }
 
     function moreHouses() {
         if (housesService.length > 3){
@@ -126,8 +153,7 @@ export default function Houses({navigation}) {
             setLoading(true);
             let nSkip = skip
             nSkip = nSkip + 30
-            if (orderDistrict === 'Todos Bairros') {
-                console.log('orderDistrict', orderDistrict)
+            if (orderDistrict === 'Todos os Bairros') {
                 allHouses(nSkip)
             }
             else {
@@ -144,7 +170,6 @@ export default function Houses({navigation}) {
     function validateImage(image, value) {
 
         try {
-            //console.log('homes',Config.AWS_URL + image.split(',')[value])
             if (image.split(',')[value].includes('jpg') || image.split(',')[value].includes('png')) {
                 return Config.AWS_URL + image.split(',')[value]
             } else {
@@ -172,23 +197,22 @@ export default function Houses({navigation}) {
     function upHouse(objA, objB) {
 
         if (objA !== objB) { 
-        setHouses(objA)
+            setHouses(objA)
+            setOldHouses(objA)
         }
     }
 
     function getHouseFiltered(skips) {
         setVisableDialogFilter(false)
         setIsLoading(true)
-        if (orderDistrict != 'Todos Bairros') {
+        if (orderDistrict != 'Todos os Bairros') {
             
             setSkip(skips)
             housesService.getHouseFiltered(skips, orderDistrict, orderCity, orderAll)
                 .then((response) => {
-                    console.log(response.data.length)
                     setOldLengh(response.data.length)
                     if (response.data.length !== 0) {
-                            //let newList = filtered([...houses, ...response.data])
-                        upHouse(response.data, oldHouse)
+                           upHouse(response.data, oldHouse)
                     }else{
                         showNotification('info', 'Então...', 'Nada foi encontrado com esse filtro.')
                     }
@@ -212,8 +236,7 @@ export default function Houses({navigation}) {
             .then((response) => {
                 setOldLengh(response.data.length)
                 if (response.data.length !== 0) {
-                        //let newList = filtered([...houses, ...response.data])
-                    upHouse(response.data, oldHouse)
+                         upHouse(response.data, oldHouse)
                 }
                 else{
                     showNotification('info', 'Então...', 'Nada foi encontrado com esse filtro.')
@@ -241,18 +264,21 @@ export default function Houses({navigation}) {
         allHouses(0)
     }, [])
 
+    useEffect(() => {
+        getCitys()
+    }, [])
     return (
         <NativeBaseProvider >
             <SafeAreaView style={styles.preContainer} >
             <StatusBar barStyle="light-content" backgroundColor={stylesColor.primaryColor} />
-                {!isLoading &&
+                {!isLoading && dataSelect &&
                     <View style={styles.viewFilter}>
                         <PButton onPress={() => setVisableDialogFilter(true)} title="Filtro" type='material-community' name='filter-menu-outline' size={hp('3%')} color={stylesColor.tertiaryColor} colorTitle={stylesColor.tertiaryColor} backgroundColor={stylesColor.primaryColor} fontFamily='MPLUS1p-Medium' />
                     </View>}
                 {isLoading &&
                     <><LoadHouse /></>
                 }
-                {houses && !isLoading &&
+                {houses && !isLoading && 
                     <FlatList refreshControl={
                         <RefreshControl
                             refreshing={refreshing}
@@ -270,7 +296,7 @@ export default function Houses({navigation}) {
                 {visableNotification && !isLoading &&
                     <Notification status={status} visable={visableNotification} title={title} message={message} close={closeNotificaion} />
                 }
-                {visableDialogFilter && !isLoading && 
+                {visableDialogFilter && !isLoading && dataSelect &&  
                     <DialogFilter question={question} dataSelect={dataSelect} nameIcon={nameIcon} type={type} orderCity={orderCity} visable={visableDialogFilter} onPress={() => getFilter()} setFilter={value => setFilter(value)} close={closeDialogFilter}  />
                 }
             </SafeAreaView>
@@ -280,9 +306,3 @@ export default function Houses({navigation}) {
 }
 
 
-
-
-//const memoizedValue = useMemo(() => renderItem, [houses]);
-    //function filtered(value) {
-    //    return value.filter(function (a) { return !this[JSON.stringify(a)] && (this[JSON.stringify(a)] = true); }, Object.create(null))
-    //}

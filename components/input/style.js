@@ -22,10 +22,5 @@ const input = StyleSheet.create({
         borderRadius:6,
         
     },
-    //textInput:{
-    //    fontSize:15,
-    //    color:"red",
-    //    
-    //}
 })
 export default input

@@ -54,8 +54,8 @@ export default function Login({ navigation }) {
       tenantService.login(data)
         .then((response) => {
           if (response.data.status) {
-            if (true) {//(response.data.device === Device.modelName + '/' + Device.osName + '/' + Device.deviceName) {
-              setLoading(false)
+            if (true) {
+               setLoading(false)
               navigation.reset({
                 index: 0,
                 routes: [{ name: "Home" }]
@@ -88,9 +88,8 @@ export default function Login({ navigation }) {
     }
     tenantService.autoLogin(data)
       .then((response) => {
-        //// console.log(response.data)
-        if (!response.data.status) {//(response.data.device === Device.modelName + '/' + Device.osName + '/' + Device.deviceName) {
-          setLoading(false)
+ if (!response.data.status) {
+    setLoading(false)
         }
         else {
           setLoading(false)

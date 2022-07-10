@@ -18,10 +18,10 @@ class HousesService{
         }).then((response)=> {
             return Promise.resolve(response)
         }).catch((error)=>{
-            ////// console.log('aaaaaaaaasasa',error)
             return Promise.reject(error)
         })
     }
+
     async updateHouse(data,id){
         let token = await AsyncStorage.getItem("TOKEN")
         return axios({
@@ -36,7 +36,6 @@ class HousesService{
         }).then((response)=> {
             return Promise.resolve(response)
         }).catch((error)=>{
-            ////// console.log('aaaaaaaaasasa',error)
             return Promise.reject(error)
         })
     }
@@ -54,12 +53,35 @@ class HousesService{
         }).then((response)=> {
             return Promise.resolve(response)
         }).catch((error)=>{
-            ////// console.log('aaaaaaaaasasa',error)
             return Promise.reject(error)
         })
     }
+
+    async city(){
+        return await axios({
+            url:Config.API_URL_TO+"city",
+            timeout: Config.TIMEOUT_REQUEST,
+            method:"Get",
+        }).then((response)=> {
+            return Promise.resolve(response)
+        }).catch((error)=>{
+            return Promise.reject(error)
+        })
+    }
+
+    async districtsByCity(city,type){
+        return await axios({
+            url:Config.API_URL_TO+"districtsByCity/"+city.toString()+"/"+type.toString(),
+            timeout: Config.TIMEOUT_REQUEST,
+            method:"Get",
+        }).then((response)=> {
+            return Promise.resolve(response)
+        }).catch((error)=>{
+            return Promise.reject(error)
+        })
+    }
+
     async getHouseFiltered(skip, district,city,orderAll){
-        console.log(Config.API_URL+"houses/orderByCityAndDistrictAndOrderValue/"+skip.toString()+"/30/"+district+"/"+city+"/"+orderAll)
         let token = await AsyncStorage.getItem("TOKEN")
         return axios({
             url:Config.API_URL+"houses/orderByCityAndDistrictAndOrderValue/"+skip.toString()+"/30/"+district+"/"+city+"/"+orderAll,
@@ -72,7 +94,6 @@ class HousesService{
         }).then((response)=> {
             return Promise.resolve(response)
         }).catch((error)=>{
-            ////// console.log('aaaaaaaaasasa',error)
             return Promise.reject(error)
         })
     }
@@ -92,13 +113,11 @@ class HousesService{
             }
             return Promise.resolve(response)
         }).catch((error)=>{
-            ////// console.log('aaa',error)
             return Promise.reject(error)
         })
     }
 
     async deleteHouse(id){
-        //// console.log('aa',id)
         let token = await AsyncStorage.getItem("TOKEN")
         return axios({
             url:Config.API_URL+"houses/delete/"+id,
@@ -114,13 +133,12 @@ class HousesService{
             }
             return Promise.resolve(response)
         }).catch((error)=>{
-            ////////// console.log('aaa',error)
             return Promise.reject(error)
         })
     }
 
     async deleteImageHouse(id){
-        //// console.log('aa',id)
+        
         return axios({
             url:Config.API_URL+"houses/deleteImageHouse/"+id,
             timeout: Config.TIMEOUT_REQUEST,
@@ -143,13 +161,12 @@ class HousesService{
                 Authorization: 'Bearer ' + token
             }
         }).then((response)=> {
-            ////// console.log('xssxx',response.data)
             return Promise.resolve(response)
         }).catch((error)=>{
-            //// console.log('aaaaaaaaasasa',error)
             return Promise.reject(error)
         })
     }
+
     async  UploadImage(data) {
         return axios({
             url: 'https://api.imgur.com/3/image',
@@ -160,9 +177,7 @@ class HousesService{
               },
               data : data
         }).then((response)=> {
-          console.log(JSON.stringify(response.data));
         }).catch((error)=>{
-          console.log('164',error);
         })
         
     }

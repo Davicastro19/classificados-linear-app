@@ -12,6 +12,7 @@ import PButton from '../button/button';
 
 
 const DialogFilter = (props) => {
+
     return (
                     <Pressable onPress={() => props.close()} style={{
                         borderTopLeftRadius: 20,

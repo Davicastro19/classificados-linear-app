@@ -55,7 +55,7 @@ export default function EditHouse({ navigation }) {
     const [visableConfirmationDeletion, setVisableConfirmationDeletion] = useState(false)
     const [visableConfirmationUpdate, setVisableConfirmationUpdate] = useState(false)
     const [oldImages, setOldImages] = useState('')
-
+    const [selectDistrict, setSelectDistrict] = useState(false);
 
     function validateButton(image, value) {
         try {
@@ -73,8 +73,6 @@ export default function EditHouse({ navigation }) {
         }
     }
 
-    
-    //
     function isValidate() {
         if (bed == null || bed == '') {
             return false
@@ -121,19 +119,6 @@ export default function EditHouse({ navigation }) {
             return true
         }
     }
-
-
-
-
-    async function removeImage(id) {
-        try {
-            housesService.deleteImageHouse(id)
-            return true
-        } catch (e) {
-            return false
-        }
-    }
-
 
     async function isValidateImage(value) {
         if (oldImages !== images) {
@@ -213,15 +198,12 @@ export default function EditHouse({ navigation }) {
             
             
                      } else {
-                         //// console.log('whatt', response.data)
                          showNotification('info', 'Ops!', 'Não foi possivel, tente novamente.')
                      }
             
                  })
                  .catch((error) => {
                      showNotification('error', 'Ops!', error.toString())
-            
-                     //// console.log('ertert', error)
                  })
         } else {
             showNotification('info', 'Ops!', 'Campos invalidos')
@@ -237,29 +219,14 @@ export default function EditHouse({ navigation }) {
             const data = await ImagePicker.launchImageLibraryAsync({
                 mediaTypes: ImagePicker.MediaTypeOptions.Image
             });
-            //const { status } = await Camera.requestCameraPermissionsAsync();
-            //
             takePictureGalery(data)
 
         }
-        //const { status } = await Camera.requestCameraPermissionsAsync();
-
-        //if (hasPermission === null || hasPermission === true) {
-        //    setOpenCamera(true)
-        //  }
-        //  if (hasPermission === false) {
-        //    setOpenCamera(false)
-        //  }
+      
 
     }
 
     function takePictureGalery(data) {
-        console.log('1', capturatePhoto1)
-        console.log('2', capturatePhoto2)
-        console.log('3', capturatePhoto3)
-        console.log('4', capturatePhoto4)
-        console.log('5', capturatePhoto5)
-        console.log('6', capturatePhoto6)
         if (!data.cancelled && data.uri) {
             if (Config.AWS_URL + 'favicon.png' === capturatePhoto1) {
                 setButtonInsert(true)
@@ -331,8 +298,6 @@ export default function EditHouse({ navigation }) {
             else if (Config.AWS_URL + 'favicon.png' === capturatePhoto6) {
                 let upAlt = alt
                 upAlt['6'] = { 'uri': data.uri }
-                console.log('upalt', upAlt)
-                console.log('upalt6', upAlt['6'])
                 setAlt(upAlt)
                 let img6 = images + Array(4)
                     .fill(null)
@@ -347,10 +312,11 @@ export default function EditHouse({ navigation }) {
 
         }
     }
+
     function removePicture() {
         if (titleDelCapturate.includes('1')) {
             let imgAlt = images.split(',')[0]
-            //removeImage(imgAlt)
+            
             imgAlt = images.replace(imgAlt)
             setImages(imgAlt)
             setDeletePhotoEdit(false)
@@ -361,7 +327,7 @@ export default function EditHouse({ navigation }) {
         }
         if (titleDelCapturate.includes('2')) {
             let imgAlt = images.split(',')[1]
-            //removeImage(imgAlt)
+            
             imgAlt = images.replace(imgAlt)
             setImages(imgAlt)
             setCapturatePhoto2(Config.AWS_URL + 'favicon.png')
@@ -370,7 +336,6 @@ export default function EditHouse({ navigation }) {
         }
         if (titleDelCapturate.includes('3')) {
             let imgAlt = images.split(',')[2]
-            //removeImage(imgAlt)
             imgAlt = images.replace(imgAlt)
             setImages(imgAlt)
             setCapturatePhoto3(Config.AWS_URL + 'favicon.png')
@@ -379,7 +344,6 @@ export default function EditHouse({ navigation }) {
         }
         if (titleDelCapturate.includes('4')) {
             let imgAlt = images.split(',')[3]
-            //removeImage(imgAlt)
             imgAlt = images.replace(imgAlt)
             setImages(imgAlt)
             setCapturatePhoto4(Config.AWS_URL + 'favicon.png')
@@ -388,7 +352,6 @@ export default function EditHouse({ navigation }) {
         }
         if (titleDelCapturate.includes('5')) {
             let imgAlt = images.split(',')[4]
-            //removeImage(imgAlt)
             imgAlt = images.replace(imgAlt)
             setImages(imgAlt)
             setCapturatePhoto5(Config.AWS_URL + 'favicon.png')
@@ -398,7 +361,6 @@ export default function EditHouse({ navigation }) {
         }
         if (titleDelCapturate.includes('6')) {
             let imgAlt = images.split(',')[5]
-            //removeImage(imgAlt)
             imgAlt = images.replace(imgAlt)
             setImages(imgAlt)
             setCapturatePhoto6(Config.AWS_URL + 'favicon.png')
@@ -408,38 +370,10 @@ export default function EditHouse({ navigation }) {
 
 
     }
-    //
-    //    function validateImage(image, value) {
-    //        try {
-    //            console.log('myhouse',Config.AWS_URL + image.split(',')[value])
-    //            if (image.split(',')[value].includes('jpg') || image.split(',')[value].includes('png')) {
-    //                return Config.AWS_URL + image.split(',')[value]
-    //            } else {
-    //                return false
-    //            }
-    //        } catch (e) {
-    //            return false
-    //        }
-    //    }
-    //
-
-    function validateImages(image) {
-        try {
-            //console.log('homes',Config.AWS_URL + image.split(',')[value])
-            if (image.includes('jpg') || image.includes('png')) {
-                return Config.AWS_URL + image
-            } else {
-                return Config.AWS_URL + 'favicon.png'
-            }
-        } catch (e) {
-            return Config.AWS_URL + 'favicon.png'
-        }
-    }
 
     function validateImage(image, value) {
         try {
-            //console.log('homes',Config.AWS_URL + image.split(',')[value])
-            if (image.split(',')[value].includes('jpg') || image.split(',')[value].includes('png')) {
+  if (image.split(',')[value].includes('jpg') || image.split(',')[value].includes('png')) {
                 return Config.AWS_URL + image.split(',')[value]
             } else {
                 return Config.AWS_URL + 'favicon.png'
@@ -486,10 +420,7 @@ export default function EditHouse({ navigation }) {
         setDistrict(data.houses_district)
         setDescription(data.houses_description)
         setId(data.houses_id)
-        //      //  setShowFilter(false)
-        //setEditShow(true)
-        //setIsLoading(false)
-        let i = 1
+         let i = 1
         for (var num in data.houses_images.split(',')) {
             let upAlt = alt
             upAlt[i.toString()] = { 'uri': Config.AWS_URL + data.houses_images.split(',')[num] }
@@ -506,13 +437,26 @@ export default function EditHouse({ navigation }) {
         setIsLoading(false)
         navigation.navigate("MyHouses")
     }
+
+    function setValueCity(value) {
+        districyBycity(value)
+        setCity(value)  
+    }
+
+    function districyBycity(cits) {
+        setIsLoading(true)
+        housesService.districtsByCity(cits,'1')
+            .then((response) => {
+                setSelectDistrict(response.data.message)
+            })
+            .catch((error) => {
+                showNotification('error', 'Ops!', error.toString())
+            })
+            setIsLoading(false)
+    }
     useEffect(() => {
         loadData(route.params.specificHouse)
     }, [])
-    let selectDistrict = ''
-    if (city === 'Ibotirama') {
-        selectDistrict = ['Alto do Cruzeiro', 'Alto do Fundão', 'Calumbi', 'Centro', 'Ibotiraminha', 'Morada Real', 'Bairro São Francisco', 'Barão 242', 'Bairro São João', 'Santa Rosa', 'Veredinha', 'Xixa']
-    }
     return (
         <NativeBaseProvider >
             
@@ -565,7 +509,7 @@ export default function EditHouse({ navigation }) {
 
                                         <View >
                                             <Text style={styleEditHouse.description}>Cidade</Text>
-                                            <Select value={city} width={wp('48%')} setSelect={value => setCity(value)} dataSelect={['Ibotirama', 'Javi']} />
+                                            <Select value={city} width={wp('48%')} setSelect={value => setValueCity(value)} dataSelect={route.params.dataSelect} />
                                         </View>
                                         <View >
                                             <Text style={styleEditHouse.description}>Bairro</Text>

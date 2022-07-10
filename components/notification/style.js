@@ -23,10 +23,5 @@ const notification = StyleSheet.create({
        
         
     },
-    //textInput:{
-    //    fontSize:15,
-    //    color:"red",
-    //    
-    //}
 })
 export default notification

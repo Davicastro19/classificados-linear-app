@@ -1,7 +1,6 @@
 import React, { memo } from 'react'
 import { Spinner, HStack } from "native-base";
 import mLoad from './style'
-//import * as Device from 'expo-device';
 
 const MLoad = (props) => {
     return (

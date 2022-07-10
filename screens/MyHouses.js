@@ -13,6 +13,8 @@ import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-nat
 
 
 export default function MyHouses({ navigation }) {
+    const [dataSelect, setDataSelect] = useState(false)
+    const [citysOptions, setCitysOptions] = useState(false)
     const [refreshing, setRefreshing] = useState(false);
     const [myHouses, setMyHouses] = useState(false)
     const [visableNotification, setVisableNotification] = useState(false);
@@ -41,11 +43,11 @@ export default function MyHouses({ navigation }) {
     }
 
     function insertHouseFull() {
-        navigation.navigate("InsertHouse")
+        navigation.navigate("InsertHouse", {dataSelect : dataSelect})
     }
 
     function EditHouseFull(values) {
-        navigation.navigate("EditHouse", { specificHouse: values })
+        navigation.navigate("EditHouse", { specificHouse: values, dataSelect: citysOptions })
     }
 
     function selectHouseById(value) {
@@ -56,7 +58,6 @@ export default function MyHouses({ navigation }) {
             })
             .catch((error) => {
                 setSpecificHouse(false)
-                //// console.log('aaa', error)
                 showNotification('error', 'Ops!', error.toString())
             })
         setIsLoading(false)
@@ -64,7 +65,6 @@ export default function MyHouses({ navigation }) {
 
     function validateImage(image, value) {
         try {
-            //console.log('homes',Config.AWS_URL + image.split(',')[value])
             if (image.split(',')[value].includes('jpg') || image.split(',')[value].includes('png')) {
                 return Config.AWS_URL + image.split(',')[value]
             } else {
@@ -74,7 +74,21 @@ export default function MyHouses({ navigation }) {
             return Config.AWS_URL + 'favicon.png'
         }
     }
+    function getCitys() {  
+        setIsLoading(true)
+        housesService.city()
+            .then((response) => {
+                setDataSelect(response.data.message)
+                setCitysOptions(response.data.message)
+            })
+            .catch((error) => {
+                showNotification('error', 'Ops!', error.toString())
+            })
+            setIsLoading(false)      
+    }
 
+
+    
     function showNotification(status, title, message) {
         setVisableNotification(true)
         setTitle(title)
@@ -107,11 +121,14 @@ export default function MyHouses({ navigation }) {
     useEffect(() => {
         allMyHouses()
     }, [])
+    useEffect(() => {
+        getCitys()
+    }, [])
     return (
         <NativeBaseProvider >
             <SafeAreaView style={styles.preContainer} >
             <StatusBar  barStyle="light-content" backgroundColor={stylesColor.primaryColor}  />
-            {!isLoading &&
+            {!isLoading && dataSelect &&
                 <View style={styles.viewFilter}>
                     <PButton onPress={() => insertHouseFull()} title="Anunciar" type='material-community' name='plus' size={hp('3%')} color={stylesColor.tertiaryColor} colorTitle={stylesColor.tertiaryColor} backgroundColor={stylesColor.primaryColor} fontFamily='Raleway-SemiBold' />
                 </View>

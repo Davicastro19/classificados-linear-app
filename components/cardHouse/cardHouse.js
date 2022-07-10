@@ -95,7 +95,7 @@ const CardHouse = (props) => {
                 </HStack>
             </Center>
         </NativeBaseProvider>
-    )//
+    )
 }
 
 export default memo(CardHouse)

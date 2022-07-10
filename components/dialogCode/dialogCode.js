@@ -26,7 +26,7 @@ const DialogCode = (props) => {
                 </Actionsheet>
             </Center>
         </NativeBaseProvider>
-    )//
+    )
 }
 
 export default memo(DialogCode)

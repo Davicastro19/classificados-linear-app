@@ -74,7 +74,7 @@ const CardMyHouses = (props) => {
                 </HStack>
                 
             </Center>
-    )//
+    )
 }
 
 export default memo(CardMyHouses)

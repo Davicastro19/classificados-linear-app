@@ -11,7 +11,7 @@ import MLoad from '../components/loading/miniLoad';
 import DialogCode from '../components/dialogCode/dialogCode';
 import Notification from '../components/notification/notification';
 import { NativeBaseProvider } from 'native-base';
-
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 export default function SignUp() {
   const [code, setCode] = useState(null)
   const [newCode, setNewCode] = useState(null)
@@ -247,6 +247,7 @@ export default function SignUp() {
 
   return (
     <NativeBaseProvider>
+      <SafeAreaProvider>
     <ImageBackground source={require("../assets/backSign.png")} resizeMode="cover" style={styles.image}>
       <StatusBar translucent={true} barStyle="light-content" backgroundColor={stylesColor.secondaryColor} />
       <SafeAreaView style={styles.preContainer} >
@@ -285,6 +286,7 @@ export default function SignUp() {
         </KeyboardAvoidingView>
       </SafeAreaView>
     </ImageBackground>
+    </SafeAreaProvider>
     </NativeBaseProvider>
   );
 }

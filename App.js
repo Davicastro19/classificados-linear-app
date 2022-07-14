@@ -15,7 +15,6 @@ import interceptor from './services/interceptor'
 import stylesColor from './style/colorApp'
 
 
-
 const Stack = createStackNavigator();
 
 const MyTheme = {

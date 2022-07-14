@@ -1,7 +1,6 @@
 import * as React from 'react';
-import notification from './style'
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
-import {View, Actionsheet , Alert, Box, IconButton, CloseIcon, HStack, VStack, Text, Center, NativeBaseProvider, Collapse } from "native-base";
+import {View, Actionsheet , Alert, HStack, VStack, Text, Center } from "native-base";
 
 const Notification = (props) => {
   let color = ''

@@ -196,7 +196,7 @@ export default function Login({ navigation }) {
                   <PInput onChangeText={value => { setPassword(value), setErroMessagePass(null); }} placeholder="Senha" secureTextEntry={true} size={hp('2.2%')} type='material-community' name='form-textbox-password' />
                   <View style={styles.rowButtons}>
                     <PButton onPress={Login} title="Entrar" type='material-community' name='location-enter' size={hp('2.1%')} color={stylesColor.tertiaryColor} colorTitle={stylesColor.tertiaryColor} backgroundColor={stylesColor.primaryColor} fontFamily='Raleway-SemiBold' />
-                    <PButton onPress={SignUp} title="Catastre-se" type='ant-design' name='form' size={hp('1.9%')} color={stylesColor.tertiaryColor} colorTitle={stylesColor.tertiaryColor} backgroundColor={stylesColor.secondaryColor} fontFamily='Raleway-SemiBold' />
+                    <PButton onPress={SignUp} title="Cadastre-se" type='ant-design' name='form' size={hp('1.9%')} color={stylesColor.tertiaryColor} colorTitle={stylesColor.tertiaryColor} backgroundColor={stylesColor.secondaryColor} fontFamily='Raleway-SemiBold' />
                   </View>
                   <PButton onPress={() => ForgotPassword()} title="Esqueci minha senha" type='material-community' name='lock-question' size={hp('2.2%')} color={stylesColor.secondaryColor} colorTitle={stylesColor.secondaryColor} backgroundColor={stylesColor.tertiaryColor} fontFamily='Raleway-SemiBold' />
                 </View></>

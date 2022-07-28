@@ -1,6 +1,6 @@
 import { Text, View, Image, Pressable, Keyboard, Vibration, KeyboardAvoidingView, SafeAreaView, StatusBar, ImageBackground } from 'react-native';
 import React, { useState } from 'react'
-import tenantService from '../services/TenantSevice';
+import userService from '../services/UserSevice';
 import stylesColor from '../style/colorApp';
 import * as Device from 'expo-device';
 import { heightPercentageToDP as hp } from 'react-native-responsive-screen';
@@ -171,7 +171,7 @@ export default function SignUp() {
           date: day + '/' + month + '/' + year
 
         }
-        tenantService.register(data)
+        userService.register(data)
           .then((response) => {
             setCode(null)
             setNewCode(null)
@@ -222,7 +222,7 @@ export default function SignUp() {
         email: email,
         type: "signUp"
       }
-      tenantService.sendCode(data)
+      userService.sendCode(data)
         .then((response) => {
           if (response.data.status) {
             setNewCode(response.data.message)

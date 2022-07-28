@@ -7,7 +7,7 @@ import { Skeleton, VStack, HStack, Center, NativeBaseProvider } from "native-bas
 import stylesColor from '../../style/colorApp';
 import styles from '../input/style'
 
-const OneLoadHouse = () => {
+const OneLoadClassified = () => {
   return (
       <Center flex={1} px="1" my={1}>
         <HStack w={wp('95%')} maxW="500" borderWidth={wp("0.1%")} space={8} rounded="md"
@@ -34,4 +34,4 @@ const OneLoadHouse = () => {
   )
 }
 
-export default OneLoadHouse
+export default OneLoadClassified

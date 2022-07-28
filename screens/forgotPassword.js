@@ -1,6 +1,6 @@
 import { Text, View, Image, Pressable, Keyboard, Vibration, SafeAreaView, StatusBar, ImageBackground } from 'react-native';
 import React, { useState } from 'react'
-import tenantService from '../services/TenantSevice';
+import userService from '../services/UserSevice';
 import styles from '../style/ForgotPassword'
 import stylesColor from '../style/colorApp';
 import { heightPercentageToDP as hp } from 'react-native-responsive-screen';
@@ -47,7 +47,7 @@ export default function ForgotPassword() {
         email: email,
         type: "forgot"
       }
-      tenantService.updatePassword(data)
+      userService.updatePassword(data)
         .then((response) => {
           if (response.data.status) {
             setLoading(false)

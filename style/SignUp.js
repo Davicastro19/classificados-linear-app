@@ -25,8 +25,8 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     logo:{
-        width: wp('25%'),
-        height: hp('15%'),
+        width: wp('33%'),
+        height: hp('18%'),
     },
     form:{
         width:wp('70%'),

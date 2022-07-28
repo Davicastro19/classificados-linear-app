@@ -4,7 +4,7 @@ import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-nat
 
 
 const styles = StyleSheet.create({
-    viewFilter:{ marginLeft: hp('0%'), width: wp('93%'), height: '6%' },
+    viewFilter:{ marginLeft: hp('0%'), width: wp('93%'), height: '6%'},
     preContainer:{
         flex:1,
         backgroundColor:'#f3f3f3',

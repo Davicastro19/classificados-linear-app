@@ -13,7 +13,7 @@ const Notification = (props) => {
   }
   return (
             <Center>
-      <Actionsheet   isOpen={props.visable}   onTouchMove={() => props.close()}  disableOverlay>
+      <Actionsheet   isOpen={props.visibles}   onTouchMove={() => props.close()}  disableOverlay>
       <Actionsheet.Content background={color}>
       <Actionsheet.Item    background={color}>
       <View style={{height:hp('10%'), width:wp('90%')}}>

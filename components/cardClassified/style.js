@@ -2,7 +2,7 @@ import {StyleSheet} from 'react-native'
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import stylesColor  from '../../style/colorApp';
 
-const cardHouse = StyleSheet.create({
+const cardClassified = StyleSheet.create({
     containerItem:{ flexDirection: "row", marginLeft:hp('1.3%'), paddingTop: wp('2%')},
     fontItem:{marginTop: hp('0%'),color:'black', marginLeft:hp('0.5%'), fontFamily: "Raleway-SemiBold" },
     fontNumber:{color:'black', marginLeft:hp('0.5%'), fontFamily: "MPLUS1p-Regular" },
@@ -22,4 +22,4 @@ const cardHouse = StyleSheet.create({
         alignItems: 'center',
       },
 })
-export default cardHouse
+export default cardClassified

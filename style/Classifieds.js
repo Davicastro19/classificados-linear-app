@@ -1,7 +1,7 @@
 
 import {StyleSheet} from 'react-native'
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
-import stylesColor from '../style/colorApp';
+import stylesColor from './colorApp';
 
 const styles = StyleSheet.create({
     viewFilter:{ marginLeft: hp('0%'), width: wp('93%'), height: '6%' },

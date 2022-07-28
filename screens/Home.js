@@ -1,8 +1,8 @@
 import React, {  } from 'react'
 import Profile from '../screens/Profile'
-import Houses from '../screens/Houses'
+import Classifieds from './Classifieds'
 import stylesColor from '../style/colorApp';
-import MyHouses from '../screens/MyHouses'
+import MyClassifieds from './MyClassifieds'
 import { FontAwesome5, MaterialCommunityIcons } from '@expo/vector-icons';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { heightPercentageToDP as hp } from 'react-native-responsive-screen';
@@ -25,8 +25,8 @@ export default function Home() {
 
     >
       <Tab.Screen
-        name="Houses"
-        component={Houses}
+        name="Classifieds"
+        component={Classifieds}
         options={{
           headerShown: false,
           tabBarLabel: 'Casa/Aptoº',
@@ -39,8 +39,8 @@ export default function Home() {
 
 
       <Tab.Screen
-        name="MyHouses"
-        component={MyHouses}
+        name="MyClassifieds"
+        component={MyClassifieds}
 
         options={{
 

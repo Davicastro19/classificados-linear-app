@@ -3,19 +3,19 @@ import { View,  StatusBar, SafeAreaView, RefreshControl } from 'react-native';
 import React, { useState, useEffect } from 'react'
 import Config from '../util/Config'
 import stylesColor from '../style/colorApp';
-import styles from '../style/Houses'
+import styles from '../style/Classifieds'
 import { NativeBaseProvider,FlatList} from "native-base";
 import { heightPercentageToDP as hp } from 'react-native-responsive-screen';
-import housesService from '../services/HousesService';
-import CardHouses from '../components/cardHouses/cardHouses'
-import LoadHouse from '../components/loading/loadHouses'
-import OneLoadHouse from '../components/loading/oneLoadHouse'
+import classifiedsService from '../services/ClassifiedsService';
+import CardClassifieds from '../components/cardClassifieds/cardClassifieds'
+import LoadClassified from '../components/loading/loadClassifieds'
+import OneLoadClassified from '../components/loading/oneLoadClassified'
 import PButton from '../components/button/button';
 import DialogFilter from '../components/dialogFilter/dialogFilter';
 import Notification from '../components/notification/notification';
 
 
-export default function Houses({navigation}) {
+export default function Classifieds({navigation}) {
     
     const [loading, setLoading] = useState(false)
     const [citys, setCitys] = useState(false)
@@ -26,10 +26,10 @@ export default function Houses({navigation}) {
     const [nameIcon, setNameIcon] = useState('filter-plus-outline')
     const [question, setQuesetion] = useState('Qual cidade?')
     const [dataSelect, setDataSelect] = useState(false)
-    const [oldHouse, setOldHouses] = useState([])
+    const [oldClassified, setOldClassifieds] = useState([])
     const [skip, setSkip] = useState(0)
     const [isLoading, setIsLoading] = useState(true)
-    const [houses, setHouses] = useState([])
+    const [classifieds, setClassifieds] = useState([])
     const [title, setTitle] = useState(null)
     const [message, setMessage] = useState(null)
     const [status, setStatus] = useState(null)
@@ -39,16 +39,16 @@ export default function Houses({navigation}) {
     const [visableNotification, setVisableNotification] = useState(false);
     
     const onRefresh = React.useCallback(() => {
-        setHouses([])
+        setClassifieds([])
         let nSkip = skip
         nSkip = nSkip - 30
         if (nSkip < 0)
             nSkip = 0
         if (orderDistrict === 'Todos os Bairros') {
-            allHouses(nSkip)
+            allClassifieds(nSkip)
         }
         else {
-            getHouseFiltered(nSkip)
+            getClassifiedFiltered(nSkip)
         }
         setSkip(nSkip)
         setRefreshing(false)
@@ -56,9 +56,9 @@ export default function Houses({navigation}) {
 
     const renderItem = React.useCallback(({ item }) => {
         return (
-            <CardHouses item={item} selectHouseById={() => selectHouseById(item.id)} validateImage={() => validateImage(item.images, '1')}  title="Ver mais"  name='information-variant'/>
+            <CardClassifieds item={item} selectClassifiedById={() => selectClassifiedById(item.id)} validateImage={() => validateImage(item.images, '1')}  title="Ver mais"  name='information-variant'/>
         )
-    }, [houses]);
+    }, [classifieds]);
 
 
     function setFilter(value) {
@@ -89,8 +89,8 @@ export default function Houses({navigation}) {
     }
 
     function getFilter() {
-        setHouses([])
-        getHouseFiltered(0)
+        setClassifieds([])
+        getClassifiedFiltered(0)
         getCitys()
         setType('city')
         setQuesetion('Qual cidade?')
@@ -115,14 +115,14 @@ export default function Houses({navigation}) {
         setVisableNotification(false)
     }
 
-    function setSpecificHouseFull(values){
-        navigation.navigate("House",{specificHouse:values})
+    function setSpecificClassifiedFull(values){
+        navigation.navigate("Classified",{specificClassified:values})
     }
      
     
     function getCitys() {  
         setIsLoading(true)
-        housesService.city()
+        classifiedsService.city()
             .then((response) => {
                 setDataSelect(response.data.message)
             })
@@ -135,7 +135,7 @@ export default function Houses({navigation}) {
 
     function districyBycity(cits) {
         setIsLoading(true)
-        housesService.districtsByCity(cits,'2')
+        classifiedsService.districtsByCity(cits,'2')
             .then((response) => {
                 setDataSelect(response.data.message)
             })
@@ -145,19 +145,19 @@ export default function Houses({navigation}) {
             setIsLoading(false)
     }
 
-    function moreHouses() {
-        if (housesService.length > 3){
-        setHouses([])
+    function moreClassifieds() {
+        if (classifiedsService.length > 3){
+        setClassifieds([])
         if (oldLengh !== 0) {
             if (loading) return;
             setLoading(true);
             let nSkip = skip
             nSkip = nSkip + 30
             if (orderDistrict === 'Todos os Bairros') {
-                allHouses(nSkip)
+                allClassifieds(nSkip)
             }
             else {
-                getHouseFiltered(nSkip)
+                getClassifiedFiltered(nSkip)
             }
             
         }
@@ -180,11 +180,11 @@ export default function Houses({navigation}) {
         }
     }
 
-    function selectHouseById(value) {
+    function selectClassifiedById(value) {
         setIsLoading(true)
-        housesService.selectHouseById(value)
+        classifiedsService.selectClassifiedById(value)
             .then((response) => {
-                setSpecificHouseFull(response.data)
+                setSpecificClassifiedFull(response.data)
             })
             .catch((error) => {
                 showNotification('error', 'Ops!', error.toString())
@@ -194,25 +194,25 @@ export default function Houses({navigation}) {
 
     }
 
-    function upHouse(objA, objB) {
+    function upClassified(objA, objB) {
 
         if (objA !== objB) { 
-            setHouses(objA)
-            setOldHouses(objA)
+            setClassifieds(objA)
+            setOldClassifieds(objA)
         }
     }
 
-    function getHouseFiltered(skips) {
+    function getClassifiedFiltered(skips) {
         setVisableDialogFilter(false)
         setIsLoading(true)
         if (orderDistrict != 'Todos os Bairros') {
             
             setSkip(skips)
-            housesService.getHouseFiltered(skips, orderDistrict, orderCity, orderAll)
+            classifiedsService.getClassifiedFiltered(skips, orderDistrict, orderCity, orderAll)
                 .then((response) => {
                     setOldLengh(response.data.length)
                     if (response.data.length !== 0) {
-                           upHouse(response.data, oldHouse)
+                           upClassified(response.data, oldClassified)
                     }else{
                         showNotification('info', 'Então...', 'Nada foi encontrado com esse filtro.')
                     }
@@ -222,21 +222,21 @@ export default function Houses({navigation}) {
                 })
             
         } else {
-            allHouses(skips)
+            allClassifieds(skips)
         }
         
         setIsLoading(false)
         setLoading(false)
     }
 
-    function allHouses(skips) {
+    function allClassifieds(skips) {
         setIsLoading(true)
         setSkip(skips)
-        housesService.allHouses(skips)
+        classifiedsService.allClassifieds(skips)
             .then((response) => {
                 setOldLengh(response.data.length)
                 if (response.data.length !== 0) {
-                         upHouse(response.data, oldHouse)
+                         upClassified(response.data, oldClassified)
                 }
                 else{
                     showNotification('info', 'Então...', 'Nada foi encontrado com esse filtro.')
@@ -261,12 +261,13 @@ export default function Houses({navigation}) {
 
 
     useEffect(() => {
-        allHouses(0)
+        allClassifieds(0)
     }, [])
 
     useEffect(() => {
         getCitys()
     }, [])
+    
     return (
         <NativeBaseProvider >
             <SafeAreaView style={styles.preContainer} >
@@ -276,20 +277,20 @@ export default function Houses({navigation}) {
                         <PButton onPress={() => setVisableDialogFilter(true)} title="Filtro" type='material-community' name='filter-menu-outline' size={hp('3%')} color={stylesColor.tertiaryColor} colorTitle={stylesColor.tertiaryColor} backgroundColor={stylesColor.primaryColor} fontFamily='MPLUS1p-Medium' />
                     </View>}
                 {isLoading &&
-                    <><LoadHouse /></>
+                    <><LoadClassified /></>
                 }
-                {houses && !isLoading && 
+                {classifieds && !isLoading && 
                     <FlatList refreshControl={
                         <RefreshControl
                             refreshing={refreshing}
                             onRefresh={onRefresh} />}
                         showsVerticalScrollIndicator={false}
-                        data={houses}
+                        data={classifieds}
                         renderItem={renderItem}
-                        onEndReached={moreHouses}
+                        onEndReached={moreClassifieds}
                         onEndReachedThreshold={0.03}
                         ListFooterComponent={
-                        <OneLoadHouse color={stylesColor.secondaryColor}
+                        <OneLoadClassified color={stylesColor.secondaryColor}
                             borderColor={stylesColor.primaryColor} />}
                         keyExtractor={value => value.id} />
                 }

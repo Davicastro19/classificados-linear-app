@@ -2,11 +2,11 @@ import axios from "axios"
 import  AsyncStorage  from '@react-native-async-storage/async-storage';
 import  Config  from '../util/Config'
 
-class TenantService{
+class UserService{
 
     async sendCode(data){
         return axios({
-            url:Config.API_URL+ "tenant/sendCode",
+            url:Config.API_URL+ "user/sendCode",
 			timeout: Config.TIMEOUT_REQUEST,
             method:"POST",
             data:data,
@@ -20,7 +20,7 @@ class TenantService{
 
     async updatePassword(data){
         return axios({
-            url:Config.API_URL+ "tenant/updatePassword",
+            url:Config.API_URL+ "user/updatePassword",
 			timeout: Config.TIMEOUT_REQUEST,
             method:"POST",
             data:data,
@@ -34,7 +34,7 @@ class TenantService{
 
     async register(data){
         return axios({
-            url:Config.API_URL+ "tenant/register",
+            url:Config.API_URL+ "user/register",
 			timeout: Config.TIMEOUT_REQUEST,
             method:"POST",
             data:data,
@@ -48,7 +48,7 @@ class TenantService{
 
     async updateAccount(data,id,token){
         return axios({
-            url:Config.API_URL+ "tenant/updateAccount/"+id,
+            url:Config.API_URL+ "user/updateAccount/"+id,
 			timeout: Config.TIMEOUT_REQUEST,
             method:"PUT",
             data:data,
@@ -65,7 +65,7 @@ class TenantService{
 	
 	async login(data){
         return axios({
-            url:Config.API_URL+"tenant/login",
+            url:Config.API_URL+"user/login",
             timeout: Config.TIMEOUT_REQUEST,
             method:"POST",
             data:data,
@@ -83,7 +83,7 @@ class TenantService{
 	
 	async autoLogin(data){
         return axios({
-            url:Config.API_URL+"tenant/autoLogin",
+            url:Config.API_URL+"user/autoLogin",
             timeout: Config.TIMEOUT_REQUEST,
             method:"POST",
             data:data,
@@ -100,7 +100,7 @@ class TenantService{
 
     async getData(data){
         return axios({
-            url:Config.API_URL+"tenant/getData",
+            url:Config.API_URL+"user/getData",
             timeout: Config.TIMEOUT_REQUEST,
             method:"POST",
             data:data,
@@ -116,5 +116,5 @@ class TenantService{
     }
 
 }
-const tenantService = new TenantService()
-export default tenantService
+const userService = new UserService()
+export default userService

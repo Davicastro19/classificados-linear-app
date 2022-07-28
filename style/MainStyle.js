@@ -16,6 +16,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#000',
         alignItems: 'center',
         justifyContent: 'center',
+        
     },
     title:{ color: 'white', fontFamily: "MPLUS1p-Medium" },
     description:{ color: 'white',fontFamily: "MPLUS1p-Light" },

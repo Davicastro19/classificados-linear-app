@@ -3,20 +3,21 @@ import { Text, NativeBaseProvider, FlatList, ScrollView } from "native-base";
 import { View, StatusBar, SafeAreaView, RefreshControl } from 'react-native';
 import Config from '../util/Config'
 import stylesColor from '../style/colorApp';
-import styles from '../style/MyHouses'
-import housesService from '../services/HousesService';
+import styles from '../style/MyClassifieds'
+import ClassifiedsService from '../services/ClassifiedsService';
 import Notification from '../components/notification/notification';
-import CardMyHouses from '../components/cardMyHouses/cardMyHouses'
+import CardMyClassifieds from '../components/cardMyClassifieds/cardMyClassifieds'
 import PButton from '../components/button/button';
 import MLoad from '../components/loading/miniLoad'
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 
 
-export default function MyHouses({ navigation }) {
+export default function MyClassifieds({ navigation }) {
     const [dataSelect, setDataSelect] = useState(false)
     const [citysOptions, setCitysOptions] = useState(false)
     const [refreshing, setRefreshing] = useState(false);
-    const [myHouses, setMyHouses] = useState(false)
+    const [myClassifieds, setMyClassifieds] = useState(false)
+    const [variable, setVariable] = useState(false)
     const [visableNotification, setVisableNotification] = useState(false);
     const [isLoading, setIsLoading] = useState(true)
     const [title, setTitle] = useState(null)
@@ -24,14 +25,14 @@ export default function MyHouses({ navigation }) {
     const [status, setStatus] = useState(null)
     const renderItem = React.useCallback(({ item }) => {
         return (
-            <CardMyHouses item={item} selectHouseById={() => selectHouseById(item.houses_id)} validateImage={() => validateImage(item.houses_images, '1')}
+            <CardMyClassifieds item={item} selectClassifiedById={() => selectClassifiedById(item.classified_id)} validateImage={() => validateImage(item.classified_images, '1')}
                 title="Editar" name='home-edit'
             />
         )
-    }, [myHouses]);
+    }, [myClassifieds]);
 
     const onRefresh = React.useCallback(() => {
-        allMyHouses()
+        allMyClassifieds()
         setRefreshing(false);
     }, []);
 
@@ -42,22 +43,24 @@ export default function MyHouses({ navigation }) {
         setStatus(status)
     }
 
-    function insertHouseFull() {
-        navigation.navigate("InsertHouse", {dataSelect : dataSelect})
+    function insertClassifiedFull(value) {
+        setVariable(false)
+        navigation.navigate("InsertClassified", {dataSelect : dataSelect, type :value})
     }
 
-    function EditHouseFull(values) {
-        navigation.navigate("EditHouse", { specificHouse: values, dataSelect: citysOptions })
+    function EditClassifiedFull(values) {
+        navigation.navigate("EditClassified", { specificClassified: values, dataSelect: citysOptions })
     }
 
-    function selectHouseById(value) {
+    function selectClassifiedById(value) {
         setIsLoading(true)
-        housesService.selectHouseById(value)
+        ClassifiedsService.selectClassifiedById(value)
             .then((response) => {
-                EditHouseFull(response.data)
+                if (Object.keys(response.data).length !== 0) {
+                EditClassifiedFull(response.data)}
             })
             .catch((error) => {
-                setSpecificHouse(false)
+                setSpecificClassified(false)
                 showNotification('error', 'Ops!', error.toString())
             })
         setIsLoading(false)
@@ -76,7 +79,7 @@ export default function MyHouses({ navigation }) {
     }
     function getCitys() {  
         setIsLoading(true)
-        housesService.city()
+        ClassifiedsService.city()
             .then((response) => {
                 setDataSelect(response.data.message)
                 setCitysOptions(response.data.message)
@@ -96,11 +99,11 @@ export default function MyHouses({ navigation }) {
         setStatus(status)
     }
 
-    function allMyHouses() {
-        housesService.allMyHouses()
+    function allMyClassifieds() {
+        ClassifiedsService.allMyClassifieds()
             .then((response) => {
                 if (response.data.length !== 0) {
-                    setMyHouses(response.data)
+                    setMyClassifieds(response.data)
                 } else {
                     showNotification('info', 'Então...', 'paraece que você não anunciou nada ainda.')
                 }
@@ -113,13 +116,13 @@ export default function MyHouses({ navigation }) {
     }
 
     function resetState() {
-        setMyHouses(false)
+        setMyClassifieds(false)
         setVisableNotification(false)
 
     }
 
     useEffect(() => {
-        allMyHouses()
+        allMyClassifieds()
     }, [])
     useEffect(() => {
         getCitys()
@@ -128,27 +131,37 @@ export default function MyHouses({ navigation }) {
         <NativeBaseProvider >
             <SafeAreaView style={styles.preContainer} >
             <StatusBar  barStyle="light-content" backgroundColor={stylesColor.primaryColor}  />
-            {!isLoading && dataSelect &&
+            {!isLoading && dataSelect && !variable &&
                 <View style={styles.viewFilter}>
-                    <PButton onPress={() => insertHouseFull()} title="Anunciar" type='material-community' name='plus' size={hp('3%')} color={stylesColor.tertiaryColor} colorTitle={stylesColor.tertiaryColor} backgroundColor={stylesColor.primaryColor} fontFamily='Raleway-SemiBold' />
+                    <PButton onPress={() => setVariable(true)} title="Anunciar" type='material-community' name='plus' size={hp('3%')} color={stylesColor.tertiaryColor} colorTitle={stylesColor.tertiaryColor} backgroundColor={stylesColor.primaryColor} fontFamily='Raleway-SemiBold' />
                 </View>
                         }
+            {!isLoading && dataSelect && variable &&
+            <View style={styles.viewFilter}>
+                    <PButton onPress={() => insertClassifiedFull("Immobile")} title="Imóvel" type='material-community' name='plus' size={hp('3%')} color={stylesColor.tertiaryColor} colorTitle={stylesColor.tertiaryColor} backgroundColor={stylesColor.primaryColor} fontFamily='Raleway-SemiBold' />
+                    <PButton onPress={() => insertClassifiedFull("Car")} title="Automovél" type='material-community' name='plus' size={hp('3%')} color={stylesColor.tertiaryColor} colorTitle={stylesColor.tertiaryColor} backgroundColor={stylesColor.primaryColor} fontFamily='Raleway-SemiBold' />
+                    <PButton onPress={() => insertClassifiedFull("Electronic")} title="Eletrônico" type='material-community' name='plus' size={hp('3%')} color={stylesColor.tertiaryColor} colorTitle={stylesColor.tertiaryColor} backgroundColor={stylesColor.primaryColor} fontFamily='Raleway-SemiBold' />
+                    <PButton onPress={() => insertClassifiedFull("Baskets")} title="Cestas básicas" type='material-community' name='plus' size={hp('3%')} color={stylesColor.tertiaryColor} colorTitle={stylesColor.tertiaryColor} backgroundColor={stylesColor.primaryColor} fontFamily='Raleway-SemiBold' />
+                    <PButton onPress={() => insertClassifiedFull("Fashion")} title="Moda e beleza" type='material-community' name='plus' size={hp('3%')} color={stylesColor.tertiaryColor} colorTitle={stylesColor.tertiaryColor} backgroundColor={stylesColor.primaryColor} fontFamily='Raleway-SemiBold' />
+                    <PButton onPress={() => insertClassifiedFull("Job")} title="Vagas de Trabalho" type='material-community' name='plus' size={hp('3%')} color={stylesColor.tertiaryColor} colorTitle={stylesColor.tertiaryColor} backgroundColor={stylesColor.primaryColor} fontFamily='Raleway-SemiBold' />
+                </View>
+}
                 {isLoading &&
                     <View style={styles.mLoad}>
                         <MLoad color={stylesColor.secondaryColor} borderColor={stylesColor.primaryColor} />
                     </View>
                 }
-                {myHouses && !isLoading &&
+                {myClassifieds && !isLoading && !variable &&
                         <FlatList refreshControl={<RefreshControl
                             refreshing={refreshing}
                             onRefresh={onRefresh} />}
                             showsVerticalScrollIndicator={false}
-                            data={myHouses}
+                            data={myClassifieds}
                             renderItem={renderItem}
-                            keyExtractor={value => value.houses_id} />
+                            keyExtractor={value => value.classified_id} />
                    
                 }
-                {!myHouses && !isLoading &&
+                {!myClassifieds && !isLoading && !variable &&
                     <ScrollView
                         contentContainerStyle={styles.scroll}
                         refreshControl={
@@ -159,7 +172,7 @@ export default function MyHouses({ navigation }) {
                         }>
                         <Text>Puxe para baixo para atualizar...</Text>
                     </ScrollView>}
-                {visableNotification &&
+                {visableNotification && !variable &&
                     <Notification status={status} visable={visableNotification} title={title} message={message} onPress={() => resetState()} close={() => resetState()} />
                 }
 

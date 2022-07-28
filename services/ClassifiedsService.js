@@ -2,12 +2,12 @@ import axios from "axios"
 import  AsyncStorage  from '@react-native-async-storage/async-storage';
 import  Config  from '../util/Config'
 
-class HousesService{
+class ClassifiedsService{
     
-    async insertHouse(data){
+    async insertClassified(data){
         let token = await AsyncStorage.getItem("TOKEN")
         return axios({
-            url:Config.API_URL+"houses/register",
+            url:Config.API_URL+"classifieds/register",
             timeout: Config.TIMEOUT_REQUEST,
             method:"POST",
             data:data,
@@ -22,10 +22,10 @@ class HousesService{
         })
     }
 
-    async updateHouse(data,id){
+    async updateClassified(data,id){
         let token = await AsyncStorage.getItem("TOKEN")
         return axios({
-            url:Config.API_URL+"houses/update/"+id,
+            url:Config.API_URL+"classifieds/update/"+id,
             timeout: Config.TIMEOUT_REQUEST,
             method:"PUT",
             data:data,
@@ -40,10 +40,10 @@ class HousesService{
         })
     }
     
-    async allHouses(skip){
+    async allClassifieds(skip){
         let token = await AsyncStorage.getItem("TOKEN")
         return await axios({
-            url:Config.API_URL+"houses/all/"+skip.toString()+"/30",
+            url:Config.API_URL+"classifieds/all/"+skip.toString()+"/30",
             timeout: Config.TIMEOUT_REQUEST,
             method:"Get",
             headers: {
@@ -81,10 +81,10 @@ class HousesService{
         })
     }
 
-    async getHouseFiltered(skip, district,city,orderAll){
+    async getClassifiedFiltered(skip, district,city,orderAll){
         let token = await AsyncStorage.getItem("TOKEN")
         return axios({
-            url:Config.API_URL+"houses/orderByCityAndDistrictAndOrderValue/"+skip.toString()+"/30/"+district+"/"+city+"/"+orderAll,
+            url:Config.API_URL+"classifieds/orderByCityAndDistrictAndOrderValue/"+skip.toString()+"/30/"+district+"/"+city+"/"+orderAll,
             timeout: Config.TIMEOUT_REQUEST,
             method:"Get",
             headers: {
@@ -98,11 +98,11 @@ class HousesService{
         })
     }
 
-    async allMyHouses(){
+    async allMyClassifieds(){
         let token = await AsyncStorage.getItem("TOKEN")
         let id = await AsyncStorage.getItem("ID")
         return axios({
-            url:Config.API_URL+"houses/allMy",
+            url:Config.API_URL+"classifieds/allMy",
             timeout: Config.TIMEOUT_REQUEST,
             method:"POST",
             data:{token:token, id:parseInt(id)},
@@ -117,10 +117,10 @@ class HousesService{
         })
     }
 
-    async deleteHouse(id){
+    async deleteClassified(id){
         let token = await AsyncStorage.getItem("TOKEN")
         return axios({
-            url:Config.API_URL+"houses/delete/"+id,
+            url:Config.API_URL+"classifieds/delete/"+id,
             timeout: Config.TIMEOUT_REQUEST,
             method:"Delete",
             headers: {
@@ -137,10 +137,10 @@ class HousesService{
         })
     }
 
-    async deleteImageHouse(id){
+    async deleteImageClassified(id){
         
         return axios({
-            url:Config.API_URL+"houses/deleteImageHouse/"+id,
+            url:Config.API_URL+"classifieds/deleteImageClassified/"+id,
             timeout: Config.TIMEOUT_REQUEST,
             method:"Delete",
         }).then((response)=> {
@@ -150,16 +150,27 @@ class HousesService{
         })
     }
 
-    async selectHouseById(id){
+    async selectClassifiedById(id){
         let token = await AsyncStorage.getItem("TOKEN")
         return axios({
-            url:Config.API_URL+"houses/one/"+id,
+            url:Config.API_URL+"classifieds/one/"+id,
             timeout: Config.TIMEOUT_REQUEST,
             method:"Get",
             headers: {
                 Accept: 'application/json',
                 Authorization: 'Bearer ' + token
             }
+        }).then((response)=> {
+            return Promise.resolve(response)
+        }).catch((error)=>{
+            return Promise.reject(error)
+        })
+    }
+    async getCep(id){
+        return axios({
+            url:Config.API_URL_CEP+id,
+            timeout: Config.TIMEOUT_REQUEST,
+            method:"Get",
         }).then((response)=> {
             return Promise.resolve(response)
         }).catch((error)=>{
@@ -184,5 +195,5 @@ class HousesService{
 
     
 }
-const housesService = new HousesService()
-export default housesService
+const classifiedsService = new ClassifiedsService()
+export default classifiedsService

@@ -1,6 +1,6 @@
 import { Text, View, Image, Pressable, Keyboard, Vibration, KeyboardAvoidingView, SafeAreaView, StatusBar, ImageBackground } from 'react-native';
 import React, { useState,useEffect } from 'react'
-import tenantService from '../services/TenantSevice';
+import userService from '../services/UserSevice';
 import stylesColor from '../style/colorApp';
 import * as Device from 'expo-device';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -54,7 +54,7 @@ export default function Profile({navigation}) {
       token: token,
       id: parseInt(id)
     }
-    tenantService.getData(data)
+    userService.getData(data)
 
       .then((response) => {
         setLoading(false)
@@ -213,7 +213,7 @@ export default function Profile({navigation}) {
           date: dateRegister
 
         }
-        tenantService.updateAccount(data, id, token)
+        userService.updateAccount(data, id, token)
           .then((response) => {
             if (response.data.status){
               showNotification('success', 'Salvo!', response.data.message)
@@ -245,7 +245,7 @@ export default function Profile({navigation}) {
         email: email,
         type: "profile"
       }
-      tenantService.sendCode(data)
+      userService.sendCode(data)
         .then((response) => {
           if (response.data.status){
             setVisableDialogCode(true)

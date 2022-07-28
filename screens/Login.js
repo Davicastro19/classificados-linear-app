@@ -5,7 +5,7 @@ import React, { useState, useEffect } from 'react'
 import {NativeBaseProvider} from 'native-base'
 import styles from '../style/Login'
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import tenantService from '../services/TenantSevice';
+import tenantService from '../services/UserSevice';
 import { useFonts } from 'expo-font';
 import stylesColor from '../style/colorApp';
 import PInput from '../components/input/input'
@@ -208,7 +208,7 @@ export default function Login({ navigation }) {
             }
           </Pressable>
           {visableNotification && !isLoading &&
-            <Notification status='error' visable={visableNotification} title={title} message={message} onPress={() => setVisableNotification(false)} close={closeNotification} />
+            <Notification status='error' visibles={visableNotification} title={title} message={message} onPress={() => setVisableNotification(false)} close={closeNotification} />
           }
         </KeyboardAvoidingView>
       </SafeAreaView>

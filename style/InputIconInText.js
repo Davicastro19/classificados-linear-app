@@ -1,6 +1,6 @@
 import {StyleSheet} from 'react-native'
 
-const inputRegisterHouse = StyleSheet.create({
+const inputRegisterClassified = StyleSheet.create({
     input:{
         fontSize:12,
         color:"#fdf5e8",
@@ -26,4 +26,4 @@ const inputRegisterHouse = StyleSheet.create({
         
     }
 })
-export default inputRegisterHouse
+export default inputRegisterClassified

@@ -1,6 +1,7 @@
 const Config = {
-    API_URL: "https://api-linear-real-state.herokuapp.com/",
+    API_URL: "http://192.168.0.105:3000/",
     API_URL_TO: "https://linear-real-state-api-services.herokuapp.com/",
+    API_URL_CEP: "http://enderecos.metheora.com/api/cep/",
     TIMEOUT_REQUEST: 5000,
     LON_TIMEOUT_REQUEST: 240000,
     HEADER_REQUEST: {

@@ -3,14 +3,14 @@ import {  StatusBar, SafeAreaView } from 'react-native';
 import React, { useState} from 'react'
 import Config from '../util/Config'
 import stylesColor from '../style/colorApp';
-import styles from '../style/Houses'
+import styles from '../style/Classifieds'
 import {
     NativeBaseProvider,
 } from 'native-base';
-import CardHouse from '../components/cardHouse/cardHouse'
+import CardClassified from '../components/cardClassified/cardClassified'
 import { useRoute } from '@react-navigation/native';
 
-export default function Houses({navigation}) {
+export default function Classifieds({navigation}) {
     
   
     const [visableNotification, setVisableNotification] = useState(false);
@@ -45,9 +45,9 @@ export default function Houses({navigation}) {
         <NativeBaseProvider >
             <SafeAreaView style={styles.preContainer} >
             <StatusBar barStyle="light-content" backgroundColor={stylesColor.primaryColor} />
-               <CardHouse specificHouse={route.params.specificHouse}   validateImages={value => validateImages(value)} />
+               <CardClassified specificClassified={route.params.specificClassified}   validateImages={value => validateImages(value)} />
                
-                {visableNotification && !isLoading && !specificHouse &&
+                {visableNotification && !isLoading && !specificClassified &&
                     <Notification status='error' dataSelect={dataSelect} visable={visableNotification} title={'adasd'} message={'message'} onPress={() => setVisableNotification(false)} close={closeNotificaion} />
                 }
             </SafeAreaView>

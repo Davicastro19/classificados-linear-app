@@ -25,9 +25,9 @@ export default function SignUp() {
   const [erroMessagePhone, setErroMessagePhone] = useState(null)
   const [erroMessageCode, setErroMessageCode] = useState(null)
   const [isLoadings, setLoading] = useState(false)
-  const [visableDialogCode, setVisableDialogCode] = useState(false);
+  const [visibleDialogCode, setVisibleDialogCode] = useState(false);
   const [message, setMessage] = useState(null)
-  const [visableNotification, setVisableNotification] = useState(false);
+  const [visibleNotification, setVisibleNotification] = useState(false);
   const [title, setTitle] = useState(null)
   const  [error,setError] = useState(null)
 
@@ -37,7 +37,7 @@ export default function SignUp() {
     setError(valid)
     setTitle(title)
     setMessage(message)
-    setVisableNotification(true)
+    setVisibleNotification(true)
     
   }
 
@@ -180,7 +180,7 @@ export default function SignUp() {
             setPhone(null)
             setPassword(null)
             setLoading(false)
-            setVisableDialogCode(false)
+            setVisibleDialogCode(false)
             if (response.data.status){
               showNotification('Sucesso!', response.data.message,'success')
             }else{
@@ -189,12 +189,12 @@ export default function SignUp() {
           })
           .catch((response) => {
              setLoading(false)
-            setVisableDialogCode(false)
+            setVisibleDialogCode(false)
             showNotification('Ops!', response.toString(),'error')
           })
       }else{
         setLoading(false)
-        setVisableDialogCode(false)
+        setVisibleDialogCode(false)
         setCode(null)
         showNotification('Ops!', 'Código inválido','error')
       }
@@ -202,11 +202,11 @@ export default function SignUp() {
   }
 
   function closeNotification() {
-    setVisableNotification(false)
+    setVisibleNotification(false)
   }
 
   function closeDialog() {
-    setVisableDialogCode(false)
+    setVisibleDialogCode(false)
   }
   
   function setCodeFull(value) {
@@ -226,7 +226,7 @@ export default function SignUp() {
         .then((response) => {
           if (response.data.status) {
             setNewCode(response.data.message)
-            setVisableDialogCode(true)
+            setVisibleDialogCode(true)
             setLoading(false)
           } else {
             setLoading(false)
@@ -234,14 +234,14 @@ export default function SignUp() {
           }
         })
         .catch((response) => {
-          setVisableDialogCode(false)
+          setVisibleDialogCode(false)
           setLoading(false)
           showNotification('Ops!', response.toString(),'error')
            })
     } else {
       Vibration.vibrate()
       setLoading(false)
-      setVisableDialogCode(false)
+      setVisibleDialogCode(false)
     }
   }
 
@@ -271,17 +271,17 @@ export default function SignUp() {
                   </View>
                 </View></>
             }
-            {isLoadings && !visableNotification &&
+            {isLoadings && !visibleNotification &&
               <View style={styles.mLoad}>
                 <MLoad color={stylesColor.secondaryColor} borderColor={stylesColor.primaryColor} />
               </View>
             }
           </Pressable>
-          {visableNotification && !isLoadings && !visableDialogCode &&
-              <Notification visable={visableNotification} status={error} title={title} message={message} onPress={() => setVisableNotification(false)} close={closeNotification} />
+          {visibleNotification && !isLoadings && !visibleDialogCode &&
+              <Notification visibles={visibleNotification} status={error} title={title} message={message} onPress={() => setVisibleNotification(false)} close={closeNotification} />
             }
-          {!visableNotification && !isLoadings && visableDialogCode &&
-            <DialogCode containerColor={stylesColor.primaryColor} erroMessageCode={erroMessageCode} onChangeText={setCodeFull} visable={visableDialogCode} FullSignUp={FullSignUp} close={closeDialog} />
+          {!visibleNotification && !isLoadings && visibleDialogCode &&
+            <DialogCode containerColor={stylesColor.primaryColor} erroMessageCode={erroMessageCode} onChangeText={setCodeFull} visibles={visibleDialogCode} FullSignUp={FullSignUp} close={closeDialog} />
           }
         </KeyboardAvoidingView>
       </SafeAreaView>

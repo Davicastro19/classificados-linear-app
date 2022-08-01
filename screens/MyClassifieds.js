@@ -18,7 +18,7 @@ export default function MyClassifieds({ navigation }) {
     const [refreshing, setRefreshing] = useState(false);
     const [myClassifieds, setMyClassifieds] = useState(false)
     const [variable, setVariable] = useState(false)
-    const [visableNotification, setVisableNotification] = useState(false);
+    const [visibleNotification, setVisibleNotification] = useState(false);
     const [isLoading, setIsLoading] = useState(true)
     const [title, setTitle] = useState(null)
     const [message, setMessage] = useState(null)
@@ -37,7 +37,7 @@ export default function MyClassifieds({ navigation }) {
     }, []);
 
     function showNotification(status, title, message) {
-        setVisableNotification(true)
+        setVisibleNotification(true)
         setTitle(title)
         setMessage(message)
         setStatus(status)
@@ -93,7 +93,7 @@ export default function MyClassifieds({ navigation }) {
 
     
     function showNotification(status, title, message) {
-        setVisableNotification(true)
+        setVisibleNotification(true)
         setTitle(title)
         setMessage(message)
         setStatus(status)
@@ -117,7 +117,7 @@ export default function MyClassifieds({ navigation }) {
 
     function resetState() {
         setMyClassifieds(false)
-        setVisableNotification(false)
+        setVisibleNotification(false)
 
     }
 
@@ -174,8 +174,8 @@ export default function MyClassifieds({ navigation }) {
                         }>
                         <Text>Puxe para baixo para atualizar...</Text>
                     </ScrollView>}
-                {visableNotification && !variable &&
-                    <Notification status={status} visable={visableNotification} title={title} message={message} onPress={() => resetState()} close={() => resetState()} />
+                {visibleNotification && !variable &&
+                    <Notification status={status} visibles={visibleNotification} title={title} message={message} onPress={() => resetState()} close={() => resetState()} />
                 }
 
             </SafeAreaView>

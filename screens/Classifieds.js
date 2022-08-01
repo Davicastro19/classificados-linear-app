@@ -36,8 +36,8 @@ export default function Classifieds({navigation}) {
     const [status, setStatus] = useState(null)
     const [oldLengh, setOldLengh] = useState(1)
     const [refreshing, setRefreshing] = useState(false);
-    const [visableDialogFilter, setVisableDialogFilter] = useState(true);
-    const [visableNotification, setVisableNotification] = useState(false);
+    const [visibleDialogFilter, setVisibleDialogFilter] = useState(true);
+    const [visibleNotification, setVisibleNotification] = useState(false);
     
     const onRefresh = React.useCallback(() => {
         setClassifieds([])
@@ -143,14 +143,14 @@ export default function Classifieds({navigation}) {
     }  
 
     function showNotification(status, title, message) {
-        setVisableNotification(true)
+        setVisibleNotification(true)
         setTitle(title)
         setMessage(message)
         setStatus(status)
       }
         
     function closeDialogFilter() {
-        setVisableDialogFilter(false)
+        setVisibleDialogFilter(false)
         getCitys()
         setType('city')
         setQuesetion('Qual cidade?')
@@ -158,7 +158,7 @@ export default function Classifieds({navigation}) {
     }
 
     function closeNotificaion() {
-        setVisableNotification(false)
+        setVisibleNotification(false)
     }
 
     function setSpecificClassifiedFull(values){
@@ -250,7 +250,7 @@ export default function Classifieds({navigation}) {
 
     function getClassifiedFiltered(skips) {
         
-        setVisableDialogFilter(false)
+        setVisibleDialogFilter(false)
         setIsLoading(true)
         setSkip(skips)
         classifiedsService.getClassifiedFiltered(skips, orderDistrict, orderCity,orderCategory,orderSubcategory, orderAll)
@@ -311,7 +311,7 @@ export default function Classifieds({navigation}) {
             <StatusBar barStyle="light-content" backgroundColor={stylesColor.primaryColor} />
                 {!isLoading && dataSelect &&
                     <View style={styles.viewFilter}>
-                        <PButton onPress={() => setVisableDialogFilter(true)} title="Filtro" type='material-community' name='filter-menu-outline' size={hp('3%')} color={stylesColor.tertiaryColor} colorTitle={stylesColor.tertiaryColor} backgroundColor={stylesColor.primaryColor} fontFamily='MPLUS1p-Medium' />
+                        <PButton onPress={() => setVisibleDialogFilter(true)} title="Filtro" type='material-community' name='filter-menu-outline' size={hp('3%')} color={stylesColor.tertiaryColor} colorTitle={stylesColor.tertiaryColor} backgroundColor={stylesColor.primaryColor} fontFamily='MPLUS1p-Medium' />
                     </View>}
                 {isLoading &&
                     <><LoadClassified /></>
@@ -331,11 +331,11 @@ export default function Classifieds({navigation}) {
                             borderColor={stylesColor.primaryColor} />}
                         keyExtractor={value => value.id} />
                 }
-                {visableNotification && !isLoading &&
-                    <Notification status={status} visable={visableNotification} title={title} message={message} close={closeNotificaion} />
+                {visibleNotification && !isLoading &&
+                    <Notification status={status} visibles={visibleNotification} title={title} message={message} close={closeNotificaion} />
                 }
-                {visableDialogFilter && !isLoading && dataSelect &&  
-                    <DialogFilter question={question} dataSelect={dataSelect} nameIcon={nameIcon} type={type} orderCity={orderCity} visable={visableDialogFilter} onPress={() => getFilter()} setFilter={value => setFilter(value)} close={closeDialogFilter}  />
+                {visibleDialogFilter && !isLoading && dataSelect &&  
+                    <DialogFilter question={question} dataSelect={dataSelect} nameIcon={nameIcon} type={type} orderCity={orderCity} onPress={() => getFilter()} setFilter={value => setFilter(value)} close={closeDialogFilter}  />
                 }
             </SafeAreaView>
             

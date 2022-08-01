@@ -64,15 +64,15 @@ export default function EditClassified({ navigation }) {
     const [col17, setCol17] = useState('')
     const [col1l, setCol1l] = useState([])
     const [col2l, setCol2l] = useState([])
-    const [visableNotification, setVisableNotification] = useState(false);
+    const [visibleNotification, setVisibleNotification] = useState(false);
     const [isLoading, setIsLoading] = useState(true)
     const [title, setTitle] = useState(null)
     const [message, setMessage] = useState(null)
     const [status, setStatus] = useState(null)
     const [deletePhotoEdit, setDeletePhotoEdit] = useState(false)
     const [images, setImages] = useState('')
-    const [visableConfirmationDeletion, setVisableConfirmationDeletion] = useState(false)
-    const [visableConfirmationUpdate, setVisableConfirmationUpdate] = useState(false)
+    const [visibleConfirmationDeletion, setVisibleConfirmationDeletion] = useState(false)
+    const [visibleConfirmationUpdate, setVisibleConfirmationUpdate] = useState(false)
     const [oldImages, setOldImages] = useState('')
     const [selectDistrict, setSelectDistrict] = useState(false);
 
@@ -568,7 +568,7 @@ export default function EditClassified({ navigation }) {
             .catch((error) => {
                 showNotification('error', 'Ops!', error.toString())
             })
-        setVisableConfirmationDeletion(false)
+        setVisibleConfirmationDeletion(false)
     }
 
     function updateClassified(id) {
@@ -629,7 +629,7 @@ export default function EditClassified({ navigation }) {
             setErrorInput(true)
             showNotification('info', 'Ops!', 'Campos invalidos')
         }
-        setVisableConfirmationUpdate(false)
+        setVisibleConfirmationUpdate(false)
 
     }
 
@@ -805,7 +805,7 @@ export default function EditClassified({ navigation }) {
     }
 
     function showNotification(status, title, message) {
-        setVisableNotification(true)
+        setVisibleNotification(true)
         setTitle(title)
         setMessage(message)
         setStatus(status)
@@ -876,7 +876,7 @@ export default function EditClassified({ navigation }) {
     }
 
     function resetState(value) {
-        setVisableNotification(false)
+        setVisibleNotification(false)
         setIsLoading(false)
         if (status === 'success'){
             navigation.navigate("MyClassifieds")
@@ -1477,8 +1477,8 @@ export default function EditClassified({ navigation }) {
     
                                             <View style={{ marginBottom: hp('2%'), flexDirection: "row", justifyContent: "space-evenly", }}>
                                         <PButton width={wp('25%')} onPress={() => resetState('1')} title='Voltar' type='material-icons' name='arrow-back-ios' size={hp('2.1%')} color={stylesColor.tertiaryColor} colorTitle='#25d366' backgroundColor={stylesColor.secondaryColor} fontFamily='Raleway-Regular' marginLeft={hp('1%')} />
-                                        <PButton width={wp('30%')} onPress={() => setVisableConfirmationUpdate(true)} title='Salvar' type='material-community' name='content-save-check-outline' size={hp('2.1%')} color={stylesColor.tertiaryColor} colorTitle='#25d366' backgroundColor='#24b95b' fontFamily='Raleway-Regular' marginLeft={hp('1%')} />
-                                        <PButton width={wp('30%')} onPress={() => setVisableConfirmationDeletion(true)} title='Apagar' type='material-community' name='delete-outline' size={hp('2.1%')} color={stylesColor.tertiaryColor} colorTitle='#25d366' backgroundColor='#f23d3d' fontFamily='Raleway-Regular' marginLeft={hp('1%')} />
+                                        <PButton width={wp('30%')} onPress={() => setVisibleConfirmationUpdate(true)} title='Salvar' type='material-community' name='content-save-check-outline' size={hp('2.1%')} color={stylesColor.tertiaryColor} colorTitle='#25d366' backgroundColor='#24b95b' fontFamily='Raleway-Regular' marginLeft={hp('1%')} />
+                                        <PButton width={wp('30%')} onPress={() => setVisibleConfirmationDeletion(true)} title='Apagar' type='material-community' name='delete-outline' size={hp('2.1%')} color={stylesColor.tertiaryColor} colorTitle='#25d366' backgroundColor='#f23d3d' fontFamily='Raleway-Regular' marginLeft={hp('1%')} />
                                     </View>
                                         </View>
     
@@ -1492,14 +1492,14 @@ export default function EditClassified({ navigation }) {
                         </KeyboardAvoidingView>
                     }
     
-                    {visableConfirmationDeletion &&
-                    <DialogConfirmation message={'Tem certeza que deseja apagar?'} cancel={() => setVisableConfirmationDeletion(false)} confirmation={() => deleteClassified(id)} />
+                    {visibleConfirmationDeletion &&
+                    <DialogConfirmation message={'Tem certeza que deseja apagar?'} cancel={() => setVisibleConfirmationDeletion(false)} confirmation={() => deleteClassified(id)} />
                 }
-                {visableConfirmationUpdate &&
-                    <DialogConfirmation message={'Tem certeza que deseja alterar?'} cancel={() => setVisableConfirmationUpdate(false)} confirmation={() => updateClassified(id)} />
+                {visibleConfirmationUpdate &&
+                    <DialogConfirmation message={'Tem certeza que deseja alterar?'} cancel={() => setVisibleConfirmationUpdate(false)} confirmation={() => updateClassified(id)} />
                 }
-                {visableNotification &&
-                    <Notification status={status} visibles={visableNotification} title={title} message={message} onPress={() => resetState('0')} close={() => resetState('0')} />
+                {visibleNotification &&
+                    <Notification status={status} visibles={visibleNotification} title={title} message={message} onPress={() => resetState('0')} close={() => resetState('0')} />
                 }   
                 </SafeAreaView>
     

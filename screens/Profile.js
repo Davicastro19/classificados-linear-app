@@ -21,14 +21,14 @@ export default function Profile({navigation}) {
   const [erroMessageCode, setErroMessageCode] = useState(null)
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const [visableNotification, setVisableNotification] = useState(false);
+  const [visibleNotification, setVisibleNotification] = useState(false);
   const [code, setCode] = useState(null)
   const [newCode, setNewCode] = useState(null)
   const [name, setName] = useState(null)
   const [phone, setPhone] = useState(null)
   const [dateRegister, setDateRegister] = useState(false)
   const [isLoading, setLoading] = useState(true)
-  const [visableDialogCode, setVisableDialogCode] = useState(false);
+  const [visibleDialogCode, setVisibleDialogCode] = useState(false);
   const [title, setTitle] = useState(null)
   const [message, setMessage] = useState(null)
   const [status, setStatus] = useState(null)
@@ -70,7 +70,7 @@ export default function Profile({navigation}) {
 
   }
   function showNotification(status, title, message) {
-    setVisableNotification(true)
+    setVisibleNotification(true)
     setTitle(title)
     setMessage(message)
     setStatus(status)
@@ -158,10 +158,10 @@ export default function Profile({navigation}) {
   }
 
   function closeNotification() {
-    setVisableNotification(false)
+    setVisibleNotification(false)
   }
   function closeDialog() {
-    setVisableDialogCode(false)
+    setVisibleDialogCode(false)
   }
 
   function ValidateSignUp() {
@@ -229,7 +229,7 @@ export default function Profile({navigation}) {
       }
     }
     setCode(null)
-    setVisableDialogCode(false)
+    setVisibleDialogCode(false)
     setPassword(null)
     setLoading(false)
   }
@@ -248,7 +248,7 @@ export default function Profile({navigation}) {
       userService.sendCode(data)
         .then((response) => {
           if (response.data.status){
-            setVisableDialogCode(true)
+            setVisibleDialogCode(true)
             setNewCode(response.data.message)
           }else{
             showNotification('info', 'Então...', response.data.message)
@@ -259,7 +259,7 @@ export default function Profile({navigation}) {
         })
     } else {
       setLoading(false)
-      setVisableDialogCode(false)
+      setVisibleDialogCode(false)
     }
     setLoading(false)
   }
@@ -307,11 +307,11 @@ export default function Profile({navigation}) {
               </View>
             }
           </Pressable>
-          {visableNotification && !isLoading && !visableDialogCode &&
-              <Notification visable={visableNotification} status={status} title={title} message={message} onPress={() => setVisableNotification(false)} close={closeNotification} />
+          {visibleNotification && !isLoading && !visibleDialogCode &&
+              <Notification visible={visibleNotification} status={status} title={title} message={message} onPress={() => setVisibleNotification(false)} close={closeNotification} />
             }
-          {!visableNotification && !isLoading && visableDialogCode &&
-            <DialogCode containerColor={stylesColor.primaryColor} erroMessageCode={erroMessageCode} onChangeText={setCodeFull} visable={visableDialogCode} FullSignUp={FullSignUp} close={closeDialog} />
+          {!visibleNotification && !isLoading && visibleDialogCode &&
+            <DialogCode containerColor={stylesColor.primaryColor} erroMessageCode={erroMessageCode} onChangeText={setCodeFull} visible={visibleDialogCode} FullSignUp={FullSignUp} close={closeDialog} />
           }
         </KeyboardAvoidingView>
       </SafeAreaView>

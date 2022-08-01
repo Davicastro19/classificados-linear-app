@@ -19,7 +19,7 @@ export default function Login({ navigation }) {
   const [erroMessageEmail, setErroMessageEmail] = useState('')
   const [erroMessagePass, setErroMessagePass] = useState('')
   const [isLoading, setLoading] = useState(false)
-  const [visableNotification, setVisableNotification] = useState(false);
+  const [visibleNotification, setVisibleNotification] = useState(false);
   const [title, setTitle] = useState(null)
   const [message, setMessage] = useState(null)
   const [loaded] = useFonts({
@@ -39,7 +39,7 @@ export default function Login({ navigation }) {
   });
 
   function showNotification(title, message) {
-    setVisableNotification(true)
+    setVisibleNotification(true)
     setTitle(title)
     setMessage(message)
   }
@@ -152,7 +152,7 @@ export default function Login({ navigation }) {
   }
 
   function closeNotification() {
-    setVisableNotification(false)
+    setVisibleNotification(false)
   }
 
   function SignUp() {
@@ -201,14 +201,14 @@ export default function Login({ navigation }) {
                   <PButton onPress={() => ForgotPassword()} title="Esqueci minha senha" type='material-community' name='lock-question' size={hp('2.2%')} color={stylesColor.secondaryColor} colorTitle={stylesColor.secondaryColor} backgroundColor={stylesColor.tertiaryColor} fontFamily='Raleway-SemiBold' />
                 </View></>
             }
-            {isLoading && !visableNotification &&
+            {isLoading && !visibleNotification &&
               <View style={styles.mLoad}>
                 <MLoad color={stylesColor.secondaryColor} borderColor={stylesColor.primaryColor} />
               </View>
             }
           </Pressable>
-          {visableNotification && !isLoading &&
-            <Notification status='error' visibles={visableNotification} title={title} message={message} onPress={() => setVisableNotification(false)} close={closeNotification} />
+          {visibleNotification && !isLoading &&
+            <Notification status='error' visibles={visibleNotification} title={title} message={message} onPress={() => setVisibleNotification(false)} close={closeNotification} />
           }
         </KeyboardAvoidingView>
       </SafeAreaView>

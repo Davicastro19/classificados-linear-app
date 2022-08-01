@@ -13,14 +13,14 @@ import { useRoute } from '@react-navigation/native';
 export default function Classifieds({navigation}) {
     
   
-    const [visableNotification, setVisableNotification] = useState(false);
+    const [visibleNotification, setVisibleNotification] = useState(false);
     const route = useRoute()
     function showNotificaion() {
-        setVisableNotification(true)
+        setVisibleNotification(true)
     }
 
     function closeNotificaion() {
-        setVisableNotification(false)
+        setVisibleNotification(false)
     }
 
 
@@ -47,8 +47,8 @@ export default function Classifieds({navigation}) {
             <StatusBar barStyle="light-content" backgroundColor={stylesColor.primaryColor} />
                <CardClassified specificClassified={route.params.specificClassified}   validateImages={value => validateImages(value)} />
                
-                {visableNotification && !isLoading && !specificClassified &&
-                    <Notification status='error' dataSelect={dataSelect} visable={visableNotification} title={'adasd'} message={'message'} onPress={() => setVisableNotification(false)} close={closeNotificaion} />
+                {visibleNotification && !isLoading && !specificClassified &&
+                    <Notification status='error' dataSelect={dataSelect} visibles={visibleNotification} title={'adasd'} message={'message'} onPress={() => setVisibleNotification(false)} close={closeNotificaion} />
                 }
             </SafeAreaView>
         </NativeBaseProvider>

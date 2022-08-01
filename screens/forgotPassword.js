@@ -17,15 +17,15 @@ export default function ForgotPassword() {
   const [error, setError] = useState(null)
   const [title, setTitle] = useState(null)
   const [message, setMessage] = useState(null)
-  const [visableNotification, setVisableNotification] = useState(false);
+  const [visibleNotification, setVisibleNotification] = useState(false);
 
 
   function closeNotification() {
-    setVisableNotification(false)
+    setVisibleNotification(false)
   }
 
   function showNotification(title, message) {
-    setVisableNotification(true)
+    setVisibleNotification(true)
     setTitle(title)
     setMessage(message)
   }
@@ -76,7 +76,7 @@ export default function ForgotPassword() {
     <SafeAreaView style={styles.preContainer} >
       <StatusBar translucent={true} barStyle="dark-content" backgroundColor={stylesColor.secondaryColor} />
       <ImageBackground source={require("../assets/backForgot.png")} resizeMode="cover" style={styles.image}>
-        <Pressable style={styles.container} onPress={() => { Keyboard.dismiss(), setVisableNotification(false) }}>
+        <Pressable style={styles.container} onPress={() => { Keyboard.dismiss(), setVisibleNotification(false) }}>
           {!isLoading &&
             <><View style={styles.containerLogo}>
               <Image style={styles.logo} source={require("../assets/icon.png")} />
@@ -89,14 +89,14 @@ export default function ForgotPassword() {
                 </View>
               </View></>
           }
-          {isLoading && !visableNotification &&
+          {isLoading && !visibleNotification &&
             <View style={styles.mLoad}>
               <MLoad color={stylesColor.secondaryColor} borderColor={stylesColor.primaryColor} />
             </View>
           }
         </Pressable>
-        {visableNotification && !isLoading &&
-          <Notification visable={visableNotification} status={error} title={title} message={message} onPress={() => setVisableNotification(false)} close={closeNotification} />
+        {visibleNotification && !isLoading &&
+          <Notification visibles={visibleNotification} status={error} title={title} message={message} onPress={() => setVisibleNotification(false)} close={closeNotification} />
         }
       </ImageBackground>
     </SafeAreaView>

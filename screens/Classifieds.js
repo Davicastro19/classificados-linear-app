@@ -22,7 +22,7 @@ export default function Classifieds({navigation}) {
     const [orderDistrict, setOrderDistrict] = useState('Todos os Bairros')
     const [orderCategory, setOrderCategory] = useState([])
     const [orderSubcategory, setOrderSubcategory] = useState([])
-    const [orderAll, setOrderAll] = useState('recent')
+    const [orderAll, setOrderAll] = useState('Mais Recentes')
     const [type, setType] = useState('city')
     const [nameIcon, setNameIcon] = useState('filter-plus-outline')
     const [question, setQuesetion] = useState('Qual cidade?')
@@ -70,44 +70,63 @@ export default function Classifieds({navigation}) {
             setQuesetion('Qual bairro?')
         } else if (type == 'district') {
             setOrderDistrict(value)
-            setDataSelect([ 'Imóvel','Animal','Automovél','Eletrônico','Cesta básica','Moda e beleza','Vagas de Trabalho','Encontrar Serviço'])
+            setDataSelect(['Todas as Categorias','Imóvel','Animal','Automovél','Eletrônico','Cesta básica','Moda e beleza','Vagas de Trabalho','Encontrar Serviço'])
             setType('category')
             setQuesetion('Qual Categoria?')
         }else if (type == 'category') {
-            setOrderCategory(value)
+            if(value === 'Imóvel'){
+                setOrderCategory('Immobile')
+            }
+            else if(value === 'Animal'){
+                setOrderCategory('Animal')
+            }
+            else if(value === 'Automovél'){
+                setOrderCategory('Car')
+            }
+            else if(value === 'Eletrônico'){
+                setOrderCategory('Electronic')
+            }
+            else if(value === 'Cesta básica'){
+                setOrderCategory('Baskets')
+            }
+            else if(value === 'Moda e beleza'){
+                setOrderCategory('Fashion')
+            }
+            else if(value === 'Vagas de Trabalho'){
+                setOrderCategory('Job')
+            }
+            else if(value === 'Encontrar Serviço'){
+                setOrderCategory('Services')
+            }else{
+                setOrderCategory('Todas as Categorias')
+            }
             if(value ==='Imóvel'){
-                setDataSelect(['Casa', 'Comercio', 'Apartamento', 'Terreno'])
-            }else if (value ==='Animal'){
-                setDataSelect(['Bode', 'Boi', 'Cachorro', 'Cavalo', 'Coelho', 'Galinha', 'Gato', 'Hamster', 'Ovelha', 'Passaro', 'Pato', 'Porco', 'Vaca'])
-            }else if (value ==='Automovél'){
-                setDataSelect(['Moto', 'Carro', 'Embarcação', 'Van'])
-            }else if (value ==='Eletrônico'){
-                setDataSelect(['Smartphone', 'Tv', 'NotBook', 'Computador', 'Console'])
-            }else if (value ==='Cesta básica'){
-                setDataSelect(['Alimentos', 'Limpeza', 'Higiene Pess.', 'Bebidas', 'Papelaria & Bzr.', 'Ult. Domésticas', 'Geral'])
-            }else if (value ==='Moda e beleza'){
-                setDataSelect([ 'Imóvel','Animal','Automovél','Eletrônico','Cesta básica','Moda e beleza','Vagas de Trabalho','Encontrar Serviço'])
+                setDataSelect(['Todas as Subcategorias','Casa', 'Comercio', 'Apartamento', 'Terreno'])
+            }else if (value === 'Animal'){
+                setDataSelect(['Todas as Subcategorias','Bode', 'Boi', 'Cachorro', 'Cavalo', 'Coelho', 'Galinha', 'Gato', 'Hamster', 'Ovelha', 'Passaro', 'Pato', 'Porco', 'Vaca'])
+            }else if (value === 'Automovél'){
+                setDataSelect(['Todas as Subcategorias','Moto', 'Carro', 'Embarcação', 'Van'])
+            }else if (value === 'Eletrônico'){
+                setDataSelect(['Todas as Subcategorias','Smartphone', 'Tv', 'NotBook', 'Computador', 'Console'])
+            }else if (value === 'Cesta básica'){
+                setDataSelect(['Todas as Subcategorias','Alimentos', 'Limpeza', 'Higiene Pess.', 'Bebidas', 'Papelaria & Bzr.', 'Ult. Domésticas', 'Geral'])
+            }else if (value === 'Moda e beleza'){
+                setDataSelect(['Todas as Subcategorias', 'Imóvel','Animal','Automovél','Eletrônico','Cesta básica','Moda e beleza','Vagas de Trabalho','Encontrar Serviço'])
+            }else if(value === 'Vagas de Trabalho' || value === 'Encontrar Serviço'){
+                setDataSelect(['Todas as Subcategorias', "Administrativo", "Secretariado", "Finanças", "Comercial", "Vendas", "Telecomunicações", "Informática", "Multimídia", "Tecnogia da Informação", "Atendimento ao Cliente", "Call Center", "Banco", "Seguros", "Consultoria", "Jurídica", "Logística", "Distribuição", "Turismo", "Hotelaria", "Restaurante", "Educação", "Formação", "Marketing", "Comunicação", "Serviços Domésticos", "Limpezas", "Construção", "Industrial", "Saúde", "Medicina", "Enfermagem", "Agricultura", "Pecuária", "Veterinária", "Engenharia", "Arquitetura", "Design"])
             }else {
-                setDataSelect([ "Administrativo", "Secretariado", "Finanças", "Comercial", "Vendas", "Telecomunicações", "Informática", "Multimídia", "Tecnogia da Informação", "Atendimento ao Cliente", "Call Center", "Banco", "Seguros", "Consultoria", "Jurídica", "Logística", "Distribuição", "Turismo", "Hotelaria", "Restaurante", "Educação", "Formação", "Marketing", "Comunicação", "Serviços Domésticos", "Limpezas", "Construção", "Industrial", "Saúde", "Medicina", "Enfermagem", "Agricultura", "Pecuária", "Veterinária", "Engenharia", "Arquitetura", "Design"])
+                setDataSelect(['Todas as Subcategorias'])
             }
             setType('subcategory')
             setQuesetion('Qual Subcategoria?')
-        }else if (type == 'subcategory') {
+        }else if(type === 'subcategory') {
             setOrderSubcategory(value)
             setDataSelect(['Mais Recentes', 'Menor Valor', 'Maior Valor'])
             setType('order')
             setQuesetion('Qual ordem?')
             setNameIcon('filter-check-outline')
-        }
-        else {
-            if (value === 'Maior Valor') {
-                setOrderAll('bigger')
-            } else if (value === 'Menor Valor') {
-                setOrderAll('smaller')
-            } else {
-                setOrderAll('recent')
-            }
-
+        }else{
+            setOrderAll(value)
         }
         
         
@@ -115,6 +134,7 @@ export default function Classifieds({navigation}) {
     }
 
     function getFilter() {
+        setOrderAll()
         setClassifieds([])
         getClassifiedFiltered(0)
         getCitys()
@@ -229,27 +249,24 @@ export default function Classifieds({navigation}) {
     }
 
     function getClassifiedFiltered(skips) {
+        
         setVisableDialogFilter(false)
         setIsLoading(true)
-        if (orderDistrict != 'Todos os Bairros') {
+        setSkip(skips)
+        classifiedsService.getClassifiedFiltered(skips, orderDistrict, orderCity,orderCategory,orderSubcategory, orderAll)
+            .then((response) => {
+                setOldLengh(response.data.length)
+                if (response.data.length !== 0) {
+                       upClassified(response.data, oldClassified)
+                }else{
+                    showNotification('info', 'Então...', 'Nada foi encontrado com esse filtro.')
+                }
+            })
+            .catch((error) => {
+                showNotification('error', 'Ops!', error.toString())
+            })
             
-            setSkip(skips)
-            classifiedsService.getClassifiedFiltered(skips, orderDistrict, orderCity,orderSubcategory,orderCategory, orderAll)
-                .then((response) => {
-                    setOldLengh(response.data.length)
-                    if (response.data.length !== 0) {
-                           upClassified(response.data, oldClassified)
-                    }else{
-                        showNotification('info', 'Então...', 'Nada foi encontrado com esse filtro.')
-                    }
-                })
-                .catch((error) => {
-                    showNotification('error', 'Ops!', error.toString())
-                })
-            
-        } else {
-            allClassifieds(skips)
-        }
+       
         
         setIsLoading(false)
         setLoading(false)
@@ -274,13 +291,7 @@ export default function Classifieds({navigation}) {
             })
         setIsLoading(false)
         setLoading(false)
-        if (orderAll === 'bigger') {
-            setOrderAll('Maior Valor')
-        } else if (orderAll === 'smaller') {
-            setOrderAll('Menor Valor')
-        } else {
-            setOrderAll('Mais Recentes')
-        }
+        
     }
 
 

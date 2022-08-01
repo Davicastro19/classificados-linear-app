@@ -7,7 +7,25 @@ import cardClassified from './style'
 import stylesColor from '../../style/colorApp';
 import PButton from '../button/button';
 import { FontAwesome5, MaterialCommunityIcons, Ionicons, FontAwesome, Octicons, SimpleLineIcons, Entypo, MaterialIcons } from '@expo/vector-icons';
+function setFullBrl(value) {
+    if (value === '') {
+        return value
+    } else {
+        value = value.replace(/\D/gim, '');
+        value = value + '';
+        value = parseInt(value.replace(/[\D]+/g, ''));
+        value = value + '';
+        value = value.replace(/([0-9]{2})$/g, ",$1");
+
+        if (value.length > 6) {
+            value = value.replace(/([0-9]{3}),([0-9]{2}$)/g, ".$1,$2");
+        }
+        return value
+    }
+
+}
 const CardClassified = (props) => {
+    const price = setFullBrl(props.specificClassified.classified_price)
     return (
         <NativeBaseProvider>
             <Center flex={1} px="0" my={0} >
@@ -82,7 +100,7 @@ const CardClassified = (props) => {
                                         </View>
                                     </View><View style={{ flexDirection: "row", marginTop: hp('3%') }}>
                                         <Text style={cardClassified.fontNumberPrice}>
-                                            R${props.specificClassified.classified_price}
+                                            R${price}
                                         </Text>
                                     </View></>}
                             {props.specificClassified.classified_category === 'Car' &&
@@ -185,7 +203,7 @@ const CardClassified = (props) => {
                                     </View>
                                     <View style={{ flexDirection: "row", marginTop: hp('2%') }}>
                                         <Text style={cardClassified.fontNumberPrice}>
-                                            R${props.specificClassified.classified_price}
+                                            R${price}
                                         </Text>
                                     </View>
 
@@ -225,7 +243,7 @@ const CardClassified = (props) => {
                                         </View>
                                     </View><View style={{ flexDirection: "row", marginTop: hp('3%') }}>
                                         <Text style={cardClassified.fontNumberPrice}>
-                                            R${props.specificClassified.classified_price}
+                                            R${price}
                                         </Text>
                                     </View></>}
                             {props.specificClassified.classified_category === 'Baskets' &&
@@ -248,7 +266,7 @@ const CardClassified = (props) => {
                                         </View>
                                     </View><View style={{ flexDirection: "row", marginTop: hp('3%') }}>
                                         <Text style={cardClassified.fontNumberPrice}>
-                                            R${props.specificClassified.classified_price}
+                                            R${price}
                                         </Text>
                                     </View></>}
                             {props.specificClassified.classified_category === 'Fashion' &&
@@ -277,7 +295,7 @@ const CardClassified = (props) => {
                                     </View>
                                     <View style={{ flexDirection: "row", marginTop: hp('2%') }}>
                                         <Text style={cardClassified.fontNumberPrice}>
-                                            R${props.specificClassified.classified_price}
+                                            R${price}
                                         </Text>
                                     </View>
 
@@ -322,7 +340,7 @@ const CardClassified = (props) => {
 
                                     <View style={{ flexDirection: "row", marginTop: hp('2%') }}>
                                         <Text style={cardClassified.fontNumberPrice}>
-                                            R${props.specificClassified.classified_price}
+                                            R${price}
                                         </Text>
                                     </View>
 
@@ -362,7 +380,7 @@ const CardClassified = (props) => {
 
                                     <View style={{ flexDirection: "row", marginTop: hp('2%') }}>
                                         <Text style={cardClassified.fontNumberPrice}>
-                                            R${props.specificClassified.classified_price}
+                                            R${price}
                                         </Text>
                                     </View>
 

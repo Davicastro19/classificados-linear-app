@@ -510,7 +510,6 @@ export default function InsertClassified({ navigation }) {
                 col16: col16,
                 col17: col17
             }
-            console.log(dataCreateClassified)
             classifiedsService.insertClassified(dataCreateClassified)
                 .then((response) => {
                     if (response.data.status) {

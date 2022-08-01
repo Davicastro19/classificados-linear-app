@@ -103,10 +103,10 @@ class ClassifiedsService{
             return Promise.reject(error)
         })
     }
-    async getClassifiedFiltered(skip, district,city,orderAll){
+    async getClassifiedFiltered(skip, district,city,category, subcategory,orderAll){
         let token = await AsyncStorage.getItem("TOKEN")
         return axios({
-            url:Config.API_URL+"classifieds/orderByCityAndDistrictAndOrderValue/"+skip.toString()+"/30/"+district+"/"+city+"/"+orderAll,
+            url:Config.API_URL+"classifieds/orderBy/"+skip.toString()+"/30/"+district+"/"+city+"/"+category+"/"+subcategory+"/"+orderAll,
             timeout: Config.TIMEOUT_REQUEST,
             method:"Get",
             headers: {

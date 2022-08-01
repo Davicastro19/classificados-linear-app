@@ -121,6 +121,23 @@ export default function EditClassified({ navigation }) {
 
 
     }
+    function setFullBrlApparence(value) {
+        if (value === '') {
+            return value
+        } else {
+            value = value.replace(/\D/gim, '');
+            value = value + '';
+            value = parseInt(value.replace(/[\D]+/g, ''));
+            value = value + '';
+            value = value.replace(/([0-9]{2})$/g, ",$1");
+    
+            if (value.length > 6) {
+                value = value.replace(/([0-9]{3}),([0-9]{2}$)/g, ".$1,$2");
+            }
+            return value
+        }
+    
+    }
     function setFullBrl(value, type) {
         if (value === '') {
             setTax('')
@@ -795,6 +812,7 @@ export default function EditClassified({ navigation }) {
     }
 
     function loadData(data) {
+        const pricess = setFullBrlApparence(data.classified_price)
         setId(data.classified_id)
         
         setImages(data.classified_images)
@@ -816,7 +834,7 @@ export default function EditClassified({ navigation }) {
         setCol3(data.classified_col3)
         setType(data.classified_type)
         setCol4(data.classified_col4)
-        setPrice(data.classified_price)
+        setPrice(pricess)
         setTax(data.classified_tax)
         setCol5(data.classified_col5)
         setCol6(data.classified_col6)

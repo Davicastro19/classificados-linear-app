@@ -7,7 +7,25 @@ import cardClassifieds from './style'
 import stylesColor from '../../style/colorApp';
 import PButton from '../button/button';
 import { MaterialCommunityIcons, Ionicons, FontAwesome, MaterialIcons, SimpleLineIcons, Octicons,Fontisto,Zocial } from '@expo/vector-icons';
+function setFullBrl(value) {
+    if (value === '') {
+        return value
+    } else {
+        value = value.replace(/\D/gim, '');
+        value = value + '';
+        value = parseInt(value.replace(/[\D]+/g, ''));
+        value = value + '';
+        value = value.replace(/([0-9]{2})$/g, ",$1");
+
+        if (value.length > 6) {
+            value = value.replace(/([0-9]{3}),([0-9]{2}$)/g, ".$1,$2");
+        }
+        return value
+    }
+
+}
 const CardMyClassifieds = (props) => {
+    const price = setFullBrl(props.item.classified_price)
     return (
 
             <Center  flex={1} px="1" my={1}>
@@ -62,7 +80,7 @@ const CardMyClassifieds = (props) => {
                                         </View>
                                         <View style={cardClassifieds.containerItem}>
                                             <Text style={cardClassifieds.fontNumber}>
-                                                R${props.item.classified_price}
+                                                R${price}
                                             </Text>
                                         </View>
                                         <PButton onPress={() => props.selectClassifiedById()} title={props.title} name={props.name} type='material-community' size={hp('2.3%')} color={stylesColor.tertiaryColor} colorTitle={stylesColor.tertiaryColor} backgroundColor={stylesColor.primaryColor} fontFamily='Raleway-SemiBold' marginLeft={hp('1%')} width={wp('25%')} />
@@ -125,7 +143,7 @@ const CardMyClassifieds = (props) => {
                                         </View>
                                         <View style={cardClassifieds.containerItem}>
                                             <Text style={cardClassifieds.fontNumber}>
-                                                R${props.item.classified_price}
+                                                R${price}
                                             </Text>
                                         </View>
                                         <PButton onPress={() => props.selectClassifiedById()} title={props.title} name={props.name} type='material-community' size={hp('2.3%')} color={stylesColor.tertiaryColor} colorTitle={stylesColor.tertiaryColor} backgroundColor={stylesColor.primaryColor} fontFamily='Raleway-SemiBold' marginLeft={hp('1%')} width={wp('25%')} />
@@ -198,7 +216,7 @@ const CardMyClassifieds = (props) => {
 
                                         <View style={cardClassifieds.containerItem}>
                                             <Text style={cardClassifieds.fontNumber}>
-                                                R${props.item.classified_price}
+                                                R${price}
                                             </Text>
                                         </View>
                                         {props.item.classified_subcategory === "Tv" &&
@@ -249,7 +267,7 @@ const CardMyClassifieds = (props) => {
 
                                         <View style={cardClassifieds.containerItem}>
                                             <Text style={cardClassifieds.fontNumber}>
-                                                R${props.item.classified_price}
+                                                R${price}
                                             </Text>
                                         </View>
                                         <View style={cardClassifieds.containerItem}>
@@ -321,7 +339,7 @@ const CardMyClassifieds = (props) => {
 
                                         <View style={cardClassifieds.containerItem}>
                                             <Text style={cardClassifieds.fontNumber}>
-                                                R${props.item.classified_price}
+                                                R${price}
                                             </Text>
                                         </View>
                                         {props.item.classified_subcategory === 'Beleza e Saúde' &&
@@ -397,7 +415,7 @@ const CardMyClassifieds = (props) => {
 
                                         <View style={cardClassifieds.containerItem}>
                                             <Text style={cardClassifieds.fontNumber}>
-                                                R${props.item.classified_price}
+                                                R${price}
                                             </Text>
                                         </View>
                                         {props.item.classified_subcategory === 'Beleza e Saúde' &&
@@ -462,7 +480,7 @@ const CardMyClassifieds = (props) => {
 
                                         <View style={cardClassifieds.containerItem}>
                                             <Text style={cardClassifieds.fontNumber}>
-                                                R${props.item.classified_price}
+                                                R${price}
                                             </Text>
                                         </View>
                                         {props.item.classified_subcategory === 'Beleza e Saúde' &&

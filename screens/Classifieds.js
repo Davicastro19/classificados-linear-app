@@ -18,9 +18,10 @@ import Notification from '../components/notification/notification';
 export default function Classifieds({navigation}) {
     
     const [loading, setLoading] = useState(false)
-    const [citys, setCitys] = useState(false)
-    const [orderCity, setOrderCity] = useState(citys)
+    const [orderCity, setOrderCity] = useState([])
     const [orderDistrict, setOrderDistrict] = useState('Todos os Bairros')
+    const [orderCategory, setOrderCategory] = useState([])
+    const [orderSubcategory, setOrderSubcategory] = useState([])
     const [orderAll, setOrderAll] = useState('recent')
     const [type, setType] = useState('city')
     const [nameIcon, setNameIcon] = useState('filter-plus-outline')
@@ -75,27 +76,19 @@ export default function Classifieds({navigation}) {
         }else if (type == 'category') {
             setOrderCategory(value)
             if(value ==='Imóvel'){
+                setDataSelect(['Casa', 'Comercio', 'Apartamento', 'Terreno'])
+            }else if (value ==='Animal'){
+                setDataSelect(['Bode', 'Boi', 'Cachorro', 'Cavalo', 'Coelho', 'Galinha', 'Gato', 'Hamster', 'Ovelha', 'Passaro', 'Pato', 'Porco', 'Vaca'])
+            }else if (value ==='Automovél'){
+                setDataSelect(['Moto', 'Carro', 'Embarcação', 'Van'])
+            }else if (value ==='Eletrônico'){
+                setDataSelect(['Smartphone', 'Tv', 'NotBook', 'Computador', 'Console'])
+            }else if (value ==='Cesta básica'){
+                setDataSelect(['Alimentos', 'Limpeza', 'Higiene Pess.', 'Bebidas', 'Papelaria & Bzr.', 'Ult. Domésticas', 'Geral'])
+            }else if (value ==='Moda e beleza'){
                 setDataSelect([ 'Imóvel','Animal','Automovél','Eletrônico','Cesta básica','Moda e beleza','Vagas de Trabalho','Encontrar Serviço'])
-            }else if
-            (value ==='Animal'){
-                setDataSelect([ 'Imóvel','Animal','Automovél','Eletrônico','Cesta básica','Moda e beleza','Vagas de Trabalho','Encontrar Serviço'])
-            }else if
-            (value ==='Automovél'){
-                setDataSelect([ 'Imóvel','Animal','Automovél','Eletrônico','Cesta básica','Moda e beleza','Vagas de Trabalho','Encontrar Serviço'])
-            }else if
-            (value ==='Eletrônico'){
-                setDataSelect([ 'Imóvel','Animal','Automovél','Eletrônico','Cesta básica','Moda e beleza','Vagas de Trabalho','Encontrar Serviço'])
-            }else if
-            (value ==='Cesta básica'){
-                setDataSelect([ 'Imóvel','Animal','Automovél','Eletrônico','Cesta básica','Moda e beleza','Vagas de Trabalho','Encontrar Serviço'])
-            }else if
-            (value ==='Moda e beleza'){
-                setDataSelect([ 'Imóvel','Animal','Automovél','Eletrônico','Cesta básica','Moda e beleza','Vagas de Trabalho','Encontrar Serviço'])
-            }else if
-            (value ==='Vagas de Trabalho'){
-                setDataSelect([ 'Imóvel','Animal','Automovél','Eletrônico','Cesta básica','Moda e beleza','Vagas de Trabalho','Encontrar Serviço'])
-            }else{
-                setDataSelect([ 'Imóvel','Animal','Automovél','Eletrônico','Cesta básica','Moda e beleza','Vagas de Trabalho','Encontrar Serviço'])
+            }else {
+                setDataSelect([ "Administrativo", "Secretariado", "Finanças", "Comercial", "Vendas", "Telecomunicações", "Informática", "Multimídia", "Tecnogia da Informação", "Atendimento ao Cliente", "Call Center", "Banco", "Seguros", "Consultoria", "Jurídica", "Logística", "Distribuição", "Turismo", "Hotelaria", "Restaurante", "Educação", "Formação", "Marketing", "Comunicação", "Serviços Domésticos", "Limpezas", "Construção", "Industrial", "Saúde", "Medicina", "Enfermagem", "Agricultura", "Pecuária", "Veterinária", "Engenharia", "Arquitetura", "Design"])
             }
             setType('subcategory')
             setQuesetion('Qual Subcategoria?')
@@ -241,7 +234,7 @@ export default function Classifieds({navigation}) {
         if (orderDistrict != 'Todos os Bairros') {
             
             setSkip(skips)
-            classifiedsService.getClassifiedFiltered(skips, orderDistrict, orderCity, orderAll)
+            classifiedsService.getClassifiedFiltered(skips, orderDistrict, orderCity,orderSubcategory,orderCategory, orderAll)
                 .then((response) => {
                     setOldLengh(response.data.length)
                     if (response.data.length !== 0) {

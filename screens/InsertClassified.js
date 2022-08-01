@@ -1132,7 +1132,7 @@ export default function InsertClassified({ navigation }) {
                                         </View>
                                             <View style={{ marginLeft: hp('0%'), flexDirection: "row", justifyContent: "space-evenly", }}>
                                                 <View>
-                                                    <Text style={styleInsertClassified.description}><MaterialCommunityIcons name="square" color='#000' size={hp('2.0%')} /> Categoria</Text>
+                                                    <Text style={styleInsertClassified.description}><MaterialCommunityIcons name="cube" color='#000' size={hp('2.0%')} /> Categoria</Text>
                                                     <Select value={'Selecione'} width={wp('30%')} setSelect={value => setSubcategory(value)} dataSelect={['Alimentos', 'Limpeza', 'Higiene Pess.', 'Bebidas', 'Papelaria & Bzr.', 'Ult. Domésticas', 'Geral']} />
                                                 </View>
                                                 <View style={{ width: wp('35%'), marginRight: hp('1%') }}>
@@ -1227,7 +1227,7 @@ export default function InsertClassified({ navigation }) {
                                             <View style={{ marginLeft: hp('0%'), flexDirection: "row", justifyContent: "space-evenly", }}>
                                                 <View>
                                                     <Text style={styleInsertClassified.description}><MaterialCommunityIcons name="square" color='#000' size={hp('2.0%')} /> Área</Text>
-                                                    <Select value={'Selecione'} width={wp('50%')} setSelect={value => setSubcategory(value)} dataSelect={["Administrativo", "Secretariado", "Finanças", "Comercial", "Vendas", "Telecomunicações", "Informática", "Multimídia", "Tecnogia da Informação", "Atendimento ao Cliente", "Call Center", "Banco", "Seguros", "Consultoria", "Jurídica", "Logística", "Distribuição", "Turismo", "Hotelaria", "Restaurante", "Educação", "Formação", "Marketing", "Comunicação", "Serviços Domésticos", "Limpezas", "Construção", "Industrial", "Saúde", "Medicina", "Enfermagem", "Agricultura", "Pecuária", "Veterinária", "Engenharia", "Arquitetura", "Design",]} />
+                                                    <Select value={'Selecione'} width={wp('50%')} setSelect={value => setSubcategory(value)} dataSelect={["Administrativo", "Secretariado", "Finanças", "Comercial", "Vendas", "Telecomunicações", "Informática", "Multimídia", "Tecnogia da Informação", "Atendimento ao Cliente", "Call Center", "Banco", "Seguros", "Consultoria", "Jurídica", "Logística", "Distribuição", "Turismo", "Hotelaria", "Restaurante", "Educação", "Formação", "Marketing", "Comunicação", "Serviços Domésticos", "Limpezas", "Construção", "Industrial", "Saúde", "Medicina", "Enfermagem", "Agricultura", "Pecuária", "Veterinária", "Engenharia", "Arquitetura", "Design"]} />
                                                 </View>
                                                 <View style={{ width: wp('35%'), marginRight: hp('1%') }}>
                                                     <Text style={styleInsertClassified.descriptionInput}>Cargo</Text>

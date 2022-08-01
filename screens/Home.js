@@ -31,7 +31,7 @@ export default function Home() {
           headerShown: false,
           tabBarLabel: 'Casa/Aptoº',
           tabBarIcon: ({ color }) => (
-            <FontAwesome5 name="search-location" color={color} size={hp('3%')} />
+            <FontAwesome5 name="search" color={color} size={hp('3%')} />
           ),
         }}
       />
@@ -47,7 +47,7 @@ export default function Home() {
           headerShown: false,
           tabBarLabel: 'Minha casa',
           tabBarIcon: ({ color }) => (
-            <FontAwesome5 name="house-user" color={color} size={hp('3%')} />
+            <FontAwesome5 name="cubes" color={color} size={hp('3.5%')} />
           ),
         }}
       />

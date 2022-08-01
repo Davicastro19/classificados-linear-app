@@ -3,7 +3,7 @@ import { useRoute } from '@react-navigation/native';
 import PInput from '../components/input/input';
 import PInputLong from '../components/inputLong/inputLong'
 import Select from '../components/select/select';
-import { FontAwesome5, MaterialCommunityIcons, Ionicons } from '@expo/vector-icons';
+import { FontAwesome5, MaterialCommunityIcons, Ionicons, FontAwesome, Octicons, SimpleLineIcons, Entypo } from '@expo/vector-icons';
 import { VStack, HStack, Text, Center, NativeBaseProvider, Image } from "native-base";
 import { View, StatusBar, SafeAreaView, KeyboardAvoidingView, ScrollView } from 'react-native';
 import Config from '../util/Config'
@@ -35,7 +35,7 @@ export default function InsertClassified({ navigation }) {
     const [capturatePhoto6, setCapturatePhoto6] = useState(Config.AWS_URL + 'favicon.png')
     const [capturatePhoto4, setCapturatePhoto4] = useState(Config.AWS_URL + 'favicon.png')
     const [capturatePhoto5, setCapturatePhoto5] = useState(Config.AWS_URL + 'favicon.png')
-    
+
     const [city, setCity] = useState('')
     const [district, setDistrict] = useState('')
     const [description, setDescription] = useState('')
@@ -52,7 +52,7 @@ export default function InsertClassified({ navigation }) {
     const [col4, setCol4] = useState('')
     const [col5, setCol5] = useState('')
     const [col6, setCol6] = useState('')
-    const [col7, setCol7] =  useState('')
+    const [col7, setCol7] = useState('')
     const [col8, setCol8] = useState('')
     const [col9, setCol9] = useState('')
     const [col10, setCol10] = useState('')
@@ -63,7 +63,9 @@ export default function InsertClassified({ navigation }) {
     const [col15, setCol15] = useState('')
     const [col16, setCol16] = useState('')
     const [col17, setCol17] = useState('')
-    
+
+    const [col1l, setCol1l] = useState([])
+    const [col2l, setCol2l] = useState([])
     const [visibleConfirmationInsert, setVisibleConfirmationInsert] = useState(false)
     const [visibleNotifications, setVisibleNotifications] = useState(false);
     const [visibleNotification, setVisibleNotification] = useState(false);
@@ -74,66 +76,370 @@ export default function InsertClassified({ navigation }) {
     const [status, setStatus] = useState(null)
     const [deletePhotoEdit, setDeletePhotoEdit] = useState(false)
     const [oldImages, setOldImages] = useState('')
-    
+
     const [selectDistrict, setSelectDistrict] = useState(false);
 
-    function setFullBrl(value, type){
+    function setFullBrl(value, type) {
+        if (value === '') {
+            setTax('')
+            setPrice('')
+        } else {
+            value = value.replace(/\D/gim, '');
+            value = value + '';
+            value = parseInt(value.replace(/[\D]+/g, ''));
+            value = value + '';
+            value = value.replace(/([0-9]{2})$/g, ",$1");
 
-        value = value + '';
-        value = parseInt(value.replace(/[\D]+/g,''));
-        value = value + '';
-        value = value.replace(/([0-9]{2})$/g, ",$1");
+            if (value.length > 6) {
+                value = value.replace(/([0-9]{3}),([0-9]{2}$)/g, ".$1,$2");
+            }
+            if (value == '') {
+                setTax(value)
+                setPrice(value)
+            } else {
 
-        if (value.length > 6) {
-            value = value.replace(/([0-9]{3}),([0-9]{2}$)/g, ".$1,$2");
+            }
+            if (type === 'tax') {
+                setTax(value)
+            } else {
+                setPrice(value)
+            }
         }
-        if (isNaN(value)){
-            value = '0'
-        }
-        if (type === 'tax'){
-            setTax(value)
-        }else{
-            setPrice(value)
-        }
-        
+
     }
-    function setFullNumber(value){
-        if (isNaN(value)){
+    function setFullNumber(value) {
+        if (isNaN(value)) {
             value = '0'
         }
         setCol5(value)
-        
+
     }
 
-    function setFullCep(value){
+    function setFullCep(value) {
         classifiedsService.getCep(value)
-        .then((response) => {
-            if (response.data.length >0){
-                return true
-            }else{
+            .then((response) => {
+                if (response.data.length > 0) {
+                    return true
+                } else {
+                    return false
+                }
+            })
+            .catch((error) => {
                 return false
-            }
-        })
-        .catch((error) => {
-            return false
-            
-        })
+
+            })
     }
 
     function isValidate() {
-        
-        if (!setFullCep(cep)){
-            setErrorText("O campo cep é inválido")
+        if (subcategory === "Carro" || subcategory === "Van") {
+            if (tax === '') {
+                setErrorText("O campo IPVA é obrigatório")
+                return false
+            }
+            else if (type === '') {
+                setErrorText("O campo Negócio é obrigatório")
+                return false
+            }
+
+            else if (col2 === '') {
+                setErrorText("O campo Marca é obrigatório")
+                return false
+            }
+            else if (col1 === '') {
+                setErrorText("O campo Modelo é obrigatório")
+                return false
+            }
+
+            else if (col3 === '') {
+                setErrorText("O campo Tipo de Veículo é obrigatório")
+                return false
+            }
+            else if (col4 === '') {
+                setErrorText("O campo Ano é obrigatório")
+                return false
+            }
+            else if (col5 === '') {
+                setErrorText("O campo Quilometragem é obrigatório")
+                return false
+            }
+            else if (col6 === '') {
+                setErrorText("O campo Potência é obrigatório")
+                return false
+            }
+            else if (col8 === '') {
+                setErrorText("O campo Direção é obrigatório")
+                return false
+            }
+            else if (col9 === '') {
+                setErrorText("O campo Portas é obrigatório")
+                return false
+            }
+            else if (col10 === '') {
+                setErrorText("O campo F. Placa  é obrigatório")
+                return false
+            }
+            else if (col11 === '') {
+                setErrorText("O campo Vidro Elé. é obrigatório")
+                return false
+            }
+            else if (col12 === '') {
+                setErrorText("O campo Air bag é obrigatório")
+                return false
+            }
+            else if (col13 === '') {
+                setErrorText("O campo Trava Elé. é obrigatório")
+                return false
+            }
+            else if (col14 === '') {
+                setErrorText("O campo Ar Condici. é obrigatório")
+                return false
+            }
+            else if (col15 === '') {
+                setErrorText("O campo Som é obrigatório")
+                return false
+            }
+            else if (col16 === '') {
+                setErrorText("O campo Kit GNV é obrigatório")
+                return false
+            }
+            else if (col17 === '') {
+                setErrorText("O campo Cor é obrigatório")
+                return false
+            }
+        }
+        else if (subcategory === "Moto") {
+            if (tax === '') {
+                setErrorText("O campo IPVA é obrigatório")
+                return false
+            }
+            else if (type === '') {
+                setErrorText("O campo Negócio é obrigatório")
+                return false
+            }
+
+            else if (col2 === '') {
+                setErrorText("O campo Marca é obrigatório")
+                return false
+            }
+            else if (col1 === '') {
+                setErrorText("O campo Modelo é obrigatório")
+                return false
+            }
+
+            else if (col3 === '') {
+                setErrorText("O campo Tipo de Veículo é obrigatório")
+                return false
+            }
+            else if (col4 === '') {
+                setErrorText("O campo Ano é obrigatório")
+                return false
+            }
+            else if (col5 === '') {
+                setErrorText("O campo Quilometragem é obrigatório")
+                return false
+            }
+            else if (col6 === '') {
+                setErrorText("O campo Potência é obrigatório")
+                return false
+            }
+            else if (col10 === '') {
+                setErrorText("O campo F. Placa  é obrigatório")
+                return false
+            }
+            else if (col17 === '') {
+                setErrorText("O campo Cor é obrigatório")
+                return false
+            }
+        }
+        else if (subcategory === "Embarcação") {
+            if (type === '') {
+                setErrorText("O campo Negócio é obrigatório")
+                return false
+            }
+
+            else if (col1 === '') {
+                setErrorText("O campo Marca - Modelo é obrigatório")
+                return false
+            }
+
+            else if (col2 === '') {
+                setErrorText("O campo Tipo é obrigatório")
+                return false
+            }
+            else if (col4 === '') {
+                setErrorText("O campo Ano é obrigatório")
+                return false
+            }
+            else if (col5 === '') {
+                setErrorText("O campo Quilometragem é obrigatório")
+                return false
+            }
+            else if (col17 === '') {
+                setErrorText("O campo Cor é obrigatório")
+                return false
+            }
+        }
+        else if (route.params.type === "Electronic") {
+
+            if (subcategory === '') {
+                setErrorText("O campo Categoria é obrigatório")
+                return false
+            }
+            else if (col2 === '') {
+                setErrorText("O campo Marca é obrigatório")
+                return false
+            }
+            else if (col1 === '') {
+                setErrorText("O campo Modelo é obrigatório")
+                return false
+            }
+
+            else if (col3 === '' && subcategory !== "Tv") {
+                setErrorText("O campo RAM-GB é obrigatório")
+                return false
+            }
+            else if (col4 === '' && subcategory !== "Tv") {
+                setErrorText("O campo Mémória-GB obrigatório")
+                return false
+            }
+            else if (col17 === '') {
+                setErrorText("O campo Cor é obrigatório")
+                return false
+            }
+            else if (col16 === '' && subcategory === "Tv") {
+                setErrorText("O campo Plegadas é obrigatório")
+                return false
+            }
+        }
+        else if (route.params.type === "Baskets") {
+            if (col1 === '') {
+                setErrorText("O campo Palavra-chave é obrigatório")
+                return false
+            }
+            else if (col2 === '') {
+                setErrorText("O campo Qtd. Itens é obrigatório.")
+                return false
+            }
+            else if (type === '') {
+                setErrorText("O campo Negócio é obrigatório")
+                return false
+            }
+
+        }
+        else if (route.params.type === 'Fashion') {
+
+            if (col1 === '') {
+                if (subcategory === 'Beleza e Saúde') {
+                    setErrorText("O campo Palavra-chave é obrigatório")
+                } else {
+                    setErrorText("O campo Tipo é obrigatório")
+                }
+                return false
+            }
+            else if (col7 === '') {
+                setErrorText("O campo Qtd. Itens é obrigatório.")
+                return false
+            }
+            else if (col4 === '') {
+                setErrorText("O campo Gênero é obrigatório.")
+                return false
+            }
+            else if (col3 === '' && subcategory !== 'Beleza e Saúde') {
+                setErrorText("O campo Tamanho é obrigatório.")
+                return false
+            }
+            else if (type === '') {
+                setErrorText("O campo Negócio é obrigatório")
+                return false
+            }
+
+        }
+        else if (route.params.type === 'Job' || route.params.type === 'Services') {
+
+            if (col1 === '') {
+                setErrorText("O campo Cargo é obrigatório")
+                return false
+            }
+            else if (col4 === '') {
+                setErrorText("O campo Gênero é obrigatório.")
+                return false
+            }
+            else if (col5 === '' && route.params.type !== 'Services') {
+                setErrorText("O campo Empresa é obrigatório.")
+                return false
+            }
+            else if (type === '') {
+                setErrorText("O campo Contratação é obrigatório")
+                return false
+            }
+
+        } 
+        else if (route.params.type === 'Animal') {
+            if (subcategory == ''){
+                setErrorText("O campo Animal é obrigatório")
+                return false
+            }
+            if (col1 === '') {
+                setErrorText("O campo Raça é obrigatório")
+                return false
+            }
+            else if (col4 === '') {
+                setErrorText("O campo Sexo é obrigatório.")
+                return false
+            }
+            else if (col3 === '') {
+                setErrorText("O campo Mêses é obrigatório.")
+                return false
+            }
+            else if (col7 === '') {
+                setErrorText("O campo Quantidade é obrigatório.")
+                return false
+            }
+            else if (type === '') {
+                setErrorText("O campo Negócio é obrigatório")
+                return false
+            }
+
+        }
+        else if (price === '') {
+            if (route.params.type === "Job" || route.params.type === "Services") {
+                setErrorText("O campo Salário é obrigatório")
+            } else {
+                setErrorText("O campo Valor é obrigatório")
+            }
             return false
         }
-        if (description == null || description == '') {
-            setErrorText("O campo descrição é obrigatório")
+        else if (city === '') {
+            setErrorText("O campo Cidade é obrigatório")
             return false
         }
-        if (publicPlace == null || publicPlace == '') {
-            setErrorText("O campo logradouro é obrigatório")
+        else if (district === '') {
+            setErrorText("O campo Bairro é obrigatório")
             return false
         }
+        else if (cep === '') {
+            setErrorText("O campo Cep é inválido")
+            return false
+        }
+        else if (setFullCep(cep) === false) {
+            setErrorText("O campo Cep é inválido")
+            return false
+        }
+        else if (description == null || description === '') {
+            setErrorText("O campo Descrição é obrigatório")
+            return false
+        }
+        else if (route.params.type === "Immobile" || route.params.type === "Baskets") {
+            if (col7 == null || col7 === '') {
+                setErrorText("O campo Logradouro é obrigatório")
+                return false
+            }
+        }
+        else {
+            setErrorText("O campo é obrigatório")
+            return false
+        }
+        return true
     }
 
     async function isValidateImage() {
@@ -164,6 +470,7 @@ export default function InsertClassified({ navigation }) {
     }
 
     function insertClassified() {
+        setErrorInput(false)
         setIsLoading(true)
         setVisibleConfirmationInsert(false)
         if (isValidate() && isValidateImage()) {
@@ -203,6 +510,7 @@ export default function InsertClassified({ navigation }) {
                 col16: col16,
                 col17: col17
             }
+            console.log(dataCreateClassified)
             classifiedsService.insertClassified(dataCreateClassified)
                 .then((response) => {
                     if (response.data.status) {
@@ -217,7 +525,7 @@ export default function InsertClassified({ navigation }) {
                     showNotification('error', 'Ops!', error.toString())
                 })
         } else {
-            showNotifications('info', 'Então...', 'Existem campos inválidos')
+            setErrorInput(true)
         }
         setIsLoading(false)
     }
@@ -234,7 +542,56 @@ export default function InsertClassified({ navigation }) {
         }
 
     }
+    function setFullSubcategory(value) {
+        if (route.params.type === "Car") {
+            classifiedsService.automobileByCategory(value)
+                .then((response) => {
+                    if (response.data.status) {
+                        setSubcategory(value)
+                        setCol2l(response.data.message)
 
+                    } else {
+                        showNotification('info', 'Então...', response.data.message)
+                    }
+
+                })
+                .catch((error) => {
+                    showNotification('error', 'Ops!', error.toString())
+                })
+
+        } else if (route.params.type === 'Fashion') {
+            setSubcategory(value)
+            if (value === 'Roupas') {
+                setCol2l(['Vestidos e Saias', 'Casacos e Jaquetas', 'Camisas e Camisetas', 'Shorts e Bermudas', 'Outros'])
+            } else if (value === 'Calçados') {
+                setCol2l(['Alpargata', 'Bota', 'Chinelo', 'Chuteira', 'Coturno', 'Galocha', 'Mocassim', 'Sandália', 'Sapato', 'Sapatilha', 'Salto|Tamanco', 'Tênis'])
+            } else if (value === 'Acessórios') {
+                setCol2l(['Lenços e Cachecóis', 'Óculos', 'Anél', 'Aliança', 'Colar', 'Gargantilha', 'Bracelete', 'Presilha', 'Cinto', 'Chapéu', 'Boina, Gorro e Boné', 'Relógio', 'Pulseira', 'Bolsas', 'Mala', 'Mochila'])
+            }
+
+        }
+
+
+    }
+    function setFullModel(value) {
+        if (route.params.type === "Car") {
+            classifiedsService.modelByAutomobile(subcategory, value)
+                .then((response) => {
+                    if (response.data.status) {
+                        setCol1l(response.data.message)
+
+                    } else {
+                        showNotification('info', 'Então...', response.data.message)
+                    }
+
+                })
+                .catch((error) => {
+                    showNotification('error', 'Ops!', error.toString())
+                })
+
+        }
+        setCol2(value)
+    }
     function takePictureGalery(data) {
         if (!data.cancelled && data.uri) {
             if (Config.AWS_URL + 'favicon.png' === capturatePhoto1) {
@@ -395,12 +752,12 @@ export default function InsertClassified({ navigation }) {
     function resetState(value) {
         setVisibleNotification(false)
         setIsLoading(false)
-        if (status === 'success'){
+        if (status === 'success') {
             navigation.navigate("MyClassifieds")
-        }else 
-        if (value === '1'){
-            navigation.navigate("MyClassifieds")
-        }
+        } else
+            if (value === '1') {
+                navigation.navigate("MyClassifieds")
+            }
     }
 
     function close() {
@@ -426,8 +783,8 @@ export default function InsertClassified({ navigation }) {
             })
         setIsLoading(false)
     }
-   return (
-    <NativeBaseProvider >
+    return (
+        <NativeBaseProvider >
 
             <SafeAreaView style={styles.preContainer} >
                 <StatusBar barStyle="light-content" backgroundColor={stylesColor.primaryColor} />
@@ -448,9 +805,9 @@ export default function InsertClassified({ navigation }) {
 
                                 <VStack flex="1" >
                                     {errorInput &&
-                                    <View style={{backgroundColor:stylesColor.secondaryColor,justifyContent:"space-evenly",alignItems: 'center',justifyContent: 'center', width: wp('97%'), borderRadius: 16}} >
-                                        <Text style={styleInsertClassified.descriptionErro}>{errorText}</Text>
-                                    </View>}
+                                        <View style={{ backgroundColor: stylesColor.secondaryColor, justifyContent: "space-evenly", alignItems: 'center', justifyContent: 'center', width: wp('97%'), borderRadius: 16 }} >
+                                            <Text style={styleInsertClassified.descriptionErro}>{errorText}</Text>
+                                        </View>}
 
                                     <View >
                                         <ScrollView horizontal={true} >
@@ -476,67 +833,68 @@ export default function InsertClassified({ navigation }) {
                                 </VStack>
 
                             </HStack>
-                            
-                                <ScrollView>
-                                    <View style={{ backgroundColor: stylesColor.tertiaryColor }}>
-                                        <View style={{ marginTop: hp('3%'), marginRight: hp('1%'), flexDirection: "row", justifyContent: "space-evenly", }}>
 
-                                        <View style={{ width: wp('71%'), marginRight: hp('1%') }}>
+                            <ScrollView style={{width: wp('100%')}}>
+                                <View style={{ backgroundColor: stylesColor.tertiaryColor }}>
+                                    <View style={{ marginTop: hp('3%'), marginRight: hp('1%'), flexDirection: "row", justifyContent: "space-evenly", }}>
+                                        {(route.params.type === "Immobile" || route.params.type === "Baskets") &&
+                                            <View style={{ width: wp('71%'), marginRight: hp('1%') }}>
                                                 <Text style={styleInsertClassified.descriptionInput}>Logradouro</Text>
                                                 <PInput placeholder={'Avenida, Rua'} onChangeText={value => setCol7(value)} size={hp('2.2%')} type='material-icons' name='place' />
-                                            </View>
+                                            </View>}
 
+                                    </View>
+
+                                    <View style={{ flexDirection: "row", justifyContent: "space-evenly", }}>
+
+                                        <View >
+                                            <Text style={styleInsertClassified.description}>Cidade</Text>
+                                            <Select value={'Ibotirama'} width={wp('45%')} setSelect={value => setValueCity(value)} dataSelect={route.params.dataSelect} />
                                         </View>
-                                        <View style={{ flexDirection: "row", justifyContent: "space-evenly", }}>
-
-                                            <View >
-                                                <Text style={styleInsertClassified.description}>Cidade</Text>
-                                                <Select value={'Ibotirama'} width={wp('45%')} setSelect={value => setValueCity(value)} dataSelect={route.params.dataSelect} />
-                                            </View>
-                                            <View >
-                                                <Text style={styleInsertClassified.description}>Bairro</Text>
-                                                <Select value={'Centro'} width={wp('45%')} setSelect={value => setDistrict(value)} dataSelect={selectDistrict} />
-                                            </View>
-
+                                        <View >
+                                            <Text style={styleInsertClassified.description}>Bairro</Text>
+                                            <Select value={'Centro'} width={wp('45%')} setSelect={value => setDistrict(value)} dataSelect={selectDistrict} />
                                         </View>
-                                        {route.params.type === "Immobile" &&
+
+                                    </View>
+                                    {route.params.type === "Immobile" &&
                                         <><View style={{ marginTop: hp('3%'), marginRight: hp('1%'), flexDirection: "row", justifyContent: "space-evenly", }}>
                                             <View style={{ width: wp('32%'), marginRight: hp('1%') }} >
                                                 <Text style={styleInsertClassified.descriptionInput}>CEP</Text>
-                                                <PInput placeholder={'cep'} onChangeText={value => setCep(value)} size={hp('2.2%')} type='material-icons' name='place' />
+                                                <PInput placeholder={'cep'} onChangeText={value => setCep(value)} keyboardType='numeric' size={hp('2.2%')} type='material-icons' name='place' />
                                             </View>
-                                           
+
                                             <View>
-                                                <Text style={styleInsertClassified.description}><MaterialCommunityIcons name="handshake" color='#000' size={hp('2.0%')} /> Tipo</Text>
+                                                <Text style={styleInsertClassified.description}><MaterialCommunityIcons name="handshake" color='#000' size={hp('2.0%')} /> Negócio</Text>
                                                 <Select value={'Selecione'} width={wp('28%')} setSelect={value => setType(value)} dataSelect={['Alugar', 'Vender']} />
                                             </View>
                                             <View style={{ width: wp('25%'), marginRight: hp('1%') }}>
-                                                    <Text style={styleInsertClassified.descriptionInput}> m²</Text>
-                                                    <PInput onChangeText={value => setFullNumber(value)} value={col5} placeholder={'10'} size={hp('2.2%')} type='material-community' name="ruler-square" />
-                                                </View>
-                                           
+                                                <Text style={styleInsertClassified.descriptionInput}> m²</Text>
+                                                <PInput onChangeText={value => setFullNumber(value)} value={col5} placeholder={'10'} size={hp('2.2%')} type='material-community' name="ruler-square" />
+                                            </View>
+
 
                                         </View>
-                                        <View style={{ marginRight: hp('1%'), flexDirection: "row", justifyContent: "space-evenly", }}>
-                                        
+                                            <View style={{ marginRight: hp('1%'), flexDirection: "row", justifyContent: "space-evenly", }}>
+
                                                 <View style={{ width: wp('30%'), marginRight: hp('0%') }}>
                                                     <Text style={styleInsertClassified.descriptionInput}> Valor</Text>
-                                                    <PInput onChangeText={value => setFullBrl(value,'price')} value={price} placeholder={'1.100,00'} size={hp('2%')} type='material-community' name='currency-brl' />
+                                                    <PInput onChangeText={value => setFullBrl(value, 'price')} value={price} keyboardType='numeric' placeholder={'1.100,00'} size={hp('2%')} type='material-community' name='currency-brl' />
                                                 </View>
                                                 <View style={{ width: wp('25%'), marginRight: hp('0%') }}>
                                                     <Text style={styleInsertClassified.descriptionInput}> IPTU</Text>
-                                                    <PInput onChangeText={value => setFullBrl(value,'tax')} value={tax} placeholder={'10,00'} size={hp('2.2%')} type='material-community' name='currency-brl' />
+                                                    <PInput onChangeText={value => setFullBrl(value, 'tax')} value={tax} placeholder={'10,00'} size={hp('2.2%')} type='material-community' name='currency-brl' />
                                                 </View>
-                                                
+
                                                 <View>
-                                                <Text style={styleInsertClassified.description}><MaterialCommunityIcons name="square" color='#000' size={hp('2.0%')} /> Categoria</Text>
-                                                <Select value={'Selecione'} width={wp('35%')} setSelect={value => setSubcategory(value)} dataSelect={['Casa', 'Comercio', 'Apartamento','Terreno']} />
-                                            </View>
-                                                
+                                                    <Text style={styleInsertClassified.description}><MaterialCommunityIcons name="square" color='#000' size={hp('2.0%')} /> Categoria</Text>
+                                                    <Select value={'Selecione'} width={wp('35%')} setSelect={value => setSubcategory(value)} dataSelect={['Casa', 'Comercio', 'Apartamento', 'Terreno']} />
+                                                </View>
+
 
                                             </View>
                                             <View style={{ flexDirection: "row", justifyContent: "space-evenly", }}>
-                                                
+
                                                 <View>
                                                     <Text style={styleInsertClassified.description}><MaterialCommunityIcons name="shower-head" color='#000' size={hp('2.0%')} /> Banheiro</Text>
                                                     <Select value={'Selecione'} width={wp('25%')} setSelect={value => setCol2(value)} dataSelect={['1', '2', '3', '4', '5', '6', '7', '8', '9', '10']} />
@@ -561,50 +919,451 @@ export default function InsertClassified({ navigation }) {
                                                     <Text style={styleInsertClassified.description}><FontAwesome5 name="couch" color='#000' size={hp('2.0%')} /> Mobilhado</Text>
                                                     <Select value={'Selecione'} width={wp('30%')} setSelect={value => setCol6(value)} dataSelect={['Sim', 'Não']} />
                                                 </View>
-                                                
+
 
                                             </View>
-                                            </>
-                                        }
-                                        {route.params.type === "Car" &&
-                                        <></>
-                                        }
 
-                                        {route.params.type === "Electronic" &&
-                                        <></>
-                                        }
-                                        
-                                        {route.params.type === "Baskets" &&
-                                        <></>
-                                        }
-                                        
-                                         
-                                        {route.params.type === "Fashion" &&
-                                       
-                                        <></>
-                                        }
-                                        {route.params.type === "Job" &&
-                                        <></>
-                                        }
-                                        <View style={{ marginTop: hp('3%'), marginRight: hp('1%'), flexDirection: "row", justifyContent: "space-evenly", }}>
-                                            <View style={{ width: wp('90%'), marginRight: hp('1%') }} >
-                                                <Text style={styleInsertClassified.descriptionInput}>Descrição</Text>
-                                                <PInputLong placeholder={'Próximo a panificadora e escola... /  Isto é um comércio ou casa e comécio...'} maxLength={316} multiline={true} onChangeText={value => setDescription(value)} value={description} size={hp('2.2%')} type='material-community' name='view-headline' />
+                                        </>
+                                    }
+                                    {route.params.type === "Car" &&
+                                        <><View style={{ marginTop: hp('3%'), marginRight: hp('1%'), flexDirection: "row", justifyContent: "space-evenly", }}>
+                                            <View style={{ width: wp('32%'), marginRight: hp('1%') }} >
+                                                <Text style={styleInsertClassified.descriptionInput}>CEP</Text>
+                                                <PInput placeholder={'cep'} onChangeText={value => setCep(value)} keyboardType='numeric' size={hp('2.2%')} type='material-icons' name='place' />
+                                            </View>
+                                            <View>
+                                                <Text style={styleInsertClassified.description}><MaterialCommunityIcons name="handshake" color='#000' size={hp('2.0%')} /> Negócio</Text>
+                                                <Select value={'Selecione'} width={wp('28%')} setSelect={value => setType(value)} dataSelect={['Alugar', 'Vender']} />
+                                            </View>
+                                            <View style={{ width: wp('30%'), marginRight: hp('0%') }}>
+                                                <Text style={styleInsertClassified.descriptionInput}> Valor</Text>
+                                                <PInput onChangeText={value => setFullBrl(value, 'price')} value={price} keyboardType='numeric' placeholder={'1.100,00'} size={hp('2%')} type='material-community' name='currency-brl' />
                                             </View>
                                         </View>
+                                            <View style={{ marginRight: hp('1%'), flexDirection: "row", justifyContent: "space-evenly", }}>
+                                                <View style={{ width: wp('30%'), marginRight: hp('1%') }}>
+                                                    <Text style={styleInsertClassified.descriptionInput}>Quilometragem</Text>
+                                                    <PInput onChangeText={value => setFullNumber(value)} value={col5} placeholder={'10'} size={hp('2.2%')} type='material-community' name="speedometer" />
+                                                </View>
+                                                <View>
+                                                    <Text style={styleInsertClassified.description}><MaterialCommunityIcons name="calendar" color='#000' size={hp('2.0%')} /> Ano</Text>
+                                                    <Select value={'Selecione'} width={wp('22%')} setSelect={value => setCol4(value)} dataSelect={["1990", "1991", "1992", " 1993", "1994", " 1995", " 1996", " 1997", " 1998", " 1999", " 2000", " 2001", " 2002", " 2003", " 2004", " 2005", " 2006", " 2007", " 2008", " 2009", " 2010", " 2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020", "2021", "2022"]} />
+                                                </View>
+                                                {subcategory !== 'Embarcação' &&
+                                                <View style={{ width: wp('25%'), marginRight: hp('0%') }}>
+                                                    <Text style={styleInsertClassified.descriptionInput}> IPVA</Text>
+                                                    <PInput onChangeText={value => setFullBrl(value, 'tax')} value={tax} placeholder={'10,00'} size={hp('2.2%')} type='material-community' name='currency-brl' />
+                                                </View>}
+                                                {subcategory === 'Moto' &&
+                                                    <View>
+                                                        <Text style={styleInsertClassified.description}><Octicons name="number" color='#000' size={hp('2.0%')} /> F. Placa</Text>
+                                                        <Select value={'Selecione'} width={wp('15%')} setSelect={value => setCol10(value)} dataSelect={['1', '2', '3', '4', '5', '6', '7', '8', '9']} />
+                                                    </View>}
 
-                                        <View style={{ marginBottom: hp('2%'), flexDirection: "row", justifyContent: "space-evenly", }}>
-                                            <PButton width={wp('25%')} onPress={() => resetState('1')} title='Cancelar' type='material-icons' name='close' size={hp('2.1%')} color={stylesColor.tertiaryColor} colorTitle='#25d366' backgroundColor={stylesColor.secondaryColor} fontFamily='Raleway-Regular' marginLeft={hp('1%')} />
-                                            {buttonInsert &&
-                                            <PButton width={wp('30%')} onPress={() => setVisibleConfirmationInsert(true)} title='Anunciar' type='material-community' name='home-plus-outline' size={hp('2.1%')} color={stylesColor.tertiaryColor} colorTitle='#25d366' backgroundColor='#24b95b' fontFamily='Raleway-Regular' marginLeft={hp('1%')} />
-}
+
                                             </View>
+
+                                            <View style={{ marginRight: hp('0%'), flexDirection: "row", justifyContent: "space-evenly", }}>
+                                                <View>
+                                                    <Text style={styleInsertClassified.description}><MaterialCommunityIcons name="square" color='#000' size={hp('2.0%')} /> Categoria</Text>
+                                                    <Select value={'Selecione'} width={wp('30%')} setSelect={value => setFullSubcategory(value)} dataSelect={['Moto', 'Carro', 'Embarcação', 'Van']} />
+                                                </View>
+                                                <View>
+                                                    <Text style={styleInsertClassified.description}><FontAwesome5 name="cube" color='#000' size={hp('2.0%')} /> {subcategory === 'Embarcação' ? "Tipo" : 'Marca'}</Text>
+                                                    <Select value={'Selecione'} width={wp('30%')} setSelect={value => setFullModel(value)} dataSelect={col2l} />
+                                                </View>
+                                                {(subcategory !== 'Embarcação' && subcategory !== 'Van') &&
+                                                    <View>
+                                                        <Text style={styleInsertClassified.description}><FontAwesome5 name="cubes" color='#000' size={hp('2.0%')} /> Modelo</Text>
+                                                        <Select value={'Selecione'} width={wp('30%')} setSelect={value => setCol1(value)} dataSelect={col1l} />
+                                                    </View>
+                                                }
+                                            </View>
+                                            <View style={{ marginLeft: hp('1%'), flexDirection: "row", justifyContent: "space-evenly", }}>
+                                                {(subcategory === 'Carro' || subcategory === 'Moto') &&
+                                                    <View>
+                                                        <Text style={styleInsertClassified.description}><SimpleLineIcons name="options" color='#000' size={hp('2.0%')} /> Tipo</Text>
+                                                        <Select value={'Selecione'} width={wp('25%')} setSelect={value => setCol3(value)} dataSelect={subcategory === 'Moto' ? ["Street", "Esportiva", "Custom", "Trail", "Naked", "Scooter", "Offroad", "Touring", "Utilitária", "Supermotard", "Triciclo", "Quadriciclo", "Trial", "Mini Cross"] : ["Passeio", "Conversível", "Pick-up", "Antigo", "SUV", "Sedã", "Hatch"]} />
+                                                    </View>
+                                                }
+                                                {(subcategory === 'Embarcação' || subcategory === 'Van') &&
+                                                    <View style={{ width: wp('35%'), marginRight: hp('1%') }}>
+                                                        <Text style={styleInsertClassified.descriptionInput}>Nome Marca</Text>
+                                                        <PInput placeholder={'Marca - Modelo'} onChangeText={value => setCol1(value)} size={hp('2.2%')} type='material-icons' name='drive-file-rename-outline' />
+                                                    </View>
+                                                }
+                                                {(subcategory === 'Carro' || subcategory === 'Moto') &&
+                                                    <View>
+                                                        <Text style={styleInsertClassified.description}><FontAwesome name="superpowers" color='#000' size={hp('2.0%')} />Potência</Text>
+                                                        <Select value={'Selecione'} width={wp('20%')} setSelect={value => setCol6(value)} dataSelect={subcategory === 'Moto' ? ["100cc", "150cc", "200cc", "250cc", "300cc", "350cc", "400cc", "450cc", "500cc", "550cc", "600cc", "650cc", "700cc", "750cc", "800cc", "850cc", "900cc", "950cc", "1000cc", "1050cc", "1100cc", "1150cc", "1200cc", "1250cc", "1300cc", "1350cc", "1400cc", "1450cc", "1500cc"] : ['1.0', '1.5', '1.1', '1.2', '1.3', '1.4', '1.5', '1.6', '1.7', '1.8', '1.9', '2.0', '2.1', '2.2', '2.3', '2.4', '2.5', '2.6', '2.7', '2.8', '2.9', '3.0', '3.1', '3.2', '3.3', '3.4', '3.5', '3.6', '3.7', '3.8', '3.9']} />
+                                                    </View>
+                                                }
+                                                <View>
+                                                    <Text style={styleInsertClassified.description}><MaterialCommunityIcons name="fuel-cell" color='#000' size={hp('2.0%')} />Combustível</Text>
+                                                    <Select value={'Selecione'} width={wp('25%')} setSelect={value => setCol7(value)} dataSelect={['Gasolina', 'Álcool', 'Diesel', 'Flex', 'GNV', 'Etanol']} />
+                                                </View>
+                                                <View style={{ width: wp('22%'), marginRight: hp('0%') }}>
+                                                    <Text style={styleInsertClassified.descriptionInput}>Cor</Text>
+                                                    <PInput placeholder={'Cor'} onChangeText={value => setCol17(value)} size={hp('2.2%')} type='material-icons' name='color-lens' />
+                                                </View>
+
+                                            </View>
+                                            {subcategory === 'Carro' &&
+                                                <><View style={{ flexDirection: "row", justifyContent: "space-evenly", }}>
+                                                    <View>
+                                                        <Text style={styleInsertClassified.description}><MaterialCommunityIcons name="steering" color='#000' size={hp('2.0%')} /> Direção</Text>
+                                                        <Select value={'Selecione'} width={wp('25%')} setSelect={value => setCol8(value)} dataSelect={['Mecânica', 'Hidráulica', 'Elétrica', 'Eletro-hidráulica']} />
+                                                    </View>
+                                                    <View>
+                                                        <Text style={styleInsertClassified.description}><MaterialCommunityIcons name="car-door" color='#000' size={hp('2.0%')} /> Portas</Text>
+                                                        <Select value={'Selecione'} width={wp('20%')} setSelect={value => setCol9(value)} dataSelect={['2', '4']} />
+                                                    </View>
+                                                    <View>
+                                                        <Text style={styleInsertClassified.description}><Octicons name="number" color='#000' size={hp('2.0%')} /> F. Placa</Text>
+                                                        <Select value={'Selecione'} width={wp('15%')} setSelect={value => setCol10(value)} dataSelect={['1', '2', '3', '4', '5', '6', '7', '8', '9']} />
+                                                    </View>
+                                                    <View>
+                                                        <Text style={styleInsertClassified.description}><MaterialCommunityIcons name="electric-switch" color='#000' size={hp('2.0%')} /> Vidro Elé.</Text>
+                                                        <Select value={'Selecione'} width={wp('20%')} setSelect={value => setCol11(value)} dataSelect={['Sim', 'Não']} />
+                                                    </View>
+
+                                                </View>
+                                                    <View style={{ flexDirection: "row", justifyContent: "space-evenly", }}>
+
+                                                        <View>
+                                                            <Text style={styleInsertClassified.description}><MaterialCommunityIcons name="airbag" color='#000' size={hp('2.0%')} /> A. Bag</Text>
+                                                            <Select value={'Selecione'} width={wp('20%')} setSelect={value => setCol12(value)} dataSelect={['Sim', 'Não']} />
+                                                        </View>
+                                                        <View>
+                                                            <Text style={styleInsertClassified.description}><MaterialCommunityIcons name="electric-switch-closed" color='#000' size={hp('2.0%')} /> Trava Elé.</Text>
+                                                            <Select value={'Selecione'} width={wp('20%')} setSelect={value => setCol13(value)} dataSelect={['Sim', 'Não']} />
+                                                        </View>
+                                                        <View>
+                                                            <Text style={styleInsertClassified.description}><Entypo name="air" color='#000' size={hp('2.0%')} /> Ar Condic.</Text>
+                                                            <Select value={'Selecione'} width={wp('20%')} setSelect={value => setCol14(value)} dataSelect={['Sim', 'Não']} />
+                                                        </View>
+                                                        <View>
+                                                            <Text style={styleInsertClassified.description}><MaterialCommunityIcons name="surround-sound" color='#000' size={hp('2.0%')} /> Som</Text>
+                                                            <Select value={'Selecione'} width={wp('20%')} setSelect={value => setCol15(value)} dataSelect={['Sim', 'Não']} />
+                                                        </View>
+
+                                                    </View>
+                                                    <View style={{ flexDirection: "row", justifyContent: "space-evenly", }}>
+
+                                                        <View>
+                                                            <Text style={styleInsertClassified.description}><Octicons name="number" color='#000' size={hp('2.0%')} /> Kit GNV</Text>
+                                                            <Select value={'Selecione'} width={wp('20%')} setSelect={value => setCol16(value)} dataSelect={['Sim', 'Não']} />
+                                                        </View>
+
+                                                    </View></>}
+                                        </>
+                                    }
+
+                                    {route.params.type === "Electronic" &&
+                                        <><View style={{ marginTop: hp('3%'), marginRight: hp('1%'), flexDirection: "row", justifyContent: "space-evenly", }}>
+                                            <View style={{ width: wp('32%'), marginRight: hp('1%') }} >
+                                                <Text style={styleInsertClassified.descriptionInput}>CEP</Text>
+                                                <PInput placeholder={'cep'} onChangeText={value => setCep(value)} keyboardType='numeric' size={hp('2.2%')} type='material-icons' name='place' />
+                                            </View>
+                                            <View>
+                                                <Text style={styleInsertClassified.description}><MaterialCommunityIcons name="handshake" color='#000' size={hp('2.0%')} /> Negócio</Text>
+                                                <Select value={'Selecione'} width={wp('28%')} setSelect={value => setType(value)} dataSelect={['Alugar', 'Vender']} />
+                                            </View>
+                                            <View style={{ width: wp('30%'), marginRight: hp('0%') }}>
+                                                <Text style={styleInsertClassified.descriptionInput}> Valor</Text>
+                                                <PInput onChangeText={value => setFullBrl(value, 'price')} value={price} keyboardType='numeric' placeholder={'1.100,00'} size={hp('2%')} type='material-community' name='currency-brl' />
+                                            </View>
+                                        </View>
+                                            <View style={{ marginLeft: hp('1%'), flexDirection: "row", justifyContent: "space-evenly", }}>
+                                                <View>
+                                                    <Text style={styleInsertClassified.description}><MaterialCommunityIcons name="square" color='#000' size={hp('2.0%')} /> Categoria</Text>
+                                                    <Select value={'Selecione'} width={wp('30%')} setSelect={value => setSubcategory(value)} dataSelect={['Smartphone', 'Tv', 'NotBook', 'Computador', 'Console']} />
+                                                </View>
+                                                <View>
+                                                    <Text style={styleInsertClassified.description}><FontAwesome5 name="cube" color='#000' size={hp('2.0%')} /> {'Marca'}</Text>
+                                                    <Select value={'Selecione'} width={wp('30%')} setSelect={value => setCol2(value)} dataSelect={["Apple", "Asus", "Blackberry", "HTC", "Lenovo", "LG", "Meizu", "Microsoft", "Motorola", "Nokia", "Samsung", "Sony", "Huawei", "Xiaomi", "ZTE", "TCL", "Philips", "Panasonic", "Philco", "AOC", "Multilaser"]} />
+                                                </View>
+                                                <View style={{ width: wp('35%'), marginRight: hp('1%') }}>
+                                                    <Text style={styleInsertClassified.descriptionInput}>Modelo</Text>
+                                                    <PInput placeholder={''} onChangeText={value => setCol1(value)} size={hp('2.2%')} type='material-icons' name='drive-file-rename-outline' />
+                                                </View>
+
+                                            </View>
+                                            <View style={{ marginLeft: hp('1%'), flexDirection: "row", justifyContent: "space-evenly", }}>
+                                                {subcategory !== "Tv" &&
+                                                    <><View style={{ width: wp('25%'), marginRight: hp('0%') }}>
+                                                        <Text style={styleInsertClassified.descriptionInput}>RAM-GB</Text>
+                                                        <PInput placeholder={'8'} onChangeText={value => setCol3(value)} size={hp('2.2%')} type='material-icons' name='memory' />
+                                                    </View><View style={{ width: wp('25%'), marginRight: hp('0%') }}>
+                                                            <Text style={styleInsertClassified.descriptionInput}>Mémória-GB</Text>
+                                                            <PInput placeholder={'256'} onChangeText={value => setCol4(value)} size={hp('2.2%')} type='font-awesome' name='hdd-o' />
+                                                        </View></>}
+                                                <View style={{ width: wp('25%'), marginRight: hp('0%') }}>
+                                                    <Text style={styleInsertClassified.descriptionInput}>Cor</Text>
+                                                    <PInput placeholder={'Cor'} onChangeText={value => setCol17(value)} size={hp('2.2%')} type='material-icons' name='color-lens' />
+                                                </View>
+                                                {subcategory === "Tv" &&
+                                                    <View style={{ width: wp('25%'), marginRight: hp('0%') }}>
+                                                        <Text style={styleInsertClassified.descriptionInput}>Polegadas</Text>
+                                                        <PInput placeholder={'25'} onChangeText={value => setCol16(value)} size={hp('2.2%')} type='material-community' name='ruler-square' />
+                                                    </View>
+                                                }
+
+                                            </View>
+
+
+                                        </>
+                                    }
+
+                                    {route.params.type === "Baskets" &&
+                                        <><View style={{ marginTop: hp('3%'), marginRight: hp('1%'), flexDirection: "row", justifyContent: "space-evenly", }}>
+                                            <View style={{ width: wp('32%'), marginRight: hp('1%') }} >
+                                                <Text style={styleInsertClassified.descriptionInput}>CEP</Text>
+                                                <PInput placeholder={'cep'} onChangeText={value => setCep(value)} keyboardType='numeric' size={hp('2.2%')} type='material-icons' name='place' />
+                                            </View>
+                                            <View>
+                                                <Text style={styleInsertClassified.description}><MaterialCommunityIcons name="handshake" color='#000' size={hp('2.0%')} /> Negócio</Text>
+                                                <Select value={'Selecione'} width={wp('28%')} setSelect={value => setType(value)} dataSelect={['Doar', 'Vender']} />
+                                            </View>
+                                            <View style={{ width: wp('30%'), marginRight: hp('0%') }}>
+                                                <Text style={styleInsertClassified.descriptionInput}> Valor</Text>
+                                                <PInput onChangeText={value => setFullBrl(value, 'price')} value={price} keyboardType='numeric' placeholder={'1.100,00'} size={hp('2%')} type='material-community' name='currency-brl' />
+                                            </View>
+                                        </View>
+                                            <View style={{ marginLeft: hp('0%'), flexDirection: "row", justifyContent: "space-evenly", }}>
+                                                <View>
+                                                    <Text style={styleInsertClassified.description}><MaterialCommunityIcons name="square" color='#000' size={hp('2.0%')} /> Categoria</Text>
+                                                    <Select value={'Selecione'} width={wp('30%')} setSelect={value => setSubcategory(value)} dataSelect={['Alimentos', 'Limpeza', 'Higiene Pess.', 'Bebidas', 'Papelaria & Bzr.', 'Ult. Domésticas', 'Geral']} />
+                                                </View>
+                                                <View style={{ width: wp('35%'), marginRight: hp('1%') }}>
+                                                    <Text style={styleInsertClassified.descriptionInput}>Palavra-chave</Text>
+                                                    <PInput maxLength={12} placeholder={'Churrasco'} onChangeText={value => setCol1(value)} size={hp('2.2%')} type='material-icons' name='drive-file-rename-outline' />
+                                                </View>
+                                                <View>
+                                                    <Text style={styleInsertClassified.description}><Octicons name="number" color='#000' size={hp('2.0%')} /> Qtd. Itens</Text>
+                                                    <Select value={'Selecione'} width={wp('22%')} setSelect={value => setCol2(value)} dataSelect={[ "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "35", "36", "37", "38", "39", "40", "41", "42", "43", "44", "45", "46", "47", "48", "49", "50", "51", "52", "53", "54", "55", "56", "57", "58", "59", "60", "61", "62", "63", "64", "65", "66", "67", "68", "69", "70", "71", "72", "73", "74", "75", "76", "77", "78", "79", "80", "81", "82", "83", "84", "85", "86", "87", "88", "89", "90", "91", "92", "93", "94", "95", "96", "97", "98", "99", "100", "101", "102", "103", "104", "105", "106", "107", "108", "109", "110", "111", "112", "113", "114", "115", "116", "117", "118", "119", "120", "121", "122", "123", "124", "125", "126", "127", "128", "129", "130", "131", "132", "133", "134", "135", "136", "137", "138", "139", "140", "141", "142", "143", "144", "145", "146", "147", "148", "149", "150", "151", "152", "153", "154", "155", "156", "157", "158", "159", "160", "161", "162", "163", "164", "165", "166", "167", "168", "169", "170", "171", "172", "173", "174", "175", "176", "177", "178", "179", "180", "181", "182", "183", "184", "185", "186", "187", "188", "189", "190", "191", "192", "193", "194", "195", "196", "197", "198", "199", "200", "201", "202", "203", "204", "205", "206", "207", "208", "209", "210", "211", "212", "213", "214", "215", "216", "217", "218", "219", "220", "221", "222", "223", "224", "225", "226", "227", "228", "229", "230", "231", "232", "233", "234", "235", "236", "237", "238", "239", "240", "241", "242", "243", "244", "245", "246", "247", "248", "249", "250", "251", "252", "253", "254", "255", "256", "257", "258", "259", "260", "261", "262", "263", "264", "265", "266", "267", "268", "269", "270", "271", "272", "273", "274", "275", "276", "277", "278", "279", "280", "281", "282", "283", "284", "285", "286", "287", "288", "289", "290", "291", "292", "293", "294", "295", "296", "297", "298", "299", "300", "301", "302", "303", "304", "305", "306", "307", "308", "309", "310", "311", "312", "313", "314", "315", "316", "317", "318", "319", "320", "321", "322", "323", "324", "325", "326", "327", "328", "329", "330", "331", "332", "333", "334", "335", "336", "337", "338", "339", "340", "341", "342", "343", "344", "345", "346", "347", "348", "349", "350", "351", "352", "353", "354", "355", "356", "357", "358", "359", "360", "361", "362", "363", "364", "365", "366", "367", "368", "369", "370", "371", "372", "373", "374", "375", "376", "377", "378", "379", "380", "381", "382", "383", "384", "385", "386", "387", "388", "389", "390", "391", "392", "393", "394", "395", "396", "397", "398", "399", "400", "401", "402", "403", "404", "405", "406", "407", "408", "409", "410", "411", "412", "413", "414", "415", "416", "417", "418", "419", "420", "421", "422", "423", "424", "425", "426", "427", "428", "429", "430", "431", "432", "433", "434", "435", "436", "437", "438", "439", "440", "441", "442", "443", "444", "445", "446", "447", "448", "449", "450", "451", "452", "453", "454", "455", "456", "457", "458", "459", "460", "461", "462", "463", "464", "465", "466", "467", "468", "469", "470", "471", "472", "473", "474", "475", "476", "477", "478", "479", "480", "481", "482", "483", "484", "485", "486", "487", "488", "489", "490", "491", "492", "493", "494", "495", "496", "497", "498", "499", "500"]} />
+                                                </View>
+
+
+                                            </View>
+
+
+                                        </>
+                                    }
+
+
+                                    {route.params.type === "Fashion" &&
+
+                                        <><View style={{ marginTop: hp('3%'), marginRight: hp('1%'), flexDirection: "row", justifyContent: "space-evenly", }}>
+                                            <View style={{ width: wp('32%'), marginRight: hp('1%') }} >
+                                                <Text style={styleInsertClassified.descriptionInput}>CEP</Text>
+                                                <PInput placeholder={'cep'} onChangeText={value => setCep(value)} keyboardType='numeric' size={hp('2.2%')} type='material-icons' name='place' />
+                                            </View>
+                                            <View>
+                                                <Text style={styleInsertClassified.description}><MaterialCommunityIcons name="handshake" color='#000' size={hp('2.0%')} /> Negócio</Text>
+                                                <Select value={'Selecione'} width={wp('28%')} setSelect={value => setType(value)} dataSelect={['Doar', 'Vender', 'Alugar']} />
+                                            </View>
+                                            <View style={{ width: wp('30%'), marginRight: hp('0%') }}>
+                                                <Text style={styleInsertClassified.descriptionInput}> Valor</Text>
+                                                <PInput onChangeText={value => setFullBrl(value, 'price')} value={price} keyboardType='numeric' placeholder={'1.100,00'} size={hp('2%')} type='material-community' name='currency-brl' />
+                                            </View>
+                                        </View>
+                                            <View style={{ marginLeft: hp('0%'), flexDirection: "row", justifyContent: "space-evenly", }}>
+                                                <View>
+                                                    <Text style={styleInsertClassified.description}><MaterialCommunityIcons name="square" color='#000' size={hp('2.0%')} /> Categoria</Text>
+                                                    <Select value={'Selecione'} width={wp('30%')} setSelect={value => setFullSubcategory(value)} dataSelect={['Roupas', 'Calçados', 'Acessórios', 'Beleza e Saúde']} />
+                                                </View>
+                                                {subcategory !== 'Beleza e Saúde' &&
+                                                    <View>
+                                                        <Text style={styleInsertClassified.description}><FontAwesome5 name="cubes" color='#000' size={hp('2.0%')} /> Tipo</Text>
+                                                        <Select value={'Selecione'} width={wp('40%')} setSelect={value => setCol1(value)} dataSelect={col2l} />
+                                                    </View>}
+                                                {subcategory === 'Beleza e Saúde' &&
+                                                    <View style={{ width: wp('35%'), marginRight: hp('1%') }}>
+                                                        <Text style={styleInsertClassified.descriptionInput}>Palavra-Chave</Text>
+                                                        <PInput placeholder={'Nome - Marca'} onChangeText={value => setCol1(value)} size={hp('2.2%')} type='material-icons' name='drive-file-rename-outline' />
+                                                    </View>}
+
+
+
+                                            </View>
+                                            <View style={{ marginLeft: hp('0%'), flexDirection: "row", justifyContent: "space-evenly", }}>
+                                                <View>
+                                                    <Text style={styleInsertClassified.description}><MaterialCommunityIcons name="gender-male-female" color='#000' size={hp('2.0%')} />Gênero</Text>
+                                                    <Select value={'Selecione'} width={wp('18%')} setSelect={value => setCol4(value)} dataSelect={['Fem', 'Mas', 'Uni']} />
+                                                </View>
+                                                {subcategory !== 'Beleza e Saúde' &&
+                                                    <View>
+                                                        <Text style={styleInsertClassified.description}><MaterialCommunityIcons name="ruler-square" color='#000' size={hp('2.0%')} /> Tamanho</Text>
+                                                        <Select value={'Selecione'} width={wp('30%')} setSelect={value => setCol3(value)} dataSelect={subcategory === 'Roupas' ? ['PP', 'P', 'M', 'G', 'GG'] : ["17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "35", "36", "37", "38", "39", "40", "41", "42", "43", "44", "45"]} />
+                                                    </View>
+                                                }
+                                                <View>
+                                                    <Text style={styleInsertClassified.description}><Octicons name="number" color='#000' size={hp('2.0%')} /> Qtd. Itens</Text>
+                                                    <Select value={'Selecione'} width={wp('22%')} setSelect={value => setCol7(value)} dataSelect={[ "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "35", "36", "37", "38", "39", "40", "41", "42", "43", "44", "45", "46", "47", "48", "49", "50", "51", "52", "53", "54", "55", "56", "57", "58", "59", "60", "61", "62", "63", "64", "65", "66", "67", "68", "69", "70", "71", "72", "73", "74", "75", "76", "77", "78", "79", "80", "81", "82", "83", "84", "85", "86", "87", "88", "89", "90", "91", "92", "93", "94", "95", "96", "97", "98", "99", "100", "101", "102", "103", "104", "105", "106", "107", "108", "109", "110", "111", "112", "113", "114", "115", "116", "117", "118", "119", "120", "121", "122", "123", "124", "125", "126", "127", "128", "129", "130", "131", "132", "133", "134", "135", "136", "137", "138", "139", "140", "141", "142", "143", "144", "145", "146", "147", "148", "149", "150", "151", "152", "153", "154", "155", "156", "157", "158", "159", "160", "161", "162", "163", "164", "165", "166", "167", "168", "169", "170", "171", "172", "173", "174", "175", "176", "177", "178", "179", "180", "181", "182", "183", "184", "185", "186", "187", "188", "189", "190", "191", "192", "193", "194", "195", "196", "197", "198", "199", "200", "201", "202", "203", "204", "205", "206", "207", "208", "209", "210", "211", "212", "213", "214", "215", "216", "217", "218", "219", "220", "221", "222", "223", "224", "225", "226", "227", "228", "229", "230", "231", "232", "233", "234", "235", "236", "237", "238", "239", "240", "241", "242", "243", "244", "245", "246", "247", "248", "249", "250", "251", "252", "253", "254", "255", "256", "257", "258", "259", "260", "261", "262", "263", "264", "265", "266", "267", "268", "269", "270", "271", "272", "273", "274", "275", "276", "277", "278", "279", "280", "281", "282", "283", "284", "285", "286", "287", "288", "289", "290", "291", "292", "293", "294", "295", "296", "297", "298", "299", "300", "301", "302", "303", "304", "305", "306", "307", "308", "309", "310", "311", "312", "313", "314", "315", "316", "317", "318", "319", "320", "321", "322", "323", "324", "325", "326", "327", "328", "329", "330", "331", "332", "333", "334", "335", "336", "337", "338", "339", "340", "341", "342", "343", "344", "345", "346", "347", "348", "349", "350", "351", "352", "353", "354", "355", "356", "357", "358", "359", "360", "361", "362", "363", "364", "365", "366", "367", "368", "369", "370", "371", "372", "373", "374", "375", "376", "377", "378", "379", "380", "381", "382", "383", "384", "385", "386", "387", "388", "389", "390", "391", "392", "393", "394", "395", "396", "397", "398", "399", "400", "401", "402", "403", "404", "405", "406", "407", "408", "409", "410", "411", "412", "413", "414", "415", "416", "417", "418", "419", "420", "421", "422", "423", "424", "425", "426", "427", "428", "429", "430", "431", "432", "433", "434", "435", "436", "437", "438", "439", "440", "441", "442", "443", "444", "445", "446", "447", "448", "449", "450", "451", "452", "453", "454", "455", "456", "457", "458", "459", "460", "461", "462", "463", "464", "465", "466", "467", "468", "469", "470", "471", "472", "473", "474", "475", "476", "477", "478", "479", "480", "481", "482", "483", "484", "485", "486", "487", "488", "489", "490", "491", "492", "493", "494", "495", "496", "497", "498", "499", "500"]} />
+                                                </View>
+
+
+                                            </View>
+
+
+                                        </>
+                                    }
+                                    {route.params.type === "Job" &&
+                                        <><View style={{ marginTop: hp('3%'), marginRight: hp('1%'), flexDirection: "row", justifyContent: "space-evenly", }}>
+                                            <View style={{ width: wp('32%'), marginRight: hp('1%') }} >
+                                                <Text style={styleInsertClassified.descriptionInput}>CEP</Text>
+                                                <PInput placeholder={'cep'} onChangeText={value => setCep(value)} keyboardType='numeric' size={hp('2.2%')} type='material-icons' name='place' />
+                                            </View>
+                                            <View>
+                                                <Text style={styleInsertClassified.description}><MaterialCommunityIcons name="handshake" color='#000' size={hp('2.0%')} /> Contratação</Text>
+                                                <Select value={'Selecione'} width={wp('28%')} setSelect={value => setType(value)} dataSelect={['PJ', 'CLT', 'FreeLa']} />
+                                            </View>
+                                            <View style={{ width: wp('30%'), marginRight: hp('0%') }}>
+                                                <Text style={styleInsertClassified.descriptionInput}> Salário</Text>
+                                                <PInput onChangeText={value => setFullBrl(value, 'price')} value={price} keyboardType='numeric' placeholder={'1.100,00'} size={hp('2%')} type='material-community' name='currency-brl' />
+                                            </View>
+                                        </View>
+                                            <View style={{ marginLeft: hp('0%'), flexDirection: "row", justifyContent: "space-evenly", }}>
+                                                <View>
+                                                    <Text style={styleInsertClassified.description}><MaterialCommunityIcons name="square" color='#000' size={hp('2.0%')} /> Área</Text>
+                                                    <Select value={'Selecione'} width={wp('50%')} setSelect={value => setSubcategory(value)} dataSelect={["Administrativo", "Secretariado", "Finanças", "Comercial", "Vendas", "Telecomunicações", "Informática", "Multimídia", "Tecnogia da Informação", "Atendimento ao Cliente", "Call Center", "Banco", "Seguros", "Consultoria", "Jurídica", "Logística", "Distribuição", "Turismo", "Hotelaria", "Restaurante", "Educação", "Formação", "Marketing", "Comunicação", "Serviços Domésticos", "Limpezas", "Construção", "Industrial", "Saúde", "Medicina", "Enfermagem", "Agricultura", "Pecuária", "Veterinária", "Engenharia", "Arquitetura", "Design",]} />
+                                                </View>
+                                                <View style={{ width: wp('35%'), marginRight: hp('1%') }}>
+                                                    <Text style={styleInsertClassified.descriptionInput}>Cargo</Text>
+                                                    <PInput placeholder={'Desenvolvedor'} onChangeText={value => setCol1(value)} size={hp('2.2%')} type='material-icons' name='drive-file-rename-outline' />
+                                                </View>
+
+                                            </View>
+                                            <View style={{ marginLeft: hp('0%'), flexDirection: "row", justifyContent: "space-evenly", }}>
+                                                <View>
+                                                    <Text style={styleInsertClassified.description}><MaterialCommunityIcons name="gender-male-female" color='#000' size={hp('2.0%')} />Gênero</Text>
+                                                    <Select value={'Selecione'} width={wp('21%')} setSelect={value => setCol4(value)} dataSelect={['Fem', 'Mas', 'Uni']} />
+                                                </View>
+
+
+                                                <View style={{ width: wp('35%'), marginRight: hp('1%') }}>
+                                                    <Text style={styleInsertClassified.descriptionInput}>Empresa</Text>
+                                                    <PInput placeholder={'Linear Dev'} onChangeText={value => setCol5(value)} size={hp('2.2%')} type='material-icons' name='drive-file-rename-outline' />
+                                                </View>
+
+
+                                            </View>
+
+
+                                        </>
+                                    }
+                                    {route.params.type === "Services" &&
+                                        <><View style={{ marginTop: hp('3%'), marginRight: hp('1%'), flexDirection: "row", justifyContent: "space-evenly", }}>
+                                            <View style={{ width: wp('32%'), marginRight: hp('1%') }} >
+                                                <Text style={styleInsertClassified.descriptionInput}>CEP</Text>
+                                                <PInput placeholder={'cep'} onChangeText={value => setCep(value)} keyboardType='numeric' size={hp('2.2%')} type='material-icons' name='place' />
+                                            </View>
+                                            <View>
+                                                <Text style={styleInsertClassified.description}><MaterialCommunityIcons name="handshake" color='#000' size={hp('2.0%')} /> Contratação</Text>
+                                                <Select value={'Selecione'} width={wp('28%')} setSelect={value => setType(value)} dataSelect={['PJ', 'CLT', 'FreeLa']} />
+                                            </View>
+                                            <View style={{ width: wp('30%'), marginRight: hp('0%') }}>
+                                                <Text style={styleInsertClassified.descriptionInput}> Salário</Text>
+                                                <PInput onChangeText={value => setFullBrl(value, 'price')} value={price} keyboardType='numeric' placeholder={'1.100,00'} size={hp('2%')} type='material-community' name='currency-brl' />
+                                            </View>
+                                        </View>
+                                            <View style={{ marginLeft: hp('0%'), flexDirection: "row", justifyContent: "space-evenly", }}>
+                                                <View>
+                                                    <Text style={styleInsertClassified.description}><MaterialCommunityIcons name="square" color='#000' size={hp('2.0%')} /> Área</Text>
+                                                    <Select value={'Selecione'} width={wp('50%')} setSelect={value => setSubcategory(value)} dataSelect={["Administrativo", "Secretariado", "Finanças", "Comercial", "Vendas", "Telecomunicações", "Informática", "Multimídia", "Tecnogia da Informação", "Atendimento ao Cliente", "Call Center", "Banco", "Seguros", "Consultoria", "Jurídica", "Logística", "Distribuição", "Turismo", "Hotelaria", "Restaurante", "Educação", "Formação", "Marketing", "Comunicação", "Serviços Domésticos", "Limpezas", "Construção", "Industrial", "Saúde", "Medicina", "Enfermagem", "Agricultura", "Pecuária", "Veterinária", "Engenharia", "Arquitetura", "Design",]} />
+                                                </View>
+                                                <View style={{ width: wp('35%'), marginRight: hp('1%') }}>
+                                                    <Text style={styleInsertClassified.descriptionInput}>Cargo</Text>
+                                                    <PInput placeholder={'Desenvolvedor'} onChangeText={value => setCol1(value)} size={hp('2.2%')} type='material-icons' name='drive-file-rename-outline' />
+                                                </View>
+
+                                            </View>
+                                            <View style={{ marginLeft: hp('0%'), flexDirection: "row", justifyContent: "space-evenly", }}>
+                                                <View>
+                                                    <Text style={styleInsertClassified.description}><MaterialCommunityIcons name="gender-male-female" color='#000' size={hp('2.0%')} />Gênero</Text>
+                                                    <Select value={'Selecione'} width={wp('21%')} setSelect={value => setCol4(value)} dataSelect={['Fem', 'Mas', 'Uni']} />
+                                                </View>
+
+
+                                            </View>
+
+
+                                        </>
+                                    }
+                                    {route.params.type === "Animal" &&
+
+                                        <><View style={{ marginTop: hp('3%'), marginRight: hp('1%'), flexDirection: "row", justifyContent: "space-evenly", }}>
+                                            <View style={{ width: wp('32%'), marginRight: hp('1%') }} >
+                                                <Text style={styleInsertClassified.descriptionInput}>CEP</Text>
+                                                <PInput placeholder={'cep'} onChangeText={value => setCep(value)} keyboardType='numeric' size={hp('2.2%')} type='material-icons' name='place' />
+                                            </View>
+                                            <View>
+                                                <Text style={styleInsertClassified.description}><MaterialCommunityIcons name="handshake" color='#000' size={hp('2.0%')} /> Negócio</Text>
+                                                <Select value={'Selecione'} width={wp('28%')} setSelect={value => setType(value)} dataSelect={['Doar', 'Vender', 'Alugar']} />
+                                            </View>
+                                            <View style={{ width: wp('30%'), marginRight: hp('0%') }}>
+                                                <Text style={styleInsertClassified.descriptionInput}> Valor</Text>
+                                                <PInput onChangeText={value => setFullBrl(value, 'price')} value={price} keyboardType='numeric' placeholder={'1.100,00'} size={hp('2%')} type='material-community' name='currency-brl' />
+                                            </View>
+                                        </View>
+                                            <View style={{ marginLeft: hp('0%'), flexDirection: "row", justifyContent: "space-evenly", }}>
+                                                <View>
+                                                    <Text style={styleInsertClassified.description}><MaterialCommunityIcons name="square" color='#000' size={hp('2.0%')} /> Animal</Text>
+                                                    <Select value={'Selecione'} width={wp('30%')} setSelect={value => setSubcategory(value)} dataSelect={['Bode', 'Boi', 'Cachorro', 'Cavalo', 'Coelho', 'Galinha', 'Gato', 'Hamster', 'Ovelha', 'Passaro', 'Pato', 'Porco', 'Vaca']} />
+                                                </View>
+                                                    <View style={{ width: wp('40%'), marginRight: hp('0%') }}>
+                                                        <Text style={styleInsertClassified.descriptionInput}>Raça</Text>
+                                                        <PInput placeholder={'Labrador'} onChangeText={value => setCol1(value)} size={hp('2.2%')} type='material-icons' name='drive-file-rename-outline' />
+                                                    </View>
+                                                    <View>
+                                                    <Text style={styleInsertClassified.description}><MaterialCommunityIcons name="gender-male-female" color='#000' size={hp('2.0%')} /> Sexo</Text>
+                                                    <Select value={'Selecione'} width={wp('18%')} setSelect={value => setCol4(value)} dataSelect={['Fem', 'Mac']} />
+                                                </View>
+
+
+
+                                            </View>
+                                            <View style={{ marginLeft: hp('0%'), flexDirection: "row", justifyContent: "space-evenly", }}>
+                                                
+                                                {subcategory !== 'Beleza e Saúde' &&
+                                                    <View>
+                                                        <Text style={styleInsertClassified.description}><MaterialCommunityIcons name="calendar" color='#000' size={hp('2.0%')} /> Qts. Mêses</Text>
+                                                        <Select value={'Selecione'} width={wp('30%')} setSelect={value => setCol3(value)} dataSelect={[ "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "35", "36", "37", "38", "39", "40", "41", "42", "43", "44", "45", "46", "47", "48", "49", "50", "51", "52", "53", "54", "55", "56", "57", "58", "59", "60", "61", "62", "63", "64", "65", "66", "67", "68", "69", "70", "71", "72", "73", "74", "75", "76", "77", "78", "79", "80", "81", "82", "83", "84", "85", "86", "87", "88", "89", "90", "91", "92", "93", "94", "95", "96", "97", "98", "99", "100", "101", "102", "103", "104", "105", "106", "107", "108", "109", "110", "111", "112", "113", "114", "115", "116", "117", "118", "119", "120", "121", "122", "123", "124", "125", "126", "127", "128", "129", "130", "131", "132", "133", "134", "135", "136", "137", "138", "139", "140", "141", "142", "143", "144", "145", "146", "147", "148", "149", "150", "151", "152", "153", "154", "155", "156", "157", "158", "159", "160", "161", "162", "163", "164", "165", "166", "167", "168", "169", "170", "171", "172", "173", "174", "175", "176", "177", "178", "179", "180", "181", "182", "183", "184", "185", "186", "187", "188", "189", "190", "191", "192", "193", "194", "195", "196", "197", "198", "199", "200", "201", "202", "203", "204", "205", "206", "207", "208", "209", "210", "211", "212", "213", "214", "215", "216", "217", "218", "219", "220", "221", "222", "223", "224", "225", "226", "227", "228", "229", "230", "231", "232", "233", "234", "235", "236", "237", "238", "239", "240", "241", "242", "243", "244", "245", "246", "247", "248", "249", "250", "251", "252", "253", "254", "255", "256", "257", "258", "259", "260", "261", "262", "263", "264", "265", "266", "267", "268", "269", "270", "271", "272", "273", "274", "275", "276", "277", "278", "279", "280", "281", "282", "283", "284", "285", "286", "287", "288", "289", "290", "291", "292", "293", "294", "295", "296", "297", "298", "299", "300", "301", "302", "303", "304", "305", "306", "307", "308", "309", "310", "311", "312", "313", "314", "315", "316", "317", "318", "319", "320", "321", "322", "323", "324", "325", "326", "327", "328", "329", "330", "331", "332", "333", "334", "335", "336", "337", "338", "339", "340", "341", "342", "343", "344", "345", "346", "347", "348"]} />
+                                                    </View>
+                                                }
+                                                <View>
+                                                    <Text style={styleInsertClassified.description}><Octicons name="number" color='#000' size={hp('2.0%')} /> Quantidade</Text>
+                                                    <Select value={'Selecione'} width={wp('22%')} setSelect={value => setCol7(value)} dataSelect={[ "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "35", "36", "37", "38", "39", "40", "41", "42", "43", "44", "45", "46", "47", "48", "49", "50", "51", "52", "53", "54", "55", "56", "57", "58", "59", "60", "61", "62", "63", "64", "65", "66", "67", "68", "69", "70", "71", "72", "73", "74", "75", "76", "77", "78", "79", "80", "81", "82", "83", "84", "85", "86", "87", "88", "89", "90", "91", "92", "93", "94", "95", "96", "97", "98", "99", "100", "101", "102", "103", "104", "105", "106", "107", "108", "109", "110", "111", "112", "113", "114", "115", "116", "117", "118", "119", "120", "121", "122", "123", "124", "125", "126", "127", "128", "129", "130", "131", "132", "133", "134", "135", "136", "137", "138", "139", "140", "141", "142", "143", "144", "145", "146", "147", "148", "149", "150", "151", "152", "153", "154", "155", "156", "157", "158", "159", "160", "161", "162", "163", "164", "165", "166", "167", "168", "169", "170", "171", "172", "173", "174", "175", "176", "177", "178", "179", "180", "181", "182", "183", "184", "185", "186", "187", "188", "189", "190", "191", "192", "193", "194", "195", "196", "197", "198", "199", "200", "201", "202", "203", "204", "205", "206", "207", "208", "209", "210", "211", "212", "213", "214", "215", "216", "217", "218", "219", "220", "221", "222", "223", "224", "225", "226", "227", "228", "229", "230", "231", "232", "233", "234", "235", "236", "237", "238", "239", "240", "241", "242", "243", "244", "245", "246", "247", "248", "249", "250", "251", "252", "253", "254", "255", "256", "257", "258", "259", "260", "261", "262", "263", "264", "265", "266", "267", "268", "269", "270", "271", "272", "273", "274", "275", "276", "277", "278", "279", "280", "281", "282", "283", "284", "285", "286", "287", "288", "289", "290", "291", "292", "293", "294", "295", "296", "297", "298", "299", "300", "301", "302", "303", "304", "305", "306", "307", "308", "309", "310", "311", "312", "313", "314", "315", "316", "317", "318", "319", "320", "321", "322", "323", "324", "325", "326", "327", "328", "329", "330", "331", "332", "333", "334", "335", "336", "337", "338", "339", "340", "341", "342", "343", "344", "345", "346", "347", "348", "349", "350", "351", "352", "353", "354", "355", "356", "357", "358", "359", "360", "361", "362", "363", "364", "365", "366", "367", "368", "369", "370", "371", "372", "373", "374", "375", "376", "377", "378", "379", "380", "381", "382", "383", "384", "385", "386", "387", "388", "389", "390", "391", "392", "393", "394", "395", "396", "397", "398", "399", "400", "401", "402", "403", "404", "405", "406", "407", "408", "409", "410", "411", "412", "413", "414", "415", "416", "417", "418", "419", "420", "421", "422", "423", "424", "425", "426", "427", "428", "429", "430", "431", "432", "433", "434", "435", "436", "437", "438", "439", "440", "441", "442", "443", "444", "445", "446", "447", "448", "449", "450", "451", "452", "453", "454", "455", "456", "457", "458", "459", "460", "461", "462", "463", "464", "465", "466", "467", "468", "469", "470", "471", "472", "473", "474", "475", "476", "477", "478", "479", "480", "481", "482", "483", "484", "485", "486", "487", "488", "489", "490", "491", "492", "493", "494", "495", "496", "497", "498", "499", "500"]} />
+                                                </View>
+
+
+                                            </View>
+
+
+                                        </>
+                                    }
+
+
+                                    <View style={{ marginTop: hp('3%'), marginRight: hp('1%'), flexDirection: "row", justifyContent: "space-evenly", }}>
+                                        <View style={{ width: wp('90%'), marginRight: hp('1%') }} >
+                                            <Text style={styleInsertClassified.descriptionInput}>Descrição</Text>
+                                            <PInputLong placeholder={'Descreva aqui  itens, detalhes do produto, tem limite mas não se preocupe você poderá passar mais detalhes quando for contatado pelo whatsapp'} maxLength={316} multiline={true} onChangeText={value => setDescription(value)} value={description} size={hp('2.2%')} type='material-community' name='view-headline' />
+                                        </View>
                                     </View>
 
-                                </ScrollView>
-                            
-                            
-                             
+                                    <View style={{ marginBottom: hp('2%'), flexDirection: "row", justifyContent: "space-evenly", }}>
+                                        <PButton width={wp('25%')} onPress={() => resetState('1')} title='Cancelar' type='material-icons' name='close' size={hp('2.1%')} color={stylesColor.tertiaryColor} colorTitle='#25d366' backgroundColor={stylesColor.secondaryColor} fontFamily='Raleway-Regular' marginLeft={hp('1%')} />
+                                        {buttonInsert &&
+                                            <PButton width={wp('30%')} onPress={() => setVisibleConfirmationInsert(true)} title='Anunciar' type='material-community' name='plus' size={hp('2.1%')} color={stylesColor.tertiaryColor} colorTitle='#25d366' backgroundColor='#24b95b' fontFamily='Raleway-Regular' marginLeft={hp('1%')} />
+                                        }
+                                    </View>
+                                </View>
+
+                            </ScrollView>
+
+
+
 
 
                         </Center>
@@ -623,7 +1382,7 @@ export default function InsertClassified({ navigation }) {
             </SafeAreaView>
 
         </NativeBaseProvider>
-        );
+    );
 
 
 }

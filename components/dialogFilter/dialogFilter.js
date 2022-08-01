@@ -74,6 +74,30 @@ const DialogFilter = (props) => {
                                     }}
                                 />
                             }
+                            {props.type === 'category' && 
+                                <SelectDropdown
+                                    dropdownIconPosition={'right'}
+                                    buttonTextStyle={dialogCode.dropdown1BtnTxtStyle}
+                                    renderDropdownIcon={isOpened => {
+                                        return <MaterialCommunityIcons name={isOpened ? 'chevron-up' : 'chevron-down'} color={stylesColor.tertiaryColor} size={hp('3%')} />;
+                                    }}
+                                    dropdownStyle={dialogCode.dropdown1DropdownStyle}
+                                    rowStyle={dialogCode.dropdown1RowStyle}
+                                    rowTextStyle={dialogCode.dropdown1RowTxtStyle}
+                                    defaultButtonText={props.dataSelect[0]}
+                                    buttonStyle={dialogCode.buttonStyle}
+                                    data={props.dataSelect}
+                                    onSelect={(selectedItem, index) => {
+                                        props.setFilter(selectedItem)
+                                    }}
+                                    buttonTextAfterSelection={(selectedItem, index) => {
+                                        return selectedItem
+                                    }}
+                                    rowTextForSelection={(item, index) => {
+                                        return item
+                                    }}
+                                />
+                            }
                             {props.type === 'order' &&
                             <><SelectDropdown
                         dropdownIconPosition={'right'}

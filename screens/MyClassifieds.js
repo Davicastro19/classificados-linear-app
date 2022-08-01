@@ -25,7 +25,7 @@ export default function MyClassifieds({ navigation }) {
     const [status, setStatus] = useState(null)
     const renderItem = React.useCallback(({ item }) => {
         return (
-            <CardMyClassifieds item={item} selectClassifiedById={() => selectClassifiedById(item.classified_id)} validateImage={() => validateImage(item.classified_images, '1')}
+            <CardMyClassifieds item={item} selectClassifiedById={() => selectClassifiedById(item.classified_id)} validateImage={() => validateImage(item.classified_images, '0')}
                 title="Editar" name='home-edit'
             />
         )
@@ -139,11 +139,13 @@ export default function MyClassifieds({ navigation }) {
             {!isLoading && dataSelect && variable &&
             <View style={styles.viewFilter}>
                     <PButton onPress={() => insertClassifiedFull("Immobile")} title="Imóvel" type='material-community' name='plus' size={hp('3%')} color={stylesColor.tertiaryColor} colorTitle={stylesColor.tertiaryColor} backgroundColor={stylesColor.primaryColor} fontFamily='Raleway-SemiBold' />
+                    <PButton onPress={() => insertClassifiedFull("Animal")} title="Animais" type='material-community' name='plus' size={hp('3%')} color={stylesColor.tertiaryColor} colorTitle={stylesColor.tertiaryColor} backgroundColor={stylesColor.primaryColor} fontFamily='Raleway-SemiBold' />
                     <PButton onPress={() => insertClassifiedFull("Car")} title="Automovél" type='material-community' name='plus' size={hp('3%')} color={stylesColor.tertiaryColor} colorTitle={stylesColor.tertiaryColor} backgroundColor={stylesColor.primaryColor} fontFamily='Raleway-SemiBold' />
                     <PButton onPress={() => insertClassifiedFull("Electronic")} title="Eletrônico" type='material-community' name='plus' size={hp('3%')} color={stylesColor.tertiaryColor} colorTitle={stylesColor.tertiaryColor} backgroundColor={stylesColor.primaryColor} fontFamily='Raleway-SemiBold' />
                     <PButton onPress={() => insertClassifiedFull("Baskets")} title="Cestas básicas" type='material-community' name='plus' size={hp('3%')} color={stylesColor.tertiaryColor} colorTitle={stylesColor.tertiaryColor} backgroundColor={stylesColor.primaryColor} fontFamily='Raleway-SemiBold' />
                     <PButton onPress={() => insertClassifiedFull("Fashion")} title="Moda e beleza" type='material-community' name='plus' size={hp('3%')} color={stylesColor.tertiaryColor} colorTitle={stylesColor.tertiaryColor} backgroundColor={stylesColor.primaryColor} fontFamily='Raleway-SemiBold' />
                     <PButton onPress={() => insertClassifiedFull("Job")} title="Vagas de Trabalho" type='material-community' name='plus' size={hp('3%')} color={stylesColor.tertiaryColor} colorTitle={stylesColor.tertiaryColor} backgroundColor={stylesColor.primaryColor} fontFamily='Raleway-SemiBold' />
+                    <PButton onPress={() => insertClassifiedFull("Services")} title="Oferecer Serviço" type='material-community' name='plus' size={hp('3%')} color={stylesColor.tertiaryColor} colorTitle={stylesColor.tertiaryColor} backgroundColor={stylesColor.primaryColor} fontFamily='Raleway-SemiBold' />  
                 </View>
 }
                 {isLoading &&

@@ -56,7 +56,7 @@ export default function Classifieds({navigation}) {
 
     const renderItem = React.useCallback(({ item }) => {
         return (
-            <CardClassifieds item={item} selectClassifiedById={() => selectClassifiedById(item.id)} validateImage={() => validateImage(item.images, '1')}  title="Ver mais"  name='information-variant'/>
+            <CardClassifieds item={item} selectClassifiedById={() => selectClassifiedById(item.id)} validateImage={() => validateImage(item.images, '0')}  title="Ver mais"  name='information-variant'/>
         )
     }, [classifieds]);
 
@@ -69,11 +69,44 @@ export default function Classifieds({navigation}) {
             setQuesetion('Qual bairro?')
         } else if (type == 'district') {
             setOrderDistrict(value)
+            setDataSelect([ 'Imóvel','Animal','Automovél','Eletrônico','Cesta básica','Moda e beleza','Vagas de Trabalho','Encontrar Serviço'])
+            setType('category')
+            setQuesetion('Qual Categoria?')
+        }else if (type == 'category') {
+            setOrderCategory(value)
+            if(value ==='Imóvel'){
+                setDataSelect([ 'Imóvel','Animal','Automovél','Eletrônico','Cesta básica','Moda e beleza','Vagas de Trabalho','Encontrar Serviço'])
+            }else if
+            (value ==='Animal'){
+                setDataSelect([ 'Imóvel','Animal','Automovél','Eletrônico','Cesta básica','Moda e beleza','Vagas de Trabalho','Encontrar Serviço'])
+            }else if
+            (value ==='Automovél'){
+                setDataSelect([ 'Imóvel','Animal','Automovél','Eletrônico','Cesta básica','Moda e beleza','Vagas de Trabalho','Encontrar Serviço'])
+            }else if
+            (value ==='Eletrônico'){
+                setDataSelect([ 'Imóvel','Animal','Automovél','Eletrônico','Cesta básica','Moda e beleza','Vagas de Trabalho','Encontrar Serviço'])
+            }else if
+            (value ==='Cesta básica'){
+                setDataSelect([ 'Imóvel','Animal','Automovél','Eletrônico','Cesta básica','Moda e beleza','Vagas de Trabalho','Encontrar Serviço'])
+            }else if
+            (value ==='Moda e beleza'){
+                setDataSelect([ 'Imóvel','Animal','Automovél','Eletrônico','Cesta básica','Moda e beleza','Vagas de Trabalho','Encontrar Serviço'])
+            }else if
+            (value ==='Vagas de Trabalho'){
+                setDataSelect([ 'Imóvel','Animal','Automovél','Eletrônico','Cesta básica','Moda e beleza','Vagas de Trabalho','Encontrar Serviço'])
+            }else{
+                setDataSelect([ 'Imóvel','Animal','Automovél','Eletrônico','Cesta básica','Moda e beleza','Vagas de Trabalho','Encontrar Serviço'])
+            }
+            setType('subcategory')
+            setQuesetion('Qual Subcategoria?')
+        }else if (type == 'subcategory') {
+            setOrderSubcategory(value)
             setDataSelect(['Mais Recentes', 'Menor Valor', 'Maior Valor'])
             setType('order')
             setQuesetion('Qual ordem?')
             setNameIcon('filter-check-outline')
-        } else {
+        }
+        else {
             if (value === 'Maior Valor') {
                 setOrderAll('bigger')
             } else if (value === 'Menor Valor') {

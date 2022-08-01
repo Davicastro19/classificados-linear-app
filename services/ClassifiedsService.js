@@ -81,6 +81,28 @@ class ClassifiedsService{
         })
     }
 
+    async automobileByCategory(category){
+        return await axios({
+            url:Config.API_URL_TO+"automobileByCategory/"+category.toString(),
+            timeout: Config.TIMEOUT_REQUEST,
+            method:"Get",
+        }).then((response)=> {
+            return Promise.resolve(response)
+        }).catch((error)=>{
+            return Promise.reject(error)
+        })
+    }
+    async modelByAutomobile(automobile,brand){
+        return await axios({
+            url:Config.API_URL_TO+"modelByAutomobile/"+automobile.toString()+"/"+brand.toString(),
+            timeout: Config.TIMEOUT_REQUEST,
+            method:"Get",
+        }).then((response)=> {
+            return Promise.resolve(response)
+        }).catch((error)=>{
+            return Promise.reject(error)
+        })
+    }
     async getClassifiedFiltered(skip, district,city,orderAll){
         let token = await AsyncStorage.getItem("TOKEN")
         return axios({

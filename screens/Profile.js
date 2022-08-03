@@ -308,10 +308,10 @@ export default function Profile({navigation}) {
             }
           </Pressable>
           {visibleNotification && !isLoading && !visibleDialogCode &&
-              <Notification visible={visibleNotification} status={status} title={title} message={message} onPress={() => setVisibleNotification(false)} close={closeNotification} />
+              <Notification visibles={visibleNotification} status={status} title={title} message={message} onPress={() => setVisibleNotification(false)} close={closeNotification} />
             }
           {!visibleNotification && !isLoading && visibleDialogCode &&
-            <DialogCode containerColor={stylesColor.primaryColor} erroMessageCode={erroMessageCode} onChangeText={setCodeFull} visible={visibleDialogCode} FullSignUp={FullSignUp} close={closeDialog} />
+            <DialogCode containerColor={stylesColor.primaryColor} erroMessageCode={erroMessageCode} onChangeText={setCodeFull} visibles={visibleDialogCode} FullSignUp={FullSignUp} close={closeDialog} />
           }
         </KeyboardAvoidingView>
       </SafeAreaView>

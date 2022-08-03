@@ -173,15 +173,16 @@ export default function SignUp() {
         }
         userService.register(data)
           .then((response) => {
-            setCode(null)
-            setNewCode(null)
-            setEmail(null)
-            setName(null)
-            setPhone(null)
-            setPassword(null)
-            setLoading(false)
-            setVisibleDialogCode(false)
+            
             if (response.data.status){
+              setCode(null)
+              setNewCode(null)
+              setEmail(null)
+              setName(null)
+              setPhone(null)
+              setPassword(null)
+              setLoading(false)
+              setVisibleDialogCode(false)
               showNotification('Sucesso!', response.data.message,'success')
             }else{
               showNotification('Ops!', response.data.message,'error ')

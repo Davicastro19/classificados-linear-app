@@ -9,9 +9,7 @@ O **Classificados Linear App** é um aplicativo desenvolvido com a plataforma Ex
 - Detalhes completos do produto, incluindo título, descrição e preço.
 - Suporte para várias imagens por anúncio.
 - Funcionalidade de pesquisa para encontrar itens específicos.
-- Sistema de mensagens internas para facilitar a comunicação entre compradores e vendedores.
 - Autenticação segura para garantir a privacidade dos usuários.
-- Possibilidade de favoritar anúncios e acessá-los facilmente mais tarde.
 - Opção para editar e excluir anúncios existentes.
 - Gerenciamento do perfil do usuário, com informações pessoais e foto de perfil.
 

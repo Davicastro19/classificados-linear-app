@@ -13,6 +13,7 @@ Autenticação segura para garantir a privacidade dos usuários.
 Possibilidade de favoritar anúncios e acessá-los facilmente mais tarde.
 Opção para editar e excluir anúncios existentes.
 Gerenciamento do perfil do usuário, com informações pessoais e foto de perfil.
+Capturas de tela
 ![image](https://github.com/Davicastro19/classificados-linear-app/assets/48842971/b42288b2-9f57-4876-a789-ac350bfdfa11)
 ![image](https://github.com/Davicastro19/classificados-linear-app/assets/48842971/284c03ed-fc07-4ed5-8535-a128488fc863)
 ![image](https://github.com/Davicastro19/classificados-linear-app/assets/48842971/a1615935-7a63-4d44-aada-e112c652ba8f)

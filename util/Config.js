@@ -7,9 +7,9 @@ const Config = {
     HEADER_REQUEST: {
         Accept: 'application/json'
     },
-    AWS_ACCESS_KEY_ID: 'AKIA2XA5LTMTT4A3QEEZ',
-    AWS_SECRET_ACCESS_KEY: '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',
+    AWS_ACCESS_KEY_ID: '',
+    AWS_SECRET_ACCESS_KEY: '',
     AWS_STORAGE_BUCKET_NAME: 'linearimoveis',
-    AWS_URL: 'https://linearimoveis.s3.amazonaws.com/'
+    AWS_URL: 'https:s.com/'
 }
 export default Config;

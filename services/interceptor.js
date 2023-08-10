@@ -1,39 +1,51 @@
-import AsyncStorage from "@react-native-async-storage/async-storage"
-import axios from "axios"
-import Config from "../util/Config"
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import axios from "axios";
+import Config from "../util/Config";
 
-class Interceptor{
+class Interceptor {
+    constructor() {
+        this.initInterceptor();
+    }
 
-    async refresh(){
-        axios.interceptors.response.use(response => {
-            return response
-          }, err => {
-            return new Promise((resolve, reject) => {
-              const originalReq = err.config
-              if (err.response.status){
-                if (err.response.status == 401 && err.config && !err.config._retry){
-                  originalReq._retry = true
-                  AsyncStorage.getItem("TOKEN").then((token) => {
-                    let res = axios.put(`${Config.API_URL}token/refresh`, {oldToken: token})
-                    .then((res) => {
-                      if (res && res.data && res.data.access_token) {
-                        AsyncStorage.setItem("TOKEN", res.data.access_token)
-                      }
-                      originalReq.headers["Authorization"] = `Bearer ${res.data.access_token}`
-                      return axios(originalReq)
-                    })
-                    resolve(res)
-                  })
-                }else{
-                    reject(err)
-                  }
-              }else{
-                reject(err)
-              }
-            })
-          })
+    async refreshToken() {
+        try {
+            const token = await AsyncStorage.getItem("TOKEN");
+            const response = await axios.put(`${Config.API_URL}token/refresh`, { oldToken: token });
+            if (response.data && response.data.access_token) {
+                await AsyncStorage.setItem("TOKEN", response.data.access_token);
+            }
+            return response.data.access_token;
+        } catch (error) {
+            await this.removeToken();
+            throw error;
+        }
+    }
+
+    async removeToken() {
+        await AsyncStorage.removeItem("TOKEN");
+    }
+
+    async initInterceptor() {
+        axios.interceptors.response.use(
+            response => response,
+            async error => {
+                const originalReq = error.config;
+                if (error.response && error.response.status === 401 && originalReq && !originalReq._retry) {
+                    originalReq._retry = true;
+                    try {
+                        const newToken = await this.refreshToken();
+                        originalReq.headers["Authorization"] = `Bearer ${newToken}`;
+                        return axios(originalReq);
+                    } catch (error) {
+                        throw error;
+                    }
+                } else {
+                    throw error;
+                }
+            }
+        );
     }
 }
 
-const interceptor = new Interceptor()
-export default interceptor
+const interceptor = new Interceptor();
+export default interceptor;
